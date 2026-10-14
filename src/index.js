@@ -53,6 +53,7 @@ export default {
   async fetch(request, env, _ctx) {
     const url = new URL(request.url);
     const corsHeaders = getCorsHeaders(env, request);
+    const rawPath = url.pathname.replace(/\/+$/, '') || '/';
 
     // =========================================================================
     // 1. CORS Preflight (OPTIONS)
@@ -65,10 +66,10 @@ export default {
     }
 
     // =========================================================================
-    // 2. Client Configuration Endpoint (/api/config)
+    // 2. Client Configuration Endpoint (/api/config, /config)
     // Securely passes public keys to the browser so frontend HTML never stores keys
     // =========================================================================
-    if (url.pathname === '/api/config' && request.method === 'GET') {
+    if ((rawPath === '/api/config' || rawPath === '/config') && request.method === 'GET') {
       const rawPk = env.ORATION_PUBLIC_KEY || '';
       const rawAg = env.ORATION_AGENT_ID || '';
       const pk = (!rawPk || rawPk.startsWith('pk_your_')) ? '70588826-0a19-4c4f-abdf-6de6c720d793' : rawPk;
@@ -95,7 +96,10 @@ export default {
     // 3. Full Demo Appliance Catalog (/api/catalog, /api/products)
     // Returns the 4 authorized Faber demo products
     // =========================================================================
-    if ((url.pathname === '/api/catalog' || url.pathname === '/api/products') && request.method === 'GET') {
+    // 3. Full Demo Appliance Catalog (/api/catalog, /api/products, /products)
+    // Returns the 4 authorized Faber demo products
+    // =========================================================================
+    if ((rawPath === '/api/catalog' || rawPath === '/catalog' || rawPath === '/api/products' || rawPath === '/products') && request.method === 'GET') {
       return new Response(
         JSON.stringify({
           status: 'success',
@@ -112,13 +116,21 @@ export default {
     }
 
     // =========================================================================
-    // 4. Health Check (/api/health, /health)
+    // 4. Health Check (/api/health, /health, /)
     // =========================================================================
-    if (url.pathname === '/api/health' || url.pathname === '/health') {
+    if ((rawPath === '/api/health' || rawPath === '/health' || rawPath === '/') && request.method === 'GET') {
       return new Response(
         JSON.stringify({
           status: 'ok',
           service: 'faber-tool-backend',
+          message: 'Faber Voice & Chat Product Visualizer Backend is online',
+          endpoints: {
+            tool: '/api/tool',
+            stream: '/api/stream/default',
+            config: '/api/config',
+            products: '/api/products',
+            health: '/api/health'
+          },
           timestamp: new Date().toISOString()
         }),
         {
@@ -132,10 +144,10 @@ export default {
     }
 
     // =========================================================================
-    // 5. WebSocket Upgrade Endpoint (/api/ws)
+    // 5. WebSocket Upgrade Endpoint (/api/ws, /ws)
     // Routes to the session's dedicated Durable Object
     // =========================================================================
-    if (url.pathname === '/api/ws') {
+    if (rawPath === '/api/ws' || rawPath === '/ws') {
       const sessionId = url.searchParams.get('sessionId') || 'default';
       const doId = env.SESSION_ROOM.idFromName(sessionId);
       const roomStub = env.SESSION_ROOM.get(doId);
@@ -147,9 +159,9 @@ export default {
     // 6. Server-Sent Events (SSE) Stream Endpoint (/api/stream/:sessionId)
     // Real-time one-way event stream used by the side HTML visualizer widget
     // =========================================================================
-    if (url.pathname.startsWith('/api/stream')) {
-      const parts = url.pathname.split('/');
-      const sessionId = (parts[3] || url.searchParams.get('sessionId') || 'default').trim();
+    if (rawPath.startsWith('/api/stream') || rawPath.startsWith('/stream')) {
+      const parts = rawPath.split('/');
+      const sessionId = (parts[3] || parts[2] || url.searchParams.get('sessionId') || 'default').trim();
       const doId = env.SESSION_ROOM.idFromName(sessionId);
       const roomStub = env.SESSION_ROOM.get(doId);
 
@@ -157,13 +169,16 @@ export default {
     }
 
     // =========================================================================
-    // 7. Oration Tool Endpoint (/api/tool, /api/display-product, /api/oration/product-tool)
+    // 7. Oration Tool Endpoint (/api/tool, /tool, or POST /)
     // Called by Oration AI Agent when appliances are discussed during speech/chat
     // =========================================================================
     if (
-      url.pathname === '/api/tool' ||
-      url.pathname === '/api/display-product' ||
-      url.pathname === '/api/oration/product-tool'
+      rawPath === '/api/tool' ||
+      rawPath === '/tool' ||
+      rawPath === '/api/display-product' ||
+      rawPath === '/display-product' ||
+      rawPath === '/api/oration/product-tool' ||
+      (rawPath === '/' && request.method === 'POST')
     ) {
       // Optional Secret verification (enforced if custom secret is configured)
       const configuredSecret = env.TOOL_WEBHOOK_SECRET?.trim();
