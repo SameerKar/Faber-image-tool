@@ -44,43 +44,49 @@ app.use(express.urlencoded({ extended: true }));
 
 // ----------------------------------------------------------------------------
 // 1. ENVIRONMENT VARIABLE LOADER
-// Loads keys from .dev.vars or .env into process.env if not already set.
+// Loads keys from .dev.vars or .env into process.env.
 // Checks both tool-backend directory and root directory.
 // ----------------------------------------------------------------------------
-['.dev.vars', '.env'].forEach((filename) => {
-  const possiblePaths = [
-    path.join(__dirname, filename),
-    path.join(__dirname, '..', filename)
-  ];
+function loadEnv() {
+  ['.dev.vars', '.env'].forEach((filename) => {
+    const possiblePaths = [
+      path.join(__dirname, filename),
+      path.join(__dirname, '..', filename)
+    ];
 
-  for (const filePath of possiblePaths) {
-    if (fs.existsSync(filePath)) {
-      try {
-        const lines = fs.readFileSync(filePath, 'utf8').split('\n');
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed || trimmed.startsWith('#')) continue;
+    for (const filePath of possiblePaths) {
+      if (fs.existsSync(filePath)) {
+        try {
+          const lines = fs.readFileSync(filePath, 'utf8').split('\n');
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed || trimmed.startsWith('#')) continue;
 
-          const eqIdx = trimmed.indexOf('=');
-          if (eqIdx !== -1) {
-            const key = trimmed.substring(0, eqIdx).trim();
-            let val = trimmed.substring(eqIdx + 1).trim();
+            const eqIdx = trimmed.indexOf('=');
+            if (eqIdx !== -1) {
+              const key = trimmed.substring(0, eqIdx).trim();
+              let val = trimmed.substring(eqIdx + 1).trim();
 
-            if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-              val = val.substring(1, val.length - 1);
-            }
+              if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+                val = val.substring(1, val.length - 1);
+              }
 
-            if (!process.env[key] || process.env[key].startsWith('pk_your_') || process.env[key].startsWith('ag_your_')) {
-              process.env[key] = val;
+              // Set in process.env
+              if (val && !val.startsWith('pk_your_') && !val.startsWith('ag_your_')) {
+                process.env[key] = val;
+              } else if (!process.env[key]) {
+                process.env[key] = val;
+              }
             }
           }
+        } catch (e) {
+          console.warn(`[Config] Could not read ${filePath}:`, e);
         }
-      } catch (e) {
-        console.warn(`[Config] Could not read ${filePath}:`, e);
       }
     }
-  }
-});
+  });
+}
+loadEnv();
 
 // Serve frontend page if available locally
 const staticCandidate = [
@@ -306,6 +312,7 @@ app.get('/api/tool', handleToolCall);
 
 // Configuration endpoint: Provides keys to <oration-widget> without exposing them in HTML files
 app.get('/api/config', (req, res) => {
+  loadEnv();
   res.json({
     publicKey: process.env.ORATION_PUBLIC_KEY || '',
     agentId: process.env.ORATION_AGENT_ID || ''

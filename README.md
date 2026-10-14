@@ -10,8 +10,6 @@ It serves as the webhook tool endpoint that receives Oration AI tool triggers, n
 
 ```
 tool-backend/
-├── .github/workflows/
-│   └── deploy-cloudflare.yml   # Automatic GitHub Actions deploy to Cloudflare
 ├── src/
 │   ├── index.ts                # Cloudflare Worker API & Real-time router
 │   ├── catalog.ts              # The 4 Faber appliances & fuzzy alias resolver
@@ -48,48 +46,36 @@ Validates all 12 input variants (single strings, arrays, comma-delimited strings
 
 ### Step 1: Push this directory to GitHub
 
-Initialize git inside `tool-backend` (or push as a dedicated repo):
 ```bash
 cd tool-backend
-git init
 git add .
-git commit -m "feat: faber visualizer backend tool service"
-git branch -M main
-git remote add origin https://github.com/SameerKar/Faber-image-tool.git
-git push -u origin main
+git commit -m "chore: manual deployment only"
+git push origin main
 ```
 
 ---
 
-### Step 2: Deploy to Cloudflare Workers
+### Step 2: Manual Deployment to Cloudflare Workers
 
-You have two simple options to deploy to Cloudflare:
+Deploy directly from your machine whenever you are ready:
 
-#### Option A: Direct CLI Deployment (Wrangler)
-1. Login to Cloudflare:
+1. **Login to Cloudflare**:
    ```bash
    npx wrangler login
    ```
-2. Set your production environment secrets (optional for Oration keys):
+2. **Set production environment secrets** (optional for Oration keys & webhook secret):
    ```bash
    npx wrangler secret put ORATION_PUBLIC_KEY
    npx wrangler secret put ORATION_AGENT_ID
    npx wrangler secret put TOOL_WEBHOOK_SECRET
    ```
-3. Deploy:
+3. **Deploy**:
    ```bash
    npm run deploy
    # Or: npx wrangler deploy
    ```
 Your Worker will be live at:
 `https://faber-oration-visualizer.YOUR_SUBDOMAIN.workers.dev`
-
-#### Option B: Automated GitHub Actions Deployment
-1. In your GitHub repository settings, go to **Settings > Secrets and variables > Actions**.
-2. Add the following repository secrets:
-   - `CLOUDFLARE_API_TOKEN`: Your Cloudflare API Token (with "Edit Cloudflare Workers" permission).
-   - `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID (found on your Cloudflare dashboard).
-3. Every push to `main` will automatically build, typecheck, and deploy your Worker to Cloudflare!
 
 ---
 
