@@ -211,7 +211,11 @@ export default {
         }
 
         // Extract session ID (from URL query string or body JSON)
-        const sessionId = (url.searchParams.get('sessionId') || body.sessionId || 'default').trim();
+        let rawSessionId = url.searchParams.get('sessionId') || body.sessionId || 'default';
+        if (typeof rawSessionId !== 'string' || !rawSessionId.trim() || rawSessionId.includes('{{') || rawSessionId === 'undefined' || rawSessionId === 'null') {
+          rawSessionId = 'default';
+        }
+        const sessionId = rawSessionId.trim();
         const displayModeRaw = body.display_mode || url.searchParams.get('display_mode');
 
         // Resolve products
@@ -279,21 +283,20 @@ export default {
           }))
         };
 
-        // Broadcast to the targeted session's Durable Object
-        const doId = env.SESSION_ROOM.idFromName(sessionId);
-        const roomStub = env.SESSION_ROOM.get(doId);
-
-        await roomStub.fetch('http://internal/broadcast', {
+        // 1. Always broadcast to the universal 'default' room so all visualizer screens update immediately
+        const defaultDoId = env.SESSION_ROOM.idFromName('default');
+        const defaultStub = env.SESSION_ROOM.get(defaultDoId);
+        await defaultStub.fetch('http://internal/broadcast', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(visualPayload)
         });
 
-        // Also broadcast to the "default" room as fallback
+        // 2. If a specific custom session ID was also provided, broadcast to it as well
         if (sessionId !== 'default') {
-          const defaultDoId = env.SESSION_ROOM.idFromName('default');
-          const defaultStub = env.SESSION_ROOM.get(defaultDoId);
-          await defaultStub.fetch('http://internal/broadcast', {
+          const doId = env.SESSION_ROOM.idFromName(sessionId);
+          const roomStub = env.SESSION_ROOM.get(doId);
+          await roomStub.fetch('http://internal/broadcast', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(visualPayload)
