@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "faber-oration-visualizer",
+  "main": "src/index.js",
+  "compatibility_date": "2024-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "SESSION_ROOM",
+        "class_name": "SessionRoom"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["SessionRoom"]
+    }
+  ],
+  "vars": {
+    "ORATION_PUBLIC_KEY": "pk_your_oration_public_key_here",
+    "ORATION_AGENT_ID": "ag_your_faber_agent_id_here",
+    "TOOL_WEBHOOK_SECRET": "faber_internal_secret_2026",
+    "ALLOWED_ORIGIN": "*"
+  }
+}

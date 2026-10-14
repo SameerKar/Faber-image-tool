@@ -1,0 +1,361 @@
+/**
+ * Faber Product Visualizer - Cloudflare Worker Entrypoint (Pure JavaScript)
+ *
+ * WHAT THIS FILE DOES:
+ * 1. Exports the `SessionRoom` Durable Object class for stateful WebSocket/SSE handling.
+ * 2. Implements the Worker `fetch()` router handling all HTTP & WebSocket endpoints.
+ * 3. Enforces full Cross-Origin Resource Sharing (CORS) so that independent frontends
+ *    (running locally on any port or deployed anywhere) can interact with this API.
+ * 4. Provides endpoints:
+ *    - `GET  /api/config`            : Returns Oration public keys & agent ID from environment.
+ *    - `GET  /api/products`          : Returns the 4 authorized Faber demo appliances.
+ *    - `GET  /api/stream/:sessionId` : Subscribes browser to Server-Sent Events (SSE).
+ *    - `GET  /api/ws`                : Upgrades browser to high-performance WebSocket.
+ *    - `POST /api/tool`              : Receives Oration custom tool triggers and broadcasts image links.
+ *    - `GET  /api/health`            : Basic health check endpoint.
+ */
+
+import { SessionRoom } from './sessionRoom.js';
+import { resolveProductsByEnums, getAllProducts } from './catalog.js';
+
+// Export Durable Object class to Cloudflare runtime
+export { SessionRoom };
+
+/**
+ * Builds CORS response headers allowing frontend requests across different ports/domains.
+ *
+ * @param {Object} env - Cloudflare environment variables
+ * @param {Request} request - Incoming HTTP request
+ * @returns {HeadersInit} CORS headers object
+ */
+function getCorsHeaders(env, request) {
+  const origin = request.headers.get('Origin') || '*';
+  const allowed = env.ALLOWED_ORIGIN || '*';
+  const resolvedOrigin = allowed === '*' ? '*' : allowed.includes(origin) ? origin : allowed;
+
+  return {
+    'Access-Control-Allow-Origin': resolvedOrigin,
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+    'Access-Control-Max-Age': '86400'
+  };
+}
+
+export default {
+  /**
+   * Main Cloudflare Worker request handler.
+   *
+   * @param {Request} request - The incoming HTTP request
+   * @param {Object} env - Bound environment variables & Durable Object namespaces
+   * @param {Object} _ctx - ExecutionContext for background tasks
+   * @returns {Promise<Response>}
+   */
+  async fetch(request, env, _ctx) {
+    const url = new URL(request.url);
+    const corsHeaders = getCorsHeaders(env, request);
+
+    // =========================================================================
+    // 1. CORS Preflight (OPTIONS)
+    // =========================================================================
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders
+      });
+    }
+
+    // =========================================================================
+    // 2. Client Configuration Endpoint (/api/config)
+    // Securely passes public keys to the browser so frontend HTML never stores keys
+    // =========================================================================
+    if (url.pathname === '/api/config' && request.method === 'GET') {
+      return new Response(
+        JSON.stringify({
+          publicKey: env.ORATION_PUBLIC_KEY || '',
+          agentId: env.ORATION_AGENT_ID || '',
+          webhookSecretConfigured: Boolean(env.TOOL_WEBHOOK_SECRET),
+          defaultSessionId: 'default'
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders
+          }
+        }
+      );
+    }
+
+    // =========================================================================
+    // 3. Full Demo Appliance Catalog (/api/catalog, /api/products)
+    // Returns the 4 authorized Faber demo products
+    // =========================================================================
+    if ((url.pathname === '/api/catalog' || url.pathname === '/api/products') && request.method === 'GET') {
+      return new Response(
+        JSON.stringify({
+          status: 'success',
+          products: getAllProducts()
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders
+          }
+        }
+      );
+    }
+
+    // =========================================================================
+    // 4. Health Check (/api/health, /health)
+    // =========================================================================
+    if (url.pathname === '/api/health' || url.pathname === '/health') {
+      return new Response(
+        JSON.stringify({
+          status: 'ok',
+          service: 'faber-tool-backend',
+          timestamp: new Date().toISOString()
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders
+          }
+        }
+      );
+    }
+
+    // =========================================================================
+    // 5. WebSocket Upgrade Endpoint (/api/ws)
+    // Routes to the session's dedicated Durable Object
+    // =========================================================================
+    if (url.pathname === '/api/ws') {
+      const sessionId = url.searchParams.get('sessionId') || 'default';
+      const doId = env.SESSION_ROOM.idFromName(sessionId);
+      const roomStub = env.SESSION_ROOM.get(doId);
+
+      return roomStub.fetch('http://internal/ws', request);
+    }
+
+    // =========================================================================
+    // 6. Server-Sent Events (SSE) Stream Endpoint (/api/stream/:sessionId)
+    // Real-time one-way event stream used by the side HTML visualizer widget
+    // =========================================================================
+    if (url.pathname.startsWith('/api/stream')) {
+      const parts = url.pathname.split('/');
+      const sessionId = (parts[3] || url.searchParams.get('sessionId') || 'default').trim();
+      const doId = env.SESSION_ROOM.idFromName(sessionId);
+      const roomStub = env.SESSION_ROOM.get(doId);
+
+      return roomStub.fetch('http://internal/stream', request);
+    }
+
+    // =========================================================================
+    // 7. Oration Tool Endpoint (/api/tool, /api/display-product, /api/oration/product-tool)
+    // Called by Oration AI Agent when appliances are discussed during speech/chat
+    // =========================================================================
+    if (
+      url.pathname === '/api/tool' ||
+      url.pathname === '/api/display-product' ||
+      url.pathname === '/api/oration/product-tool'
+    ) {
+      // Optional Secret verification (enforced if custom secret is configured)
+      const configuredSecret = env.TOOL_WEBHOOK_SECRET?.trim();
+      if (configuredSecret && configuredSecret !== 'faber_internal_secret_2026') {
+        const queryToken = url.searchParams.get('token');
+        const authHeader = request.headers.get('Authorization') || '';
+        const bearerToken = authHeader.toLowerCase().startsWith('bearer ') ? authHeader.substring(7).trim() : null;
+
+        if (queryToken !== configuredSecret && bearerToken !== configuredSecret) {
+          return new Response(
+            JSON.stringify({
+              error: 'Unauthorized: Invalid or missing webhook secret token',
+              status: 401
+            }),
+            {
+              status: 401,
+              headers: {
+                'Content-Type': 'application/json',
+                ...corsHeaders
+              }
+            }
+          );
+        }
+      }
+
+      try {
+        let body = {};
+        if (request.method === 'POST') {
+          const rawText = await request.text();
+          if (rawText && rawText.trim().length > 0) {
+            try {
+              body = JSON.parse(rawText);
+            } catch {
+              body = { product: rawText.trim() };
+            }
+          }
+        } else if (request.method === 'GET') {
+          body = {
+            sessionId: url.searchParams.get('sessionId'),
+            product: url.searchParams.get('product'),
+            products: url.searchParams.get('products'),
+            product_enums: url.searchParams.get('product_enums'),
+            display_mode: url.searchParams.get('display_mode')
+          };
+        }
+
+        // Extract session ID (from URL query string or body JSON)
+        const sessionId = (url.searchParams.get('sessionId') || body.sessionId || 'default').trim();
+        const displayModeRaw = body.display_mode || url.searchParams.get('display_mode');
+
+        // Resolve products
+        let products = [];
+        if (body.imageUrl || body.link) {
+          // Direct raw image URL passthrough
+          const directUrl = body.imageUrl || body.link;
+          products = [
+            {
+              enumKey: 'DIRECT_IMAGE',
+              sequenceOrder: 1,
+              name: body.product || body.title || 'Product Image',
+              category: 'Featured Display',
+              imageUrl: directUrl,
+              description: body.description || body.title || 'Appliance Display'
+            }
+          ];
+        } else {
+          // Fuzzy match inputs against the 4 demo products
+          const rawInput =
+            body.products ??
+            body.product_enums ??
+            body.product ??
+            body.product_name ??
+            url.searchParams.get('product') ??
+            url.searchParams.get('products') ??
+            url.searchParams.get('product_enums');
+
+          products = resolveProductsByEnums(rawInput);
+        }
+
+        const displayMode =
+          displayModeRaw === 'SINGLE' || displayModeRaw === 'COMPARISON' || displayModeRaw === 'SEQUENCE'
+            ? displayModeRaw
+            : products.length > 1
+            ? 'SEQUENCE'
+            : 'SINGLE';
+
+        // Structured payload delivered to the side HTML widget
+        const visualPayload = {
+          type: 'PRODUCT_UPDATE',
+          action: 'DISPLAY_IMAGES',
+          displayMode,
+          sessionId,
+          timestamp: new Date().toISOString(),
+          images: products.map((p) => ({
+            name: p.name,
+            title: p.title || p.name,
+            imageUrl: p.imageUrl,
+            description: p.description
+          })),
+          products: products.map((p) => ({
+            enumKey: p.enumKey || p.name,
+            sequenceOrder: p.sequenceOrder || 1,
+            name: p.name,
+            category: p.category || 'Appliance',
+            imageUrl: p.imageUrl,
+            dimensions: p.dimensions,
+            suctionPower: p.suctionPower,
+            finish: p.finish,
+            controls: p.controls,
+            highlight: p.highlight,
+            description: p.description,
+            keyFeatures: p.keyFeatures
+          }))
+        };
+
+        // Broadcast to the targeted session's Durable Object
+        const doId = env.SESSION_ROOM.idFromName(sessionId);
+        const roomStub = env.SESSION_ROOM.get(doId);
+
+        await roomStub.fetch('http://internal/broadcast', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(visualPayload)
+        });
+
+        // Also broadcast to the "default" room as fallback
+        if (sessionId !== 'default') {
+          const defaultDoId = env.SESSION_ROOM.idFromName('default');
+          const defaultStub = env.SESSION_ROOM.get(defaultDoId);
+          await defaultStub.fetch('http://internal/broadcast', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(visualPayload)
+          });
+        }
+
+        // Return confirmation back to Oration AI Agent
+        return new Response(
+          JSON.stringify({
+            status: 'success',
+            message: `Sent ${products.length} image link(s) to the side HTML widget.`,
+            displayedCount: products.length,
+            displayedImages: products.map((p) => ({
+              name: p.name,
+              link: p.imageUrl
+            })),
+            products: products.map((p) => ({
+              name: p.name,
+              imageUrl: p.imageUrl
+            })),
+            displayedEnums: products.map((p) => p.enumKey || p.name),
+            sequence: products.map((p, idx) => `#${p.sequenceOrder || idx + 1}: ${p.name}`),
+            displayMode,
+            sessionId
+          }),
+          {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json',
+              ...corsHeaders
+            }
+          }
+        );
+      } catch (err) {
+        console.error('[ToolWebhook] Error handling product tool request:', err);
+        return new Response(
+          JSON.stringify({
+            error: 'Failed to process product tool payload',
+            message: err instanceof Error ? err.message : String(err)
+          }),
+          {
+            status: 400,
+            headers: {
+              'Content-Type': 'application/json',
+              ...corsHeaders
+            }
+          }
+        );
+      }
+    }
+
+    // =========================================================================
+    // 8. Fallback 404
+    // =========================================================================
+    return new Response(
+      JSON.stringify({
+        status: 'error',
+        message: 'Endpoint not found',
+        endpoints: ['/api/tool', '/api/stream/:sessionId', '/api/ws', '/api/config', '/api/products', '/api/health']
+      }),
+      {
+        status: 404,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      }
+    );
+  }
+};

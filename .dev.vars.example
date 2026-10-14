@@ -1,0 +1,4 @@
+ORATION_PUBLIC_KEY="pk_your_oration_public_key_here"
+ORATION_AGENT_ID="ag_your_faber_agent_id_here"
+TOOL_WEBHOOK_SECRET="faber_internal_secret_2026"
+ALLOWED_ORIGIN="*"

@@ -1,0 +1,32 @@
+{
+  "name": "faber-tool-backend",
+  "version": "1.0.0",
+  "description": "Faber Voice Visualizer - Backend Tool & Real-Time Sync Service for Oration AI and Cloudflare Workers",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "dev:cf": "wrangler dev --port 8787",
+    "deploy": "wrangler deploy",
+    "test": "node test-suite.js"
+  },
+  "keywords": [
+    "faber",
+    "oration-ai",
+    "voice-agent",
+    "cloudflare-workers",
+    "durable-objects",
+    "sse",
+    "websocket"
+  ],
+  "author": "Faber Internal Team",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261006.1",
+    "wrangler": "^4.151.0"
+  }
+}
