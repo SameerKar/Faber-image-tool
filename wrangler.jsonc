@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "faber-oration-visualizer",
+  "name": "faber-image-tool",
   "main": "src/index.js",
   "compatibility_date": "2024-11-01",
   "compatibility_flags": ["nodejs_compat"],
@@ -19,8 +19,8 @@
     }
   ],
   "vars": {
-    "ORATION_PUBLIC_KEY": "pk_your_oration_public_key_here",
-    "ORATION_AGENT_ID": "ag_your_faber_agent_id_here",
+    "ORATION_PUBLIC_KEY": "70588826-0a19-4c4f-abdf-6de6c720d793",
+    "ORATION_AGENT_ID": "538568f1-6a55-4e3f-989c-164f391a8443",
     "TOOL_WEBHOOK_SECRET": "faber_internal_secret_2026",
     "ALLOWED_ORIGIN": "*"
   }

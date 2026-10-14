@@ -69,10 +69,15 @@ export default {
     // Securely passes public keys to the browser so frontend HTML never stores keys
     // =========================================================================
     if (url.pathname === '/api/config' && request.method === 'GET') {
+      const rawPk = env.ORATION_PUBLIC_KEY || '';
+      const rawAg = env.ORATION_AGENT_ID || '';
+      const pk = (!rawPk || rawPk.startsWith('pk_your_')) ? '70588826-0a19-4c4f-abdf-6de6c720d793' : rawPk;
+      const ag = (!rawAg || rawAg.startsWith('ag_your_')) ? '538568f1-6a55-4e3f-989c-164f391a8443' : rawAg;
+
       return new Response(
         JSON.stringify({
-          publicKey: env.ORATION_PUBLIC_KEY || '',
-          agentId: env.ORATION_AGENT_ID || '',
+          publicKey: pk,
+          agentId: ag,
           webhookSecretConfigured: Boolean(env.TOOL_WEBHOOK_SECRET),
           defaultSessionId: 'default'
         }),
