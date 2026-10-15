@@ -100,95 +100,805 @@ if (staticCandidate) {
 }
 
 // ----------------------------------------------------------------------------
-// 2. AUTHORIZED DEMO PRODUCTS (Strict Scope: Exactly 4 demo appliances)
+// 2. COMPLETE 13-PRODUCT CATALOG FROM AGENT TRAINING KNOWLEDGE BASE
 // ----------------------------------------------------------------------------
-const DEMO_PRODUCTS = {
-  // Demo Product 1: Wall-Mounted Curved Glass Chimney
-  chimney1: {
-    id: 'chimney1',
-    name: 'Chimney 1',
-    title: 'Faber Curved Glass Auto-Clean Chimney',
-    imageUrl: 'https://faberindia.com/cdn/shop/products/IMG_4526-2.jpg?v=1652172625&width=1100'
+const FABER_PRODUCT_CATALOG = {
+  // Chimneys - Libra BLDC Series (3 Models)
+  LIBRA_60: {
+    id: 'libra-60',
+    enumKey: 'LIBRA_60',
+    sequenceOrder: 1,
+    name: 'Faber Libra BLDC 60 cm',
+    modelName: 'HOOD LIBRA BLDC HC SC FL BK IN 60 - C',
+    sku: '325.0741.435',
+    category: 'chimney',
+    categoryLabel: 'Auto-Clean BLDC Chimney',
+    type: 'Wall-Mounted Curved Glass Chimney',
+    width: '60 cm',
+    dimensions: '600 × 418 × 485 mm',
+    price: 21330,
+    mrp: 32490,
+    discountPercent: 34,
+    savings: 11160,
+    isOffer: true,
+    suctionPower: '1500 m³/hr Airflow',
+    motor: 'BLDC (Energy-Saving Brushless Motor)',
+    filterDesign: 'Filterless Technology',
+    cleaningFunction: 'Heat Auto Clean (9 min heat + 1 min fan)',
+    controls: 'Touch & Wave Gesture Control',
+    speedLevels: 'Up to 9 Speed Levels',
+    ledLight: '1 × 1.5 W Energy-saving LED',
+    finish: 'Black Curved Tempered Glass',
+    installation: 'Ducted or Ductless',
+    warranty: '2 Years Comprehensive • 12 Years Motor',
+    imageUrl: 'https://faberindia.com/cdn/shop/products/IMG_4526-2.jpg?v=1652172625&width=1100',
+    productPageUrl: 'https://faberindia.com/collections/chimneys',
+    description: 'Compact 60 cm curved glass auto-clean chimney with 1500 m³/hr suction, brushless DC motor, and wave gesture control.',
+    highlight: 'Heat Auto Clean • 1500 m³/hr • 12-Year Motor Warranty',
+    keyFeatures: ['1500 m³/hr Suction', 'BLDC Motor', 'Heat Auto Clean', 'Touch & Gesture Control', '12-Year Motor Warranty']
   },
-  // Demo Product 2: Vertical Angular Filterless Chimney
-  chimney2: {
-    id: 'chimney2',
-    name: 'Chimney 2',
-    title: 'Faber Angular Filterless Luxury Chimney',
-    imageUrl: 'https://faberindia.com/cdn/shop/files/0P5A2322.jpg?v=1718706990&width=1500'
+
+  LIBRA_75: {
+    id: 'libra-75',
+    enumKey: 'LIBRA_75',
+    sequenceOrder: 2,
+    name: 'Faber Libra BLDC 75 cm',
+    modelName: 'HOOD LIBRA BLDC HC SC FL BK IN 75 - C',
+    sku: '325.0741.438',
+    category: 'chimney',
+    categoryLabel: 'Auto-Clean BLDC Chimney',
+    type: 'Wall-Mounted Curved Glass Chimney',
+    width: '75 cm',
+    dimensions: '750 × 418 × 490 mm',
+    price: 23118,
+    mrp: 33990,
+    discountPercent: 32,
+    savings: 10872,
+    isOffer: true,
+    suctionPower: '1500 m³/hr Airflow',
+    motor: 'BLDC (Energy-Saving Brushless Motor)',
+    filterDesign: 'Filterless Technology',
+    cleaningFunction: 'Heat Auto Clean (9 min heat + 1 min fan)',
+    controls: 'Touch & Wave Gesture Control',
+    speedLevels: 'Up to 9 Speed Levels',
+    ledLight: '1 × 1.5 W Energy-saving LED',
+    finish: 'Black Curved Tempered Glass',
+    installation: 'Ducted or Ductless',
+    warranty: '2 Years Comprehensive • 12 Years Motor',
+    imageUrl: 'https://faberindia.com/cdn/shop/files/0P5A2322.jpg?v=1718706990&width=1500',
+    productPageUrl: 'https://faberindia.com/collections/chimneys',
+    description: 'Mid-size 75 cm curved glass hood ideal for 3-4 burner gas cooktops with 1500 m³/hr airflow and heat auto-clean.',
+    highlight: '75 cm Medium Width • 1500 m³/hr • 9 Speed Levels',
+    keyFeatures: ['75 cm Medium Width', '1500 m³/hr Suction', 'Heat Auto Clean', 'BLDC Motor', 'Filterless Design']
   },
-  // Demo Product 3: Integrated Built-in Dishwasher
-  dishwasher1: {
-    id: 'dishwasher1',
-    name: 'Dishwasher 1',
-    title: 'Faber FBID 8PR 14S Dishwasher',
-    imageUrl: 'https://faberindia.com/cdn/shop/files/0P5A9911.jpg?v=1744617554&width=2000'
+
+  LIBRA_90: {
+    id: 'libra-90',
+    enumKey: 'LIBRA_90',
+    sequenceOrder: 3,
+    name: 'Faber Libra BLDC 90 cm',
+    modelName: 'HOOD LIBRA BLDC HC SC FL BK IN 90 - C',
+    sku: '325.0741.440',
+    category: 'chimney',
+    categoryLabel: 'Auto-Clean BLDC Chimney',
+    type: 'Wall-Mounted Curved Glass Chimney',
+    width: '90 cm',
+    dimensions: '900 × 418 × 490 mm',
+    price: 24987,
+    mrp: 35490,
+    discountPercent: 30,
+    savings: 10503,
+    isOffer: true,
+    suctionPower: '1500 m³/hr Airflow',
+    motor: 'BLDC (Energy-Saving Brushless Motor)',
+    filterDesign: 'Filterless Technology',
+    cleaningFunction: 'Heat Auto Clean (9 min heat + 1 min fan)',
+    controls: 'Touch & Wave Gesture Control',
+    speedLevels: 'Up to 9 Speed Levels',
+    ledLight: '1 × 1.5 W Energy-saving LED',
+    finish: 'Black Curved Tempered Glass',
+    installation: 'Ducted or Ductless',
+    warranty: '2 Years Comprehensive • 12 Years Motor',
+    imageUrl: 'https://faberindia.com/cdn/shop/products/IMG_4526-2.jpg?v=1652172625&width=1100',
+    productPageUrl: 'https://faberindia.com/collections/chimneys',
+    description: 'Wide 90 cm canopy hood covering 4-5 burner cooktops with maximum smoke capture and ultra-quiet BLDC motor.',
+    highlight: '90 cm Large Canopy • 1500 m³/hr • Max Cooking Coverage',
+    keyFeatures: ['90 cm Wide Coverage', '1500 m³/hr Airflow', 'BLDC Motor', 'Heat Auto Clean', 'Touch & Gesture']
   },
-  // Demo Product 4: Freestanding Stainless Steel Dishwasher
-  dishwasher2: {
-    id: 'dishwasher2',
-    name: 'Dishwasher 2',
-    title: 'Faber FSID 8PR 14S Dishwasher',
-    imageUrl: 'https://faberindia.com/cdn/shop/files/WhatsApp_Image_2024-11-28_at_12.44.59_56b1d62d.jpg?v=1732799100&width=1500'
+
+  // Dishwashers (10 Models)
+  FBID_8PR_14S: {
+    id: 'fbid-8pr-14s',
+    enumKey: 'FBID_8PR_14S',
+    sequenceOrder: 4,
+    name: 'Faber FBID 8PR 14S',
+    modelName: 'FBID 8PR 14S',
+    sku: '117.0534.675',
+    category: 'dishwasher',
+    categoryLabel: 'Built-in Integrated Dishwasher',
+    type: 'Built-in Integrated',
+    capacity: '14 Place Settings',
+    washProgrammesCount: 8,
+    programmes: '8 Programmes: Auto, Intensive, Normal, ECO, Glass, 90 Min, Rapid, Soak',
+    price: 63901,
+    mrp: 70990,
+    discountPercent: 10,
+    savings: 7089,
+    isOffer: false,
+    finish: 'Stainless Steel (Concealed Controls inside Door)',
+    controls: 'Concealed Soft Touch & LED Display',
+    washZones: 'Dual Zone Wash (Upper & Lower Zone Selection)',
+    drying: 'Natural Drying + Extra Drying',
+    dimensions: '815 × 598 × 600 mm',
+    energyClass: 'A++ (266 kWh/yr)',
+    noiseLevel: '44 dB(A)',
+    warranty: '2 Years Comprehensive • 10 Years on Cavity',
+    imageUrl: 'https://faberindia.com/cdn/shop/files/0P5A9911.jpg?v=1744617554&width=2000',
+    productPageUrl: 'https://faberindia.com/collections/dishwashers',
+    description: 'Luxury fully built-in dishwasher concealed in cabinetry with concealed door controls, 14 place settings, and Dual Zone Wash.',
+    highlight: 'Fully Built-in • Dual Zone Wash • 14 Place Settings • A++',
+    keyFeatures: ['Fully Built-in Seamless', '14 Place Settings', '8 Wash Programs', 'Dual Zone Wash', 'A++ Energy Efficiency']
+  },
+
+  FSID_8PR_14S: {
+    id: 'fsid-8pr-14s',
+    enumKey: 'FSID_8PR_14S',
+    sequenceOrder: 5,
+    name: 'Faber FSID 8PR 14S',
+    modelName: 'FSID 8PR 14S',
+    sku: '117.0534.676',
+    category: 'dishwasher',
+    categoryLabel: 'Semi-integrated Dishwasher',
+    type: 'Semi-integrated',
+    capacity: '14 Place Settings',
+    washProgrammesCount: 8,
+    programmes: '8 Washing Programmes',
+    price: 58617,
+    mrp: 65490,
+    discountPercent: 10,
+    savings: 6873,
+    isOffer: false,
+    finish: 'Stainless Steel (Visible Front Control Panel)',
+    controls: 'Front-facing LED Digital Display',
+    drying: 'Natural Drying',
+    dimensions: '815 × 598 × 600 mm',
+    powerMemory: true,
+    warranty: '2 Years Comprehensive • 10 Years on Cavity',
+    imageUrl: 'https://faberindia.com/cdn/shop/files/WhatsApp_Image_2024-11-28_at_12.44.59_56b1d62d.jpg?v=1732799100&width=1500',
+    productPageUrl: 'https://faberindia.com/collections/dishwashers',
+    description: 'Semi-integrated dishwasher fitted inside cabinetry with convenient front-facing digital control panel and 14 place capacity.',
+    highlight: 'Semi-Integrated Front Display • 14 Place Settings • 8 Programs',
+    keyFeatures: ['Semi-Integrated Panel', 'Front Visible Controls', '14 Place Capacity', '8 Wash Programs', 'Power Memory']
+  },
+
+  FFSD_8PR_14S: {
+    id: 'ffsd-8pr-14s',
+    enumKey: 'FFSD_8PR_14S',
+    sequenceOrder: 6,
+    name: 'Faber FFSD 8PR 14S Inox',
+    modelName: 'FFSD 8PR 14S',
+    sku: '117.0534.678',
+    category: 'dishwasher',
+    categoryLabel: 'Freestanding Dishwasher',
+    type: 'Freestanding',
+    capacity: '14 Place Settings',
+    washProgrammesCount: 8,
+    programmes: '8 Washing Programmes',
+    price: 52170,
+    mrp: 60490,
+    discountPercent: 14,
+    savings: 8320,
+    isOffer: false,
+    finish: 'Stainless Steel / Inox',
+    controls: 'LED Display with Push Button',
+    drying: 'Natural Drying',
+    dimensions: '845 × 598 × 600 mm',
+    warranty: '2 Years Comprehensive • 10 Years on Cavity',
+    imageUrl: 'https://faberindia.com/cdn/shop/files/WhatsApp_Image_2024-11-28_at_12.44.59_56b1d62d.jpg?v=1732799100&width=1500',
+    productPageUrl: 'https://faberindia.com/collections/dishwashers',
+    description: 'Freestanding stainless steel dishwasher with 14 place capacity, flexible racks, and 8 programs for heavy Indian pots and pans.',
+    highlight: 'Freestanding Inox • 14 Place Settings • Plug & Play',
+    keyFeatures: ['Freestanding Inox Body', '14 Place Settings', '8 Wash Programs', 'Natural Drying', '10-Yr Cavity Warranty']
+  },
+
+  FFSD_8PR_14S_BK: {
+    id: 'ffsd-8pr-14s-bk',
+    enumKey: 'FFSD_8PR_14S_BK',
+    sequenceOrder: 7,
+    name: 'Faber FFSD 8PR 14S Black',
+    modelName: 'FFSD 8PR 14S BK',
+    sku: '117.0737.651',
+    category: 'dishwasher',
+    categoryLabel: 'Freestanding Dishwasher',
+    type: 'Freestanding',
+    capacity: '14 Place Settings',
+    washProgrammesCount: 8,
+    programmes: '8 Washing Programmes',
+    price: 51964,
+    mrp: 57990,
+    discountPercent: 10,
+    savings: 6026,
+    isOffer: false,
+    finish: 'Obsidian Black',
+    controls: 'Push Button with LED Display',
+    washZones: 'Dual Zone Wash',
+    drying: 'Natural Drying',
+    childLock: true,
+    powerMemory: true,
+    dimensions: '598 × 600 × 845 mm',
+    warranty: '2 Years Comprehensive • 10 Years on Cavity',
+    imageUrl: 'https://faberindia.com/cdn/shop/files/0P5A9911.jpg?v=1744617554&width=2000',
+    productPageUrl: 'https://faberindia.com/collections/dishwashers',
+    description: 'Sleek black freestanding dishwasher with 14 place capacity, Dual Zone Wash, and child lock protection for family kitchens.',
+    highlight: 'Sleek Black • Dual Zone Wash • Child Lock • 14 Place Settings',
+    keyFeatures: ['Obsidian Black Finish', 'Dual Zone Wash', 'Child Lock Protection', '14 Place Settings', '8 Programs']
+  },
+
+  FFSD_7PR_14S_BK: {
+    id: 'ffsd-7pr-14s-bk',
+    enumKey: 'FFSD_7PR_14S_BK',
+    sequenceOrder: 8,
+    name: 'Faber FFSD 7PR 14S Black',
+    modelName: 'FFSD 7PR 14S BK',
+    sku: '117.0737.644',
+    category: 'dishwasher',
+    categoryLabel: 'Freestanding Dishwasher',
+    type: 'Freestanding',
+    capacity: '14 Place Settings',
+    washProgrammesCount: 7,
+    programmes: '7 Washing Programmes',
+    price: 30200,
+    mrp: 45990,
+    discountPercent: 34,
+    savings: 15790,
+    isOffer: true,
+    finish: 'Black',
+    controls: 'Push Button',
+    loadFunction: 'Half Load Option',
+    childLock: true,
+    drying: 'Natural Drying',
+    dimensions: '598 × 600 × 845 mm',
+    warranty: '2 Years Comprehensive • 10 Years on Cavity',
+    imageUrl: 'https://faberindia.com/cdn/shop/files/0P5A9911.jpg?v=1744617554&width=2000',
+    productPageUrl: 'https://faberindia.com/collections/dishwashers',
+    description: 'Best value 14-place setting black dishwasher with 7 programmes, convenient Half Load function, and ₹15,790 (34%) discount savings.',
+    highlight: '★ Best Value (34% Off) • Half Load • 14 Place Settings',
+    keyFeatures: ['Best Value (Save ₹15,790)', '14 Place Settings', '7 Wash Programs', 'Half Load Option', 'Child Lock']
+  },
+
+  FFSD_6PR_14S_BK_DIGITAL: {
+    id: 'ffsd-6pr-14s-bk-digital',
+    enumKey: 'FFSD_6PR_14S_BK_DIGITAL',
+    sequenceOrder: 9,
+    name: 'Faber FFSD 6PR 14S Black Digital',
+    modelName: 'FFSD 6PR 14S BK Digital',
+    sku: '117.0737.650',
+    category: 'dishwasher',
+    categoryLabel: 'Freestanding Digital Dishwasher',
+    type: 'Freestanding',
+    capacity: '14 Place Settings',
+    washProgrammesCount: 6,
+    programmes: '6 Washing Programmes',
+    price: 35010,
+    mrp: 48990,
+    discountPercent: 29,
+    savings: 13980,
+    isOffer: true,
+    finish: 'Black',
+    controls: 'Electronic Push Button with Digital Display',
+    loadFunction: 'Half Load Option',
+    drying: 'Natural Drying',
+    dimensions: '598 × 600 × 845 mm',
+    warranty: '2 Years Comprehensive • 10 Years on Cavity',
+    imageUrl: 'https://faberindia.com/cdn/shop/files/0P5A9911.jpg?v=1744617554&width=2000',
+    productPageUrl: 'https://faberindia.com/collections/dishwashers',
+    description: 'Black digital freestanding dishwasher with intuitive screen, 14 place capacity, and convenient Half Load mode.',
+    highlight: 'Digital Screen • 29% Off • Half Load • 14 Place Settings',
+    keyFeatures: ['Digital Interface Display', '14 Place Settings', 'Half Load Function', '29% Discount', '10-Yr Cavity Warranty']
+  },
+
+  FFSD_6PR_12S_NEO_INOX: {
+    id: 'ffsd-6pr-12s-neo-inox',
+    enumKey: 'FFSD_6PR_12S_NEO_INOX',
+    sequenceOrder: 10,
+    name: 'Faber FFSD 6PR 12S Neo Inox',
+    modelName: 'FFSD 6PR 12S NEO INOX',
+    sku: '117.0606.169',
+    category: 'dishwasher',
+    categoryLabel: 'Freestanding Dishwasher',
+    type: 'Freestanding',
+    capacity: '12 Place Settings',
+    washProgrammesCount: 6,
+    programmes: '6 Washing Programmes',
+    price: 34250,
+    mrp: 40990,
+    discountPercent: 16,
+    savings: 6740,
+    isOffer: false,
+    finish: 'Stainless Steel / Inox',
+    controls: 'Electronic Push Button, LED Display',
+    loadFunction: 'Half Load Option',
+    powerMemory: true,
+    drying: 'Natural Drying',
+    dimensions: '845 × 598 × 600 mm',
+    warranty: '2 Years Comprehensive • 5 Years on Cavity',
+    imageUrl: 'https://faberindia.com/cdn/shop/files/WhatsApp_Image_2024-11-28_at_12.44.59_56b1d62d.jpg?v=1732799100&width=1500',
+    productPageUrl: 'https://faberindia.com/collections/dishwashers',
+    description: 'Medium 12-place setting dishwasher in brushed Inox, suited for nuclear families with Half Load flexibility.',
+    highlight: '12 Place Medium Capacity • Stainless Steel • Half Load',
+    keyFeatures: ['12 Place Settings', 'Inox Stainless Steel', 'Half Load Mode', 'Power Memory', '6 Programs']
+  },
+
+  FFSD_6PR_12S_NEO_BK: {
+    id: 'ffsd-6pr-12s-neo-bk',
+    enumKey: 'FFSD_6PR_12S_NEO_BK',
+    sequenceOrder: 11,
+    name: 'Faber FFSD 6PR 12S Neo Black',
+    modelName: 'FFSD 6PR 12S NEO BK',
+    sku: '117.0626.341',
+    category: 'dishwasher',
+    categoryLabel: 'Freestanding Dishwasher',
+    type: 'Freestanding',
+    capacity: '12 Place Settings',
+    washProgrammesCount: 6,
+    programmes: '6 Washing Programmes',
+    price: 29999,
+    mrp: 37490,
+    discountPercent: 20,
+    savings: 7491,
+    isOffer: true,
+    finish: 'Neo Black',
+    controls: 'Electronic Push Button, LED Display',
+    loadFunction: 'Half Load Option',
+    powerMemory: true,
+    drying: 'Natural Drying',
+    dimensions: '845 × 598 × 600 mm',
+    warranty: '2 Years Comprehensive • 5 Years on Cavity',
+    imageUrl: 'https://faberindia.com/cdn/shop/files/0P5A9911.jpg?v=1744617554&width=2000',
+    productPageUrl: 'https://faberindia.com/collections/dishwashers',
+    description: 'Great value 12 place dishwasher in Neo Black under ₹30,000 (₹29,999) with 6 wash programs and half load mode.',
+    highlight: 'Under ₹30,000 (₹29,999) • 12 Place Settings • Neo Black',
+    keyFeatures: ['Under ₹30k (₹29,999)', '12 Place Settings', 'Neo Black Finish', 'Half Load Option', '5-Yr Cavity Warranty']
+  },
+
+  FFSD_6PR_8S_ACE_INOX: {
+    id: 'ffsd-6pr-8s-ace-inox',
+    enumKey: 'FFSD_6PR_8S_ACE_INOX',
+    sequenceOrder: 12,
+    name: 'Faber FFSD 6PR 8S Ace Inox',
+    modelName: 'FFSD 6PR 8S ACE INOX',
+    sku: '117.0631.594',
+    category: 'dishwasher',
+    categoryLabel: 'Tabletop Compact Dishwasher',
+    type: 'Tabletop / Compact',
+    capacity: '8 Place Settings',
+    washProgrammesCount: 6,
+    programmes: '6 Washing Programmes',
+    price: 28150,
+    mrp: 31990,
+    discountPercent: 12,
+    savings: 3840,
+    isOffer: false,
+    finish: 'Inox Finish',
+    controls: 'Electronic Push Button, LED Display',
+    loadFunction: 'Half Load Option',
+    powerMemory: true,
+    drying: 'Natural Drying',
+    dimensions: '595 × 550 × 500 mm',
+    cutoutDimensions: '662 × 605 × 555 mm',
+    warranty: '2 Years Comprehensive • 5 Years on Cavity',
+    imageUrl: 'https://faberindia.com/cdn/shop/files/WhatsApp_Image_2024-11-28_at_12.44.59_56b1d62d.jpg?v=1732799100&width=1500',
+    productPageUrl: 'https://faberindia.com/collections/dishwashers',
+    description: 'Compact 8-place tabletop dishwasher in Inox, designed for small kitchens and countertops with 6 wash programs.',
+    highlight: 'Tabletop Compact • 8 Place Settings • Fits on Countertop',
+    keyFeatures: ['Tabletop Compact Size', '8 Place Settings', 'Inox Finish', 'Half Load Option', 'Power Memory']
+  },
+
+  FFSD_6PR_8S_ACE_BLACK: {
+    id: 'ffsd-6pr-8s-ace-black',
+    enumKey: 'FFSD_6PR_8S_ACE_BLACK',
+    sequenceOrder: 13,
+    name: 'Faber FFSD 6PR 8S Ace Black',
+    modelName: 'FFSD 6PR 8S ACE BLACK',
+    sku: '117.0631.600',
+    category: 'dishwasher',
+    categoryLabel: 'Tabletop Compact Dishwasher',
+    type: 'Tabletop / Compact',
+    capacity: '8 Place Settings',
+    washProgrammesCount: 6,
+    programmes: '6 Washing Programmes',
+    price: 26750,
+    mrp: 30490,
+    discountPercent: 12,
+    savings: 3740,
+    isOffer: false,
+    finish: 'Black Finish',
+    controls: 'Electronic Push Button, LED Display',
+    loadFunction: 'Half Load Option',
+    powerMemory: true,
+    drying: 'Natural Drying',
+    dimensions: '595 × 550 × 500 mm',
+    warranty: '2 Years Comprehensive • 5 Years on Cavity',
+    imageUrl: 'https://faberindia.com/cdn/shop/files/0P5A9911.jpg?v=1744617554&width=2000',
+    productPageUrl: 'https://faberindia.com/collections/dishwashers',
+    description: 'Most affordable Faber compact dishwasher (₹26,750) with 8 place capacity, modern black finish, and countertop placement.',
+    highlight: 'Lowest Price (₹26,750) • 8 Place Compact • Black Tabletop',
+    keyFeatures: ['Lowest Price Faber Dishwasher (₹26,750)', '8 Place Compact Size', 'Black Modern Finish', 'Tabletop Friendly']
   }
 };
 
-/**
- * Fuzzy Product Resolver
- * Normalizes any text or model alias into one of the 4 demo products.
- *
- * @param {string} val - Raw input string (e.g. "chimney 1", "FBID", "curved")
- * @returns {Object|null} Matching demo product object or null
- */
-function resolveProduct(val) {
-  if (!val) return null;
-  // Convert to lowercase and strip all punctuation and whitespace
-  const str = String(val).toLowerCase().replace(/[^a-z0-9]/g, '');
+// Aliases for backwards compatibility
+FABER_PRODUCT_CATALOG.CHIMNEY_1 = FABER_PRODUCT_CATALOG.LIBRA_60;
+FABER_PRODUCT_CATALOG.CHIMNEY_2 = FABER_PRODUCT_CATALOG.LIBRA_75;
+FABER_PRODUCT_CATALOG.DISHWASHER_1 = FABER_PRODUCT_CATALOG.FBID_8PR_14S;
+FABER_PRODUCT_CATALOG.DISHWASHER_2 = FABER_PRODUCT_CATALOG.FSID_8PR_14S;
+FABER_PRODUCT_CATALOG.chimney1 = FABER_PRODUCT_CATALOG.LIBRA_60;
+FABER_PRODUCT_CATALOG.chimney2 = FABER_PRODUCT_CATALOG.LIBRA_75;
+FABER_PRODUCT_CATALOG.dishwasher1 = FABER_PRODUCT_CATALOG.FBID_8PR_14S;
+FABER_PRODUCT_CATALOG.dishwasher2 = FABER_PRODUCT_CATALOG.FSID_8PR_14S;
 
-  if (str.includes('chimney1') || str.includes('curved') || str.includes('zenith')) {
-    return DEMO_PRODUCTS.chimney1;
+// Predefined Guides
+const DISHWASHER_LOADING_GUIDE = {
+  title: 'How to Load a Faber Dishwasher for Indian Cookware',
+  subtitle: 'Official loading techniques for maximum cleaning performance and safety',
+  imageUrl: 'https://faberindia.com/cdn/shop/files/0P5A9911.jpg?v=1744617554&width=2000',
+  sections: [
+    {
+      rackName: 'Lower Basket (Heaviest Cookware)',
+      icon: '🍳',
+      items: 'Pressure cookers, Kadai, Patila, Frying pans, Large dinner plates',
+      rules: [
+        'Place heavy pots and kadai facing downwards at a 45° angle so water sprays inside and drains freely.',
+        'Never nest/stack utensils inside one another; each vessel needs direct spray access.',
+        'Position large thalis and dinner plates vertically between the foldable rack tines.'
+      ]
+    },
+    {
+      rackName: 'Upper Basket (Glasses, Cups & Katoris)',
+      icon: '☕',
+      items: 'Chai cups, glassware, serving bowls, steel katoris, small plates',
+      rules: [
+        'Tilt glasses and chai mugs upside-down at an angle to prevent water pooling on curved bottoms.',
+        'Secure light plastic or steel bowls firmly between tines so water pressure does not flip them.',
+        'Adjust the upper basket height if tall pots are loaded in the bottom basket.'
+      ]
+    },
+    {
+      rackName: 'Cutlery Tray / Basket',
+      icon: '🍴',
+      items: 'Spoons, forks, butter knives, small whisks, and peelers',
+      rules: [
+        'Alternate spoon handles up and down so spoons do not nest/stick together during the wash.',
+        'Place knife blades pointing downwards for safe unloading.',
+        'Long ladles and tongs should be laid flat on the upper basket shelf.'
+      ]
+    },
+    {
+      rackName: 'Critical Checks Before Pressing Start',
+      icon: '⚠️',
+      items: 'Spray arms, detergent flap, food scraping',
+      rules: [
+        'Spin spray arms by hand: Ensure tall spatulas or deep pots do not block either arm from rotating freely.',
+        'Clear the detergent dispenser: Ensure plates do not block the tablet door from springing open.',
+        'Scrape, do not pre-wash: Scrape off large bones, lemon rinds, and solid food into the dustbin.'
+      ]
+    }
+  ]
+};
+
+const USER_MANUAL_GUIDE = {
+  title: 'Faber User Manual & Appliance Maintenance Guide',
+  subtitle: 'Official procedures for Chimney Heat Auto-Clean and Dishwasher Care',
+  chimneyAutoClean: {
+    title: 'Chimney Heat Auto-Clean Procedure',
+    cycleDuration: '10 Minutes Total (9 min Heating + 1 min Fan)',
+    reminderHours: '30 Operating Hours',
+    steps: [
+      { step: 1, name: 'Press Auto-Clean Button', desc: 'Touch the Auto-Clean symbol or trigger the dedicated motion gesture.' },
+      { step: 2, name: 'Heating Phase (9 Minutes)', desc: 'Internal heating coils warm up the motor chamber to liquefy thick oil and grease deposits.' },
+      { step: 3, name: 'Fan Drain Phase (1 Minute)', desc: 'The high-speed blower fan rotates to channel the liquefied oil into the metal oil collector.' },
+      { step: 4, name: 'Oil Collector Maintenance', desc: 'Slide out the stainless steel/metal oil tray, empty accumulated oil, wash with warm soapy water, and replace.' }
+    ],
+    precautions: [
+      'Clean oil collector periodically to prevent overflow.',
+      'Always disconnect power before surface wiping.',
+      'Do not allow water to enter the motor or touch control circuit.'
+    ]
+  },
+  dishwasherCare: {
+    title: 'Dishwasher Care & Chemical Guide',
+    points: [
+      { name: 'Dishwasher Salt', desc: 'Softens hard Indian water. Refill when the salt indicator illuminates to prevent white limescale on steel.' },
+      { name: 'Rinse Aid', desc: 'Accelerates spotless drying and prevents cloudy water marks on glasses and cutlery.' },
+      { name: 'Triple-Stage Filter', desc: 'Unscrew cylindrical filter at the tub bottom weekly, rinse under running tap water, and lock back in place.' },
+      { name: 'Detergent Type', desc: 'Use ONLY automatic dishwasher tablets, powder, or gel. Never use liquid Vim/Pril which causes overflow foaming.' }
+    ]
   }
-  if (str.includes('chimney2') || str.includes('angular') || str.includes('crest')) {
-    return DEMO_PRODUCTS.chimney2;
+};
+
+function getAllProductsList() {
+  return [
+    FABER_PRODUCT_CATALOG.LIBRA_60,
+    FABER_PRODUCT_CATALOG.LIBRA_75,
+    FABER_PRODUCT_CATALOG.LIBRA_90,
+    FABER_PRODUCT_CATALOG.FBID_8PR_14S,
+    FABER_PRODUCT_CATALOG.FSID_8PR_14S,
+    FABER_PRODUCT_CATALOG.FFSD_8PR_14S,
+    FABER_PRODUCT_CATALOG.FFSD_8PR_14S_BK,
+    FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK,
+    FABER_PRODUCT_CATALOG.FFSD_6PR_14S_BK_DIGITAL,
+    FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_INOX,
+    FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK,
+    FABER_PRODUCT_CATALOG.FFSD_6PR_8S_ACE_INOX,
+    FABER_PRODUCT_CATALOG.FFSD_6PR_8S_ACE_BLACK
+  ];
+}
+
+function normalizeKey(str) {
+  return String(str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function findProductByQuery(query) {
+  if (!query) return null;
+  const q = normalizeKey(query);
+  const all = getAllProductsList();
+
+  for (const p of all) {
+    if (normalizeKey(p.enumKey) === q || normalizeKey(p.id) === q || normalizeKey(p.sku) === q) {
+      return p;
+    }
   }
-  if (str.includes('dishwasher1') || str.includes('fbid')) {
-    return DEMO_PRODUCTS.dishwasher1;
-  }
-  if (str.includes('dishwasher2') || str.includes('fsid')) {
-    return DEMO_PRODUCTS.dishwasher2;
+
+  if (q.includes('libra60') || (q.includes('libra') && q.includes('60')) || q.includes('chimney1') || (q.includes('chimney') && q.includes('60'))) return FABER_PRODUCT_CATALOG.LIBRA_60;
+  if (q.includes('libra75') || (q.includes('libra') && q.includes('75')) || q.includes('chimney2') || (q.includes('chimney') && q.includes('75'))) return FABER_PRODUCT_CATALOG.LIBRA_75;
+  if (q.includes('libra90') || (q.includes('libra') && q.includes('90')) || (q.includes('chimney') && q.includes('90'))) return FABER_PRODUCT_CATALOG.LIBRA_90;
+  if (q.includes('fbid') || (q.includes('builtin') && q.includes('dishwasher')) || q.includes('dishwasher1')) return FABER_PRODUCT_CATALOG.FBID_8PR_14S;
+  if (q.includes('fsid') || (q.includes('semi') && q.includes('integrated')) || q.includes('dishwasher2')) return FABER_PRODUCT_CATALOG.FSID_8PR_14S;
+  if (q.includes('ffsd8pr14sbk') || (q.includes('8pr') && q.includes('black') && q.includes('14s'))) return FABER_PRODUCT_CATALOG.FFSD_8PR_14S_BK;
+  if (q.includes('ffsd8pr14s') || (q.includes('8pr') && q.includes('inox') && q.includes('14s'))) return FABER_PRODUCT_CATALOG.FFSD_8PR_14S;
+  if (q.includes('ffsd7pr14s') || (q.includes('7pr') && q.includes('14s'))) return FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK;
+  if (q.includes('digital') || (q.includes('6pr') && q.includes('14s') && q.includes('digital'))) return FABER_PRODUCT_CATALOG.FFSD_6PR_14S_BK_DIGITAL;
+  if (q.includes('12sneo') && q.includes('bk')) return FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK;
+  if (q.includes('12sneo') || (q.includes('12s') && q.includes('inox'))) return FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_INOX;
+  if ((q.includes('8s') || q.includes('ace')) && q.includes('black')) return FABER_PRODUCT_CATALOG.FFSD_6PR_8S_ACE_BLACK;
+  if (q.includes('8s') || q.includes('ace')) return FABER_PRODUCT_CATALOG.FFSD_6PR_8S_ACE_INOX;
+
+  for (const p of all) {
+    if (normalizeKey(p.name).includes(q) || normalizeKey(p.modelName).includes(q)) return p;
   }
   return null;
 }
 
+function resolveToolRequest(rawBody = {}, rawQuery = {}) {
+  const merged = { ...rawQuery, ...rawBody };
+  const allProducts = getAllProductsList();
+
+  let action = String(merged.action || '').trim().toLowerCase();
+  let category = String(merged.category || '').trim().toLowerCase();
+  let maxPrice = Number(merged.maxPrice || merged.max_price || 0);
+
+  const rawText = String(merged.query || merged.product || merged.products || merged.product_name || '').trim();
+  const lowerText = rawText.toLowerCase();
+
+  // Natural language intent detection
+  if (!action || action === 'show_products' || action === 'display_images') {
+    if (lowerText.includes('load') || lowerText.includes('loading') || lowerText.includes('how to load') || lowerText.includes('bartan')) {
+      action = 'dishwasher_loading';
+    } else if (lowerText.includes('manual') || lowerText.includes('auto clean') || lowerText.includes('autoclean') || lowerText.includes('maintenance')) {
+      action = 'show_manual';
+    } else if (lowerText.includes('offer') || lowerText.includes('discount') || lowerText.includes('deal') || lowerText.includes('savings')) {
+      action = 'show_offers';
+    } else if (lowerText.includes('compare') || lowerText.includes('difference') || lowerText.includes('vs')) {
+      action = 'compare_products';
+    } else if (lowerText.includes('under') || lowerText.includes('below') || lowerText.includes('less than') || /\d{4,6}/.test(lowerText)) {
+      const match = lowerText.match(/(\d{4,6})/);
+      if (match) {
+        maxPrice = Number(match[1]);
+        action = 'filter_by_price';
+        if (lowerText.includes('chimney') || lowerText.includes('hood')) category = 'chimney';
+        else if (lowerText.includes('dish')) category = 'dishwasher';
+      }
+    }
+  }
+
+  // Component 1: Dishwasher Loading Guide
+  if (action === 'dishwasher_loading' || action === 'loading_guide') {
+    return {
+      componentType: 'dishwasher-loading',
+      title: 'How to Load a Faber Dishwasher',
+      subtitle: 'Proper utensil arrangement for optimal cleaning and drainage',
+      guideData: DISHWASHER_LOADING_GUIDE,
+      products: [FABER_PRODUCT_CATALOG.FBID_8PR_14S, FABER_PRODUCT_CATALOG.FSID_8PR_14S],
+      images: [{
+        name: 'Dishwasher Loading Diagram',
+        title: 'Faber Dishwasher Loading Architecture',
+        imageUrl: DISHWASHER_LOADING_GUIDE.imageUrl,
+        description: 'Upper basket for cups/glasses, lower basket for kadai/plates.'
+      }]
+    };
+  }
+
+  // Component 2: User Manual / Auto-Clean Guide
+  if (action === 'show_manual' || action === 'manual' || action === 'auto_clean') {
+    return {
+      componentType: 'manual',
+      title: 'Faber User Manual & Appliance Maintenance',
+      subtitle: 'Step-by-step Auto-Clean and chemical maintenance protocols',
+      manualData: USER_MANUAL_GUIDE,
+      products: [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.FBID_8PR_14S],
+      images: [{
+        name: 'Chimney Auto-Clean Procedure',
+        title: '9-Min Heating + 1-Min Fan Oil Collector Guide',
+        imageUrl: FABER_PRODUCT_CATALOG.LIBRA_60.imageUrl,
+        description: 'Thermal heat auto-clean separates oil into the stainless steel collector.'
+      }]
+    };
+  }
+
+  // Component 3: Offers & Promotional Deals
+  if (action === 'show_offers' || action === 'offers') {
+    let offerProducts = allProducts.filter((p) => p.isOffer);
+    if (category === 'chimney') offerProducts = offerProducts.filter((p) => p.category === 'chimney');
+    else if (category === 'dishwasher') offerProducts = offerProducts.filter((p) => p.category === 'dishwasher');
+    offerProducts.sort((a, b) => b.savings - a.savings);
+
+    return {
+      componentType: 'offers',
+      title: 'Faber Special Offers & Promotional Deals',
+      subtitle: `Showing ${offerProducts.length} models with special recorded discounts up to 34% off`,
+      products: offerProducts,
+      images: offerProducts.map((p) => ({
+        name: p.name,
+        title: `${p.name} (Save ₹${p.savings.toLocaleString('en-IN')})`,
+        imageUrl: p.imageUrl,
+        description: `Price: ₹${p.price.toLocaleString('en-IN')} (MRP: ₹${p.mrp.toLocaleString('en-IN')} • ${p.discountPercent}% off)`
+      }))
+    };
+  }
+
+  // Component 4: Price Filter Search
+  if (action === 'filter_by_price' || maxPrice > 0) {
+    let filtered = allProducts;
+    if (category === 'chimney' || lowerText.includes('chimney')) {
+      filtered = filtered.filter((p) => p.category === 'chimney');
+    } else if (category === 'dishwasher' || lowerText.includes('dish')) {
+      filtered = filtered.filter((p) => p.category === 'dishwasher');
+    }
+    if (maxPrice > 0) {
+      filtered = filtered.filter((p) => p.price <= maxPrice);
+    }
+    filtered.sort((a, b) => a.price - b.price);
+
+    const catLabel = category === 'chimney' ? 'Chimneys' : category === 'dishwasher' ? 'Dishwashers' : 'Appliances';
+    const limitLabel = maxPrice > 0 ? `under ₹${maxPrice.toLocaleString('en-IN')}` : 'by Price';
+
+    return {
+      componentType: 'products',
+      title: `Faber ${catLabel} ${limitLabel}`,
+      subtitle: `Found ${filtered.length} model${filtered.length === 1 ? '' : 's'} matching budget`,
+      products: filtered,
+      images: filtered.map((p) => ({
+        name: p.name,
+        title: `${p.name} — ₹${p.price.toLocaleString('en-IN')}`,
+        imageUrl: p.imageUrl,
+        description: p.description
+      }))
+    };
+  }
+
+  // Component 5: Side-by-Side Comparison
+  if (action === 'compare_products' || action === 'comparison') {
+    let candidateList = [];
+    let rawList = merged.products || merged.product_enums || merged.product;
+    if (typeof rawList === 'string') {
+      try {
+        const parsed = JSON.parse(rawList);
+        if (Array.isArray(parsed)) rawList = parsed;
+        else rawList = rawList.split(',').map((s) => s.trim());
+      } catch {
+        rawList = rawList.includes(',') ? rawList.split(',').map((s) => s.trim()) : [rawList];
+      }
+    }
+
+    if (Array.isArray(rawList)) {
+      for (const item of rawList) {
+        const matched = findProductByQuery(item);
+        if (matched && !candidateList.some((p) => p.id === matched.id)) {
+          candidateList.push(matched);
+        }
+      }
+    }
+
+    if (candidateList.length < 2) {
+      if (lowerText.includes('chimney') || lowerText.includes('libra')) {
+        candidateList = [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_75, FABER_PRODUCT_CATALOG.LIBRA_90];
+      } else {
+        candidateList = [FABER_PRODUCT_CATALOG.FBID_8PR_14S, FABER_PRODUCT_CATALOG.FSID_8PR_14S];
+      }
+    }
+
+    return {
+      componentType: 'comparison',
+      title: `Appliance Comparison (${candidateList.length} Models)`,
+      subtitle: candidateList.map((p) => p.name).join(' vs '),
+      products: candidateList,
+      images: candidateList.map((p) => ({
+        name: p.name,
+        title: p.name,
+        imageUrl: p.imageUrl,
+        description: `Price: ₹${p.price.toLocaleString('en-IN')} • ${p.category}`
+      }))
+    };
+  }
+
+  // Component 6: Standard Product Display
+  let itemsToDisplay = [];
+  let rawList = merged.products || merged.product_enums || merged.product || merged.product_name;
+
+  if (typeof rawList === 'string') {
+    try {
+      const parsed = JSON.parse(rawList);
+      if (Array.isArray(parsed)) rawList = parsed;
+      else rawList = rawList.includes(',') ? rawList.split(',').map((s) => s.trim()) : [rawList];
+    } catch {
+      rawList = rawList.includes(',') ? rawList.split(',').map((s) => s.trim()) : [rawList];
+    }
+  }
+
+  if (Array.isArray(rawList)) {
+    for (const item of rawList) {
+      const matched = findProductByQuery(item);
+      if (matched && !itemsToDisplay.some((p) => p.id === matched.id)) {
+        itemsToDisplay.push(matched);
+      }
+    }
+  } else if (rawList) {
+    const matched = findProductByQuery(rawList);
+    if (matched) itemsToDisplay.push(matched);
+  }
+
+  if (itemsToDisplay.length === 0 && (category === 'chimney' || category === 'dishwasher')) {
+    itemsToDisplay = allProducts.filter((p) => p.category === category);
+  }
+
+  if (itemsToDisplay.length === 0) {
+    itemsToDisplay = allProducts;
+  }
+
+  return {
+    componentType: 'products',
+    title: itemsToDisplay.length === 1 ? itemsToDisplay[0].name : `Faber Appliances (${itemsToDisplay.length})`,
+    subtitle: itemsToDisplay.length === 1 ? itemsToDisplay[0].type : `Displaying ${itemsToDisplay.length} models`,
+    products: itemsToDisplay,
+    images: itemsToDisplay.map((p) => ({
+      name: p.name,
+      title: p.name,
+      imageUrl: p.imageUrl,
+      description: p.description
+    }))
+  };
+}
+
 // ----------------------------------------------------------------------------
 // 3. REAL-TIME STREAMING CONNECTIONS (Server-Sent Events)
-// Maps sessionId -> Express response stream
 // ----------------------------------------------------------------------------
 const activeClients = new Map();
 
-/**
- * GET /api/stream/:sessionId
- * Subscribed by frontend index.html via EventSource to receive image links live.
- */
 app.get('/api/stream/:sessionId', (req, res) => {
   const { sessionId } = req.params;
 
-  // Set HTTP headers required for Server-Sent Events (SSE)
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
   res.flushHeaders();
 
-  // Register client connection under its sessionId
   activeClients.set(sessionId, res);
   console.log(`[SSE Connected] Session: ${sessionId}`);
 
-  // Send periodic keepalive ping every 25 seconds to keep connection open through firewalls
   const ping = setInterval(() => {
     res.write(': keepalive\n\n');
   }, 25000);
 
-  // Clean up when client closes browser tab or navigates away
   req.on('close', () => {
     clearInterval(ping);
     activeClients.delete(sessionId);
@@ -198,81 +908,36 @@ app.get('/api/stream/:sessionId', (req, res) => {
 
 /**
  * Core Tool Request Handler
- * Handles both POST and GET tool calls from Oration AI or test buttons.
- *
- * Flow:
- * 1. Extracts sessionId (from query string or body).
- * 2. Parses inputs (direct imageUrl, array of products, comma string, or aliases).
- * 3. Resolves to the 4 demo appliances.
- * 4. Pushes image links to the connected browser session via SSE.
- * 5. Returns a confirmation JSON response to the caller.
  */
 function handleToolCall(req, res) {
-  // Extract session ID
   const sessionId = req.query.sessionId || req.body.sessionId || 'default';
   const body = req.body || {};
 
   console.log(`[Tool Hit] Session: ${sessionId}`, body);
 
-  let itemsToDisplay = [];
+  const resolved = resolveToolRequest(body, req.query);
+  const products = resolved.products || [];
 
-  // Case 1: Direct raw image URL provided in body
-  if (body.imageUrl || body.link) {
-    const directUrl = body.imageUrl || body.link;
-    itemsToDisplay.push({
-      name: body.product || body.title || 'Product Image',
-      title: body.title || 'Appliance Display',
-      imageUrl: directUrl
-    });
-  }
-
-  // Case 2: Array or string of products / product_enums / aliases
-  let list = body.products || body.product_enums || body.product || body.product_name || req.query.product;
-
-  if (typeof list === 'string') {
-    try {
-      // Handle stringified JSON array: '["chimney 1", "chimney 2"]'
-      const parsed = JSON.parse(list);
-      if (Array.isArray(parsed)) list = parsed;
-      else list = [list];
-    } catch {
-      // Handle comma-separated string: "dishwasher 1, chimney 2"
-      list = list.includes(',') ? list.split(',').map((s) => s.trim()) : [list];
-    }
-  }
-
-  if (Array.isArray(list)) {
-    for (const item of list) {
-      const matched = resolveProduct(item);
-      // Deduplicate items
-      if (matched && !itemsToDisplay.some((p) => p.id === matched.id)) {
-        itemsToDisplay.push(matched);
-      }
-    }
-  }
-
-  // Fallback: If empty, show all 4 demo appliances safely
-  if (itemsToDisplay.length === 0) {
-    itemsToDisplay = Object.values(DEMO_PRODUCTS);
-  }
-
-  // Visual payload formatted for the side HTML widget
   const widgetPayload = {
-    action: 'DISPLAY_IMAGES',
+    type: 'PRODUCT_UPDATE',
+    action: 'DISPLAY_COMPONENT',
+    componentType: resolved.componentType || 'products',
+    title: resolved.title,
+    subtitle: resolved.subtitle,
+    sessionId,
     timestamp: new Date().toISOString(),
-    images: itemsToDisplay.map((p) => ({
+    products: products,
+    images: resolved.images || products.map((p) => ({
       name: p.name,
-      title: p.title,
-      imageUrl: p.imageUrl
+      title: p.title || p.name,
+      imageUrl: p.imageUrl,
+      description: p.description
     })),
-    products: itemsToDisplay.map((p) => ({
-      name: p.name,
-      title: p.title,
-      imageUrl: p.imageUrl
-    }))
+    guideData: resolved.guideData || null,
+    manualData: resolved.manualData || null
   };
 
-  // SEND IMAGE LINKS TO THE SIDE HTML WIDGET VIA SSE
+  // Broadcast to this sessionId
   const clientRes = activeClients.get(sessionId);
   if (clientRes) {
     clientRes.write(`data: ${JSON.stringify(widgetPayload)}\n\n`);
@@ -285,18 +950,18 @@ function handleToolCall(req, res) {
     }
   });
 
-  // Return success response to the Oration Agent
   return res.status(200).json({
     status: 'success',
-    message: `Sent ${itemsToDisplay.length} image link(s) to the side HTML widget.`,
-    displayedImages: itemsToDisplay.map((p) => ({
+    message: `Sent visual component (${resolved.componentType}): ${resolved.title}`,
+    componentType: resolved.componentType,
+    title: resolved.title,
+    displayedCount: products.length,
+    displayedProducts: products.map((p) => p.name),
+    displayedImages: (resolved.images || []).map((p) => ({
       name: p.name,
       link: p.imageUrl
     })),
-    products: itemsToDisplay.map((p) => ({
-      name: p.name,
-      imageUrl: p.imageUrl
-    }))
+    sessionId
   });
 }
 
@@ -321,7 +986,7 @@ app.get('/api/config', (req, res) => {
 
 // Full catalog lookup endpoint
 app.get('/api/products', (req, res) => {
-  res.json({ products: Object.values(DEMO_PRODUCTS) });
+  res.json({ products: getAllProductsList() });
 });
 
 // Health check endpoint

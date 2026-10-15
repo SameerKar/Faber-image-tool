@@ -16,7 +16,7 @@
  */
 
 import { SessionRoom } from './sessionRoom.js';
-import { resolveProductsByEnums, getAllProducts } from './catalog.js';
+import { resolveToolRequest, getAllProducts } from './catalog.js';
 
 // Export Durable Object class to Cloudflare runtime
 export { SessionRoom };
@@ -233,69 +233,31 @@ export default {
         const sessionId = rawSessionId.trim();
         const displayModeRaw = body.display_mode || url.searchParams.get('display_mode');
 
-        // Resolve products
-        let products = [];
-        if (body.imageUrl || body.link) {
-          // Direct raw image URL passthrough
-          const directUrl = body.imageUrl || body.link;
-          products = [
-            {
-              enumKey: 'DIRECT_IMAGE',
-              sequenceOrder: 1,
-              name: body.product || body.title || 'Product Image',
-              category: 'Featured Display',
-              imageUrl: directUrl,
-              description: body.description || body.title || 'Appliance Display'
-            }
-          ];
-        } else {
-          // Fuzzy match inputs against the 4 demo products
-          const rawInput =
-            body.products ??
-            body.product_enums ??
-            body.product ??
-            body.product_name ??
-            url.searchParams.get('product') ??
-            url.searchParams.get('products') ??
-            url.searchParams.get('product_enums');
+        // Extract query parameters as object
+        const queryParams = Object.fromEntries(url.searchParams.entries());
 
-          products = resolveProductsByEnums(rawInput);
-        }
-
-        const displayMode =
-          displayModeRaw === 'SINGLE' || displayModeRaw === 'COMPARISON' || displayModeRaw === 'SEQUENCE'
-            ? displayModeRaw
-            : products.length > 1
-            ? 'SEQUENCE'
-            : 'SINGLE';
+        // Resolve rich component and products from catalog engine
+        const resolved = resolveToolRequest(body, queryParams);
+        const products = resolved.products || [];
 
         // Structured payload delivered to the side HTML widget
         const visualPayload = {
           type: 'PRODUCT_UPDATE',
-          action: 'DISPLAY_IMAGES',
-          displayMode,
+          action: 'DISPLAY_COMPONENT',
+          componentType: resolved.componentType || 'products',
+          title: resolved.title,
+          subtitle: resolved.subtitle,
           sessionId,
           timestamp: new Date().toISOString(),
-          images: products.map((p) => ({
+          products: products,
+          images: resolved.images || products.map((p) => ({
             name: p.name,
             title: p.title || p.name,
             imageUrl: p.imageUrl,
             description: p.description
           })),
-          products: products.map((p) => ({
-            enumKey: p.enumKey || p.name,
-            sequenceOrder: p.sequenceOrder || 1,
-            name: p.name,
-            category: p.category || 'Appliance',
-            imageUrl: p.imageUrl,
-            dimensions: p.dimensions,
-            suctionPower: p.suctionPower,
-            finish: p.finish,
-            controls: p.controls,
-            highlight: p.highlight,
-            description: p.description,
-            keyFeatures: p.keyFeatures
-          }))
+          guideData: resolved.guideData || null,
+          manualData: resolved.manualData || null
         };
 
         // 1. Always broadcast to the universal 'default' room so all visualizer screens update immediately
@@ -322,19 +284,15 @@ export default {
         return new Response(
           JSON.stringify({
             status: 'success',
-            message: `Sent ${products.length} image link(s) to the side HTML widget.`,
+            message: `Sent visual component (${resolved.componentType}) to the side HTML widget: ${resolved.title}`,
+            componentType: resolved.componentType,
+            title: resolved.title,
             displayedCount: products.length,
-            displayedImages: products.map((p) => ({
+            displayedProducts: products.map((p) => p.name),
+            displayedImages: (resolved.images || []).map((p) => ({
               name: p.name,
               link: p.imageUrl
             })),
-            products: products.map((p) => ({
-              name: p.name,
-              imageUrl: p.imageUrl
-            })),
-            displayedEnums: products.map((p) => p.enumKey || p.name),
-            sequence: products.map((p, idx) => `#${p.sequenceOrder || idx + 1}: ${p.name}`),
-            displayMode,
             sessionId
           }),
           {
