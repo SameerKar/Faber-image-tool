@@ -675,29 +675,78 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
 
   let action = String(merged.action || '').trim().toLowerCase();
   let category = String(merged.category || '').trim().toLowerCase();
-  let maxPrice = Number(merged.maxPrice || merged.max_price || 0);
+  let maxPrice = Number(merged.max_price || merged.maxPrice || merged.budget || 0);
 
   const rawText = String(merged.query || merged.product || merged.products || merged.product_name || '').trim();
   const lowerText = rawText.toLowerCase();
 
-  // Natural language intent detection
-  if (!action || action === 'show_products' || action === 'display_images') {
-    if (lowerText.includes('load') || lowerText.includes('loading') || lowerText.includes('how to load') || lowerText.includes('bartan')) {
+  // Normalize Category & Detect Combined Categories
+  if (
+    category === 'both' ||
+    category === 'chimney_and_dishwasher' ||
+    (lowerText.includes('chimney') && (lowerText.includes('dish') || lowerText.includes('dishwasher'))) ||
+    (lowerText.includes('चिमनी') && (lowerText.includes('डिशवॉशर') || lowerText.includes('dish')))
+  ) {
+    category = 'both';
+  } else if (!category || category === 'all') {
+    if (lowerText.includes('chimney') || lowerText.includes('hood') || lowerText.includes('चिमनी')) {
+      category = 'chimney';
+    } else if (lowerText.includes('dish') || lowerText.includes('bartan') || lowerText.includes('डिशवॉशर')) {
+      category = 'dishwasher';
+    }
+  }
+
+  // Auto-Detect Intent from Natural Voice Query if action is not explicitly set
+  if (!action || action === 'show_products' || action === 'display_images' || action === 'view') {
+    if (
+      lowerText.includes('load') ||
+      lowerText.includes('loading') ||
+      lowerText.includes('how to load') ||
+      lowerText.includes('utensil') ||
+      lowerText.includes('bartan')
+    ) {
       action = 'dishwasher_loading';
-    } else if (lowerText.includes('manual') || lowerText.includes('auto clean') || lowerText.includes('autoclean') || lowerText.includes('maintenance')) {
+    } else if (
+      lowerText.includes('manual') ||
+      lowerText.includes('auto clean') ||
+      lowerText.includes('autoclean') ||
+      lowerText.includes('maintenance') ||
+      lowerText.includes('clean procedure')
+    ) {
       action = 'show_manual';
-    } else if (lowerText.includes('offer') || lowerText.includes('discount') || lowerText.includes('deal') || lowerText.includes('savings')) {
+    } else if (
+      lowerText.includes('offer') ||
+      lowerText.includes('discount') ||
+      lowerText.includes('deal') ||
+      lowerText.includes('best price') ||
+      lowerText.includes('savings') ||
+      lowerText.includes('ऑफर')
+    ) {
       action = 'show_offers';
-    } else if (lowerText.includes('compare') || lowerText.includes('difference') || lowerText.includes('vs')) {
+    } else if (
+      category === 'both' ||
+      lowerText.includes('compare') ||
+      lowerText.includes('difference') ||
+      lowerText.includes('vs') ||
+      lowerText.includes('comparison') ||
+      lowerText.includes('डिफरेंस') ||
+      lowerText.includes('तुलना')
+    ) {
       action = 'compare_products';
-    } else if (lowerText.includes('under') || lowerText.includes('below') || lowerText.includes('less than') || /\d{4,6}/.test(lowerText)) {
-      const match = lowerText.match(/(\d{4,6})/);
-      if (match) {
-        maxPrice = Number(match[1]);
-        action = 'filter_by_price';
-        if (lowerText.includes('chimney') || lowerText.includes('hood')) category = 'chimney';
-        else if (lowerText.includes('dish')) category = 'dishwasher';
+    } else if (
+      lowerText.includes('under') ||
+      lowerText.includes('below') ||
+      lowerText.includes('less than') ||
+      lowerText.includes('budget') ||
+      lowerText.includes('अंडर') ||
+      maxPrice > 0 ||
+      /\d{4,6}/.test(lowerText)
+    ) {
+      if (!maxPrice) {
+        const match = lowerText.match(/(\d{4,6})/);
+        if (match) maxPrice = Number(match[1]);
       }
+      action = 'filter_by_price';
     }
   }
 
@@ -736,16 +785,37 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   }
 
   // Component 3: Offers & Promotional Deals
-  if (action === 'show_offers' || action === 'offers') {
+  if (action === 'show_offers' || action === 'offers' || action === 'discounts') {
     let offerProducts = allProducts.filter((p) => p.isOffer);
-    if (category === 'chimney') offerProducts = offerProducts.filter((p) => p.category === 'chimney');
-    else if (category === 'dishwasher') offerProducts = offerProducts.filter((p) => p.category === 'dishwasher');
+
+    // Filter strictly by category if specified
+    if (category === 'chimney') {
+      offerProducts = offerProducts.filter((p) => p.category === 'chimney');
+    } else if (category === 'dishwasher') {
+      offerProducts = offerProducts.filter((p) => p.category === 'dishwasher');
+    }
+
+    // Filter by maxPrice if specified
+    if (maxPrice > 0) {
+      const budgetOffers = offerProducts.filter((p) => p.price <= maxPrice);
+      if (budgetOffers.length > 0) {
+        offerProducts = budgetOffers;
+      } else {
+        const anyBudget = allProducts.filter((p) => (category ? p.category === category : true) && p.price <= maxPrice);
+        if (anyBudget.length > 0) offerProducts = anyBudget;
+      }
+    }
+
+    // Sort by largest savings amount descending
     offerProducts.sort((a, b) => b.savings - a.savings);
+
+    const catLabel = category === 'chimney' ? 'Chimney' : category === 'dishwasher' ? 'Dishwasher' : 'Appliance';
+    const priceLabel = maxPrice > 0 ? ` under ₹${maxPrice.toLocaleString('en-IN')}` : '';
 
     return {
       componentType: 'offers',
-      title: 'Faber Special Offers & Promotional Deals',
-      subtitle: `Showing ${offerProducts.length} models with special recorded discounts up to 34% off`,
+      title: `Faber Special ${catLabel} Offers${priceLabel}`,
+      subtitle: `Showing ${offerProducts.length} model${offerProducts.length === 1 ? '' : 's'} with special recorded discounts up to 34% off`,
       products: offerProducts,
       images: offerProducts.map((p) => ({
         name: p.name,
@@ -757,19 +827,42 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   }
 
   // Component 4: Price Filter Search
-  if (action === 'filter_by_price' || maxPrice > 0) {
+  if (action === 'filter_by_price' || action === 'filter_price' || maxPrice > 0) {
     let filtered = allProducts;
-    if (category === 'chimney' || lowerText.includes('chimney')) {
+    if (category === 'chimney' || lowerText.includes('chimney') || lowerText.includes('चिमनी')) {
       filtered = filtered.filter((p) => p.category === 'chimney');
-    } else if (category === 'dishwasher' || lowerText.includes('dish')) {
+    } else if (category === 'dishwasher' || lowerText.includes('dish') || lowerText.includes('डिशवॉशर')) {
       filtered = filtered.filter((p) => p.category === 'dishwasher');
     }
+
     if (maxPrice > 0) {
       filtered = filtered.filter((p) => p.price <= maxPrice);
     }
+
     filtered.sort((a, b) => a.price - b.price);
 
     const catLabel = category === 'chimney' ? 'Chimneys' : category === 'dishwasher' ? 'Dishwashers' : 'Appliances';
+
+    // Graceful handling when no models match budget (e.g. chimneys under 20k)
+    if (filtered.length === 0 && maxPrice > 0) {
+      const closest = allProducts.filter((p) => (category ? p.category === category : true)).sort((a, b) => a.price - b.price);
+      const startingPrice = closest.length > 0 ? closest[0].price : 21990;
+      const suggestions = closest.slice(0, 2);
+
+      return {
+        componentType: 'products',
+        title: `Faber ${catLabel} Budget Options`,
+        subtitle: `No ${catLabel.toLowerCase()} found under ₹${maxPrice.toLocaleString('en-IN')}. Faber BLDC models start from ₹${startingPrice.toLocaleString('en-IN')}:`,
+        products: suggestions,
+        images: suggestions.map((p) => ({
+          name: p.name,
+          title: `${p.name} — Starting at ₹${p.price.toLocaleString('en-IN')}`,
+          imageUrl: p.imageUrl,
+          description: p.description
+        }))
+      };
+    }
+
     const limitLabel = maxPrice > 0 ? `under ₹${maxPrice.toLocaleString('en-IN')}` : 'by Price';
 
     return {
@@ -787,21 +880,50 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   }
 
   // Component 5: Side-by-Side Comparison
-  if (action === 'compare_products' || action === 'comparison') {
+  if (action === 'compare_products' || action === 'compare' || action === 'comparison') {
     let candidateList = [];
+
+    // Check for Cross-Category Comparison (Chimney vs Dishwasher)
+    if (category === 'both') {
+      candidateList = [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.FBID_8PR_14S];
+      return {
+        componentType: 'comparison',
+        title: 'Faber Chimney vs Dishwasher Comparison',
+        subtitle: 'Comparing Faber Libra BLDC Chimney (60 cm) vs Faber Built-in Dishwasher (14 Place)',
+        products: candidateList,
+        images: candidateList.map((p) => ({
+          name: p.name,
+          title: p.name,
+          imageUrl: p.imageUrl,
+          description: `Price: ₹${p.price.toLocaleString('en-IN')} • ${p.category}`
+        }))
+      };
+    }
+
+    // Parse products list (supports array, comma-separated, "and", "vs", "aur")
     let rawList = merged.products || merged.product_enums || merged.product;
     if (typeof rawList === 'string') {
       try {
         const parsed = JSON.parse(rawList);
         if (Array.isArray(parsed)) rawList = parsed;
-        else rawList = rawList.split(',').map((s) => s.trim());
+        else rawList = rawList.split(/,| and | aur | vs | vs\. | \/ /i).map((s) => s.trim()).filter(Boolean);
       } catch {
-        rawList = rawList.includes(',') ? rawList.split(',').map((s) => s.trim()) : [rawList];
+        rawList = rawList.split(/,| and | aur | vs | vs\. | \/ /i).map((s) => s.trim()).filter(Boolean);
       }
     }
 
     if (Array.isArray(rawList)) {
       for (const item of rawList) {
+        const lowerItem = item.toLowerCase();
+        if (lowerItem === 'chimney' || lowerItem === 'चिमनी') {
+          if (!candidateList.some((p) => p.category === 'chimney')) candidateList.push(FABER_PRODUCT_CATALOG.LIBRA_60);
+          continue;
+        }
+        if (lowerItem === 'dishwasher' || lowerItem === 'डिशवॉशर') {
+          if (!candidateList.some((p) => p.category === 'dishwasher')) candidateList.push(FABER_PRODUCT_CATALOG.FBID_8PR_14S);
+          continue;
+        }
+
         const matched = findProductByQuery(item);
         if (matched && !candidateList.some((p) => p.id === matched.id)) {
           candidateList.push(matched);
@@ -809,17 +931,32 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
       }
     }
 
-    if (candidateList.length < 2) {
-      if (lowerText.includes('chimney') || lowerText.includes('libra')) {
+    // If user provided exact products, we compare ONLY those products!
+    // Only apply fallbacks if candidateList has fewer than 2 items
+    if (candidateList.length === 1) {
+      const single = candidateList[0];
+      if (single.category === 'chimney') {
+        const sibling = single.id === 'libra-60' ? FABER_PRODUCT_CATALOG.LIBRA_90 : FABER_PRODUCT_CATALOG.LIBRA_60;
+        candidateList.push(sibling);
+      } else {
+        const sibling = single.id === 'fbid-8pr-14s' ? FABER_PRODUCT_CATALOG.FSID_8PR_14S : FABER_PRODUCT_CATALOG.FBID_8PR_14S;
+        candidateList.push(sibling);
+      }
+    } else if (candidateList.length < 1) {
+      if (lowerText.includes('chimney') || lowerText.includes('libra') || category === 'chimney') {
         candidateList = [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_75, FABER_PRODUCT_CATALOG.LIBRA_90];
       } else {
         candidateList = [FABER_PRODUCT_CATALOG.FBID_8PR_14S, FABER_PRODUCT_CATALOG.FSID_8PR_14S];
       }
     }
 
+    const titleText = candidateList.length === 2
+      ? `${candidateList[0].name} vs ${candidateList[1].name}`
+      : `Appliance Comparison (${candidateList.length} Models)`;
+
     return {
       componentType: 'comparison',
-      title: `Appliance Comparison (${candidateList.length} Models)`,
+      title: titleText,
       subtitle: candidateList.map((p) => p.name).join(' vs '),
       products: candidateList,
       images: candidateList.map((p) => ({
@@ -839,9 +976,9 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     try {
       const parsed = JSON.parse(rawList);
       if (Array.isArray(parsed)) rawList = parsed;
-      else rawList = rawList.includes(',') ? rawList.split(',').map((s) => s.trim()) : [rawList];
+      else rawList = rawList.split(/,| and | aur | vs | \/ /i).map((s) => s.trim()).filter(Boolean);
     } catch {
-      rawList = rawList.includes(',') ? rawList.split(',').map((s) => s.trim()) : [rawList];
+      rawList = rawList.split(/,| and | aur | vs | \/ /i).map((s) => s.trim()).filter(Boolean);
     }
   }
 
