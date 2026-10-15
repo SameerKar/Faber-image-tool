@@ -30,28 +30,34 @@ export const FABER_PRODUCT_CATALOG = {
     category: 'chimney',
     categoryLabel: 'Auto-Clean BLDC Chimney',
     type: 'Wall-Mounted Curved Glass Chimney',
-    width: '60 cm',
+    shape: 'Curved Glass',
+    colour: 'Black',
+    width: '60 cm (600 mm)',
     dimensions: '600 × 418 × 485 mm',
+    cooktopMatch: 'Suited for 60 cm Cooktops (2–4 Burners)',
     price: 21330,
     mrp: 32490,
     discountPercent: 34,
     savings: 11160,
     isOffer: true,
     suctionPower: '1500 m³/hr Airflow',
-    motor: 'BLDC (Energy-Saving Brushless Motor)',
-    filterDesign: 'Filterless Technology',
+    motor: '150 W BLDC Inverter Motor',
+    motorWattage: '150 W',
+    noiseLevel: '44–46 dB (Ultra-Quiet)',
+    speedLevels: '9 Speed Settings (BLDC Inverter Control)',
+    filterDesign: 'Filterless Technology (Easy Maintenance)',
     cleaningFunction: 'Heat Auto Clean (9 min heat + 1 min fan)',
-    controls: 'Touch & Wave Gesture Control',
-    speedLevels: 'Up to 9 Speed Levels',
+    controls: 'Touch with Wave Gesture Control (9 Speeds)',
     ledLight: '1 × 1.5 W Energy-saving LED',
     finish: 'Black Curved Tempered Glass',
-    installation: 'Ducted or Ductless',
-    warranty: '2 Years Comprehensive • 12 Years Motor',
+    installation: 'Ducted & Ductless (Recirculating)',
+    ventilation: 'Ducted & Ductless (Recirculating)',
+    warranty: '2 Years Comprehensive • 12 Years on Motor',
     imageUrl: 'https://faberindia.com/cdn/shop/products/IMG_4526-2.jpg?v=1652172625&width=1100',
     productPageUrl: 'https://faberindia.com/collections/chimneys',
-    description: 'Compact 60 cm curved glass auto-clean chimney with 1500 m³/hr suction, brushless DC motor, and wave gesture control.',
-    highlight: 'Heat Auto Clean • 1500 m³/hr • 12-Year Motor Warranty',
-    keyFeatures: ['1500 m³/hr Suction', 'BLDC Motor', 'Heat Auto Clean', 'Touch & Gesture Control', '12-Year Motor Warranty']
+    description: 'Compact 60 cm curved glass chimney with 1500 m³/hr suction, 150W BLDC motor, 44–46 dB ultra-quiet sound, 9 speeds, and touch & wave gesture control.',
+    highlight: 'Heat Auto Clean • 44–46 dB Quiet • 12-Yr Motor Warranty',
+    keyFeatures: ['1500 m³/hr Suction', '150W BLDC Motor', '44–46 dB Ultra-Quiet', '9 Speed Levels', 'Touch & Wave Gesture', '12-Year Motor Warranty']
   },
 
   LIBRA_75: {
@@ -64,28 +70,34 @@ export const FABER_PRODUCT_CATALOG = {
     category: 'chimney',
     categoryLabel: 'Auto-Clean BLDC Chimney',
     type: 'Wall-Mounted Curved Glass Chimney',
-    width: '75 cm',
+    shape: 'Curved Glass',
+    colour: 'Black',
+    width: '75 cm (750 mm)',
     dimensions: '750 × 418 × 490 mm',
+    cooktopMatch: 'Suited for 75 cm Cooktops (3–4 Burners)',
     price: 23118,
     mrp: 33990,
     discountPercent: 32,
     savings: 10872,
     isOffer: true,
     suctionPower: '1500 m³/hr Airflow',
-    motor: 'BLDC (Energy-Saving Brushless Motor)',
-    filterDesign: 'Filterless Technology',
+    motor: '150 W BLDC Inverter Motor',
+    motorWattage: '150 W',
+    noiseLevel: '44–46 dB (Ultra-Quiet)',
+    speedLevels: '9 Speed Settings (BLDC Inverter Control)',
+    filterDesign: 'Filterless Technology (Easy Maintenance)',
     cleaningFunction: 'Heat Auto Clean (9 min heat + 1 min fan)',
-    controls: 'Touch & Wave Gesture Control',
-    speedLevels: 'Up to 9 Speed Levels',
+    controls: 'Touch with Wave Gesture Control (9 Speeds)',
     ledLight: '1 × 1.5 W Energy-saving LED',
     finish: 'Black Curved Tempered Glass',
-    installation: 'Ducted or Ductless',
-    warranty: '2 Years Comprehensive • 12 Years Motor',
+    installation: 'Ducted & Ductless (Recirculating)',
+    ventilation: 'Ducted & Ductless (Recirculating)',
+    warranty: '2 Years Comprehensive • 12 Years on Motor',
     imageUrl: 'https://faberindia.com/cdn/shop/files/0P5A2322.jpg?v=1718706990&width=1500',
     productPageUrl: 'https://faberindia.com/collections/chimneys',
-    description: 'Mid-size 75 cm curved glass hood ideal for 3-4 burner gas cooktops with 1500 m³/hr airflow and heat auto-clean.',
-    highlight: '75 cm Medium Width • 1500 m³/hr • 9 Speed Levels',
-    keyFeatures: ['75 cm Medium Width', '1500 m³/hr Suction', 'Heat Auto Clean', 'BLDC Motor', 'Filterless Design']
+    description: 'Mid-size 75 cm curved glass hood ideal for 3-4 burner gas cooktops with 1500 m³/hr airflow, 150W BLDC motor, 44–46 dB quiet sound, and heat auto-clean.',
+    highlight: '75 cm Mid-Width • 44–46 dB Quiet • 12-Yr Motor Warranty',
+    keyFeatures: ['75 cm Medium Width', '1500 m³/hr Suction', '150W BLDC Motor', '44–46 dB Ultra-Quiet', '9 Speed Levels', '12-Year Motor Warranty']
   },
 
   LIBRA_90: {
@@ -98,28 +110,34 @@ export const FABER_PRODUCT_CATALOG = {
     category: 'chimney',
     categoryLabel: 'Auto-Clean BLDC Chimney',
     type: 'Wall-Mounted Curved Glass Chimney',
-    width: '90 cm',
+    shape: 'Curved Glass',
+    colour: 'Black',
+    width: '90 cm (900 mm)',
     dimensions: '900 × 418 × 490 mm',
+    cooktopMatch: 'Suited for 90 cm Cooktops (3–5 Burners)',
     price: 24987,
     mrp: 35490,
     discountPercent: 30,
     savings: 10503,
     isOffer: true,
     suctionPower: '1500 m³/hr Airflow',
-    motor: 'BLDC (Energy-Saving Brushless Motor)',
-    filterDesign: 'Filterless Technology',
+    motor: '150 W BLDC Inverter Motor',
+    motorWattage: '150 W',
+    noiseLevel: '44–46 dB (Ultra-Quiet)',
+    speedLevels: '9 Speed Settings (BLDC Inverter Control)',
+    filterDesign: 'Filterless Technology (Easy Maintenance)',
     cleaningFunction: 'Heat Auto Clean (9 min heat + 1 min fan)',
-    controls: 'Touch & Wave Gesture Control',
-    speedLevels: 'Up to 9 Speed Levels',
+    controls: 'Touch with Wave Gesture Control (9 Speeds)',
     ledLight: '1 × 1.5 W Energy-saving LED',
     finish: 'Black Curved Tempered Glass',
-    installation: 'Ducted or Ductless',
-    warranty: '2 Years Comprehensive • 12 Years Motor',
+    installation: 'Ducted & Ductless (Recirculating)',
+    ventilation: 'Ducted & Ductless (Recirculating)',
+    warranty: '2 Years Comprehensive • 12 Years on Motor',
     imageUrl: 'https://faberindia.com/cdn/shop/products/IMG_4526-2.jpg?v=1652172625&width=1100',
     productPageUrl: 'https://faberindia.com/collections/chimneys',
-    description: 'Wide 90 cm canopy hood covering 4-5 burner cooktops with maximum smoke capture and ultra-quiet BLDC motor.',
-    highlight: '90 cm Large Canopy • 1500 m³/hr • Max Cooking Coverage',
-    keyFeatures: ['90 cm Wide Coverage', '1500 m³/hr Airflow', 'BLDC Motor', 'Heat Auto Clean', 'Touch & Gesture']
+    description: 'Wide 90 cm canopy hood covering 3-5 burner cooktops with maximum smoke capture, 150W BLDC motor, 44–46 dB sound level, and 12-year motor warranty.',
+    highlight: '90 cm Wide Canopy • 44–46 dB Quiet • 12-Yr Motor Warranty',
+    keyFeatures: ['90 cm Wide Coverage', '1500 m³/hr Airflow', '150W BLDC Motor', '44–46 dB Ultra-Quiet', '9 Speed Levels', '12-Year Motor Warranty']
   },
 
   // --------------------------------------------------------------------------
@@ -506,24 +524,137 @@ export const DISHWASHER_LOADING_GUIDE = {
 };
 
 export const USER_MANUAL_GUIDE = {
-  title: 'Faber User Manual & Appliance Maintenance Guide',
-  subtitle: 'Official procedures for Chimney Heat Auto-Clean and Dishwasher Care',
+  title: 'Faber User Manual & Official Maintenance Guide',
+  subtitle: 'Official operating procedures, gesture controls, heat auto-clean, care guidelines & troubleshooting FAQ',
+
+  // 1. Chimney Heat Auto-Clean Protocol
   chimneyAutoClean: {
-    title: 'Chimney Heat Auto-Clean Procedure',
+    title: 'Chimney Heat Auto-Clean Step-by-Step Procedure',
     cycleDuration: '10 Minutes Total (9 min Heating + 1 min Fan)',
-    reminderHours: '30 Operating Hours',
+    reminderHours: 'Every 30 Operating Hours / Post-Heavy Frying',
     steps: [
-      { step: 1, name: 'Press Auto-Clean Button', desc: 'Touch the Auto-Clean symbol or trigger the dedicated motion gesture.' },
-      { step: 2, name: 'Heating Phase (9 Minutes)', desc: 'Internal heating coils warm up the motor chamber to liquefy thick oil and grease deposits.' },
-      { step: 3, name: 'Fan Drain Phase (1 Minute)', desc: 'The high-speed blower fan rotates to channel the liquefied oil into the metal oil collector.' },
-      { step: 4, name: 'Oil Collector Maintenance', desc: 'Slide out the stainless steel/metal oil tray, empty accumulated oil, wash with warm soapy water, and replace.' }
+      { step: 1, name: 'Press Auto-Clean Button', desc: 'Touch the Auto-Clean symbol on the front glass panel or trigger the motion gesture sensor.' },
+      { step: 2, name: 'Heating Phase (9 Minutes)', desc: 'Internal heating coils warm up the motor chamber to liquefy thick accumulated oil and grease deposits.' },
+      { step: 3, name: 'Fan Drain Phase (1 Minute)', desc: 'The high-speed blower fan rotates to channel the liquefied grease directly into the stainless steel collector tray.' },
+      { step: 4, name: 'Oil Collector Maintenance', desc: 'Slide out the bottom metal oil collector tray, empty accumulated grease, wash with warm soapy water, and replace.' }
     ],
     precautions: [
-      'Clean oil collector periodically to prevent overflow.',
-      'Always disconnect power before surface wiping.',
-      'Do not allow water to enter the motor or touch control circuit.'
+      'Clean oil collector periodically to prevent grease overflow.',
+      'Always disconnect power before surface wiping or servicing.',
+      'Auto-clean is an assistance feature—filterless design does not mean maintenance-free.'
     ]
   },
+
+  // 2. Touch & Wave Gesture Control Operation (FAQ Q19-Q21)
+  gestureControl: {
+    title: 'Touch & Wave Gesture Control Operation',
+    technology: 'Dual Optical Motion Sensors with 9 Speed Control',
+    operatingDistance: '5 to 10 cm (2 to 4 inches) from front glass panel',
+    instructions: [
+      {
+        gesture: 'Wave Left-to-Right (👋 ➡️)',
+        action: 'Power ON / Step Up Speed (1 → 9)',
+        desc: 'Wave your hand smoothly from left to right across the sensor to turn on at Speed 1. Repeated waves increment speed up to Speed 9 for heavy frying.'
+      },
+      {
+        gesture: 'Wave Right-to-Left (⬅️ 👋)',
+        action: 'Step Down Speed / Power OFF',
+        desc: 'Wave your hand smoothly from right to left to step down the speed level. A final wave at Speed 1 powers the chimney off completely.'
+      },
+      {
+        gesture: 'Touch Controls Backup',
+        action: 'Direct Capacitive Touch',
+        desc: 'Touch icons on the front panel provide instant direct access to all 9 speeds, LED lighting, and Auto-Clean mode if hands are wet or greasy.'
+      }
+    ],
+    tips: [
+      'Maintain 5–10 cm distance with steady, moderate hand movements.',
+      'Keep the black glass front clean and smudge-free for optimal optical sensing.',
+      'If gesture does not respond, verify sensor cleanliness and use touch buttons.'
+    ]
+  },
+
+  // 3. Filterless Technology & Real-World Maintenance (FAQ Q13-Q18)
+  filterlessMaintenance: {
+    title: 'Filterless Technology & Real-World Maintenance',
+    concept: 'Filterless Design ≠ Maintenance-Free',
+    summary: 'The Libra BLDC uses a filterless design so there are no mesh or baffle filters to scrub or replace. However, periodic exterior care and oil tray cleaning are essential for peak airflow.',
+    maintenanceRules: [
+      {
+        title: 'Exterior Glass & Body Care',
+        frequency: 'Weekly or After Deep Cooking',
+        action: 'Disconnect power, spray mild neutral kitchen detergent onto a soft microfiber cloth, and wipe down the curved tempered glass and body. Never use abrasive scrubbers.'
+      },
+      {
+        title: 'Oil Collector Tray',
+        frequency: 'Every 2 to 3 Weeks',
+        action: 'Slide out the bottom metal collector tray, drain liquefied grease into a disposal container, rinse in warm water with dish soap, dry and reinstall.'
+      },
+      {
+        title: 'Heat Auto-Clean Trigger',
+        frequency: 'Every 30 Cooking Hours or Monthly',
+        action: 'Run the dedicated 10-minute thermal heating cycle to prevent grease solidification inside the blower chamber.'
+      }
+    ]
+  },
+
+  // 4. Installation & Cooktop Matching Guide (FAQ Q22-Q31)
+  installationGuide: {
+    title: 'Installation, Ventilation & Cooktop Sizing Guide',
+    ventilationModes: 'Ducted & Ductless (Recirculating) Supported',
+    mountingHeight: '650 mm to 750 mm (25.5 to 29.5 inches) above gas cooktop',
+    models: [
+      { width: '60 cm (600 mm)', dimensions: '600 × 418 × 485 mm', cooktopMatch: '2 to 4 burner gas hobs (up to 60 cm wide cooktop)' },
+      { width: '75 cm (750 mm)', dimensions: '750 × 418 × 490 mm', cooktopMatch: '3 to 4 burner gas hobs (up to 75 cm wide cooktop)' },
+      { width: '90 cm (900 mm)', dimensions: '900 × 418 × 490 mm', cooktopMatch: '3 to 5 burner wide gas hobs (75 to 90 cm wide cooktop)' }
+    ],
+    ductedVsDuctless: [
+      'Ducted: Exhausts smoke, fumes, and steam outdoors via duct pipe for maximum air-flow performance.',
+      'Ductless: Uses recirculating carbon filtration to purify air and return it into the kitchen when exterior ducting is impossible.'
+    ]
+  },
+
+  // 5. Official Customer Support Troubleshooting Matrix (FAQ Table Section 10)
+  troubleshootingGuide: {
+    title: 'Official Customer Support Troubleshooting Matrix',
+    subtitle: 'Verified troubleshooting steps for Faber chimneys and kitchen appliances',
+    items: [
+      {
+        complaint: 'Chimney is not switching on',
+        firstResponse: 'Check main power switch, wall socket plug point, and electrical voltage. If responsive neither to touch nor gesture, arrange authorized Faber service inspection.'
+      },
+      {
+        complaint: 'Suction appears weak',
+        firstResponse: 'Verify selected speed level (use Speeds 6–9 for deep frying / tadka). Check for obstructions in duct pipe, outer exhaust louvers, or full oil collector tray.'
+      },
+      {
+        complaint: 'Chimney sounds noisy / loud',
+        firstResponse: 'The Libra BLDC operates at an ultra-quiet 44–46 dB. Verify sound variation across speeds. Persistent unusual noise may indicate duct pipe bends or loose mounting; call Faber service.'
+      },
+      {
+        complaint: 'Gesture control is not responding',
+        firstResponse: 'Ensure the front glass sensor is clean and dry. Wave hand at 5–10 cm distance with steady movement. Check if touch controls work normally.'
+      },
+      {
+        complaint: 'Auto-clean is not working',
+        firstResponse: 'Ensure the 10-minute cycle is initiated (9 min heating + 1 min fan). Do not run manual high-speed extraction during heating. If heating coil fails to warm, contact support.'
+      },
+      {
+        complaint: 'Smoke is not being extracted effectively',
+        firstResponse: 'Check installation height (must be 65–75 cm above burners) and verify the hood width matches the cooktop surface area.'
+      },
+      {
+        complaint: 'Oil or residue is accumulating / dripping',
+        firstResponse: 'Empty and wash the metal oil collector tray immediately. Run a 10-minute Heat Auto-Clean cycle and wipe down outer glass canopy.'
+      },
+      {
+        complaint: 'Chimney vibrates during operation',
+        firstResponse: 'Cease operation immediately if mounting appears loose or unsafe. Ensure wall brackets are tightly secured and arrange professional service.'
+      }
+    ]
+  },
+
+  // 6. Dishwasher Care & Maintenance
   dishwasherCare: {
     title: 'Dishwasher Care & Chemical Guide',
     points: [
@@ -572,58 +703,86 @@ function normalizeKey(str) {
  */
 export function findProductByQuery(query) {
   if (!query) return null;
-  const q = normalizeKey(query);
+  const raw = String(query).trim();
+  const q = normalizeKey(raw);
+  const all = getAllProducts();
 
-  // Exact enum match
-  for (const p of getAllProducts()) {
-    if (normalizeKey(p.enumKey) === q || normalizeKey(p.id) === q || normalizeKey(p.sku) === q) {
+  // 1. Direct exact match on enumKey, id, sku, name, modelName
+  for (const p of all) {
+    if (
+      normalizeKey(p.enumKey) === q ||
+      normalizeKey(p.id) === q ||
+      normalizeKey(p.sku) === q ||
+      normalizeKey(p.name) === q ||
+      normalizeKey(p.modelName) === q
+    ) {
       return p;
     }
   }
 
-  // Model & width aliases
-  if (q.includes('libra60') || (q.includes('libra') && q.includes('60')) || q.includes('chimney1') || (q.includes('chimney') && q.includes('60'))) {
-    return FABER_PRODUCT_CATALOG.LIBRA_60;
+  // 2. Check if the query contains the full normalized product name or modelName (or vice versa)
+  for (const p of all) {
+    const normName = normalizeKey(p.name);
+    const normModel = normalizeKey(p.modelName);
+    if (normName.length > 5 && (q.includes(normName) || normName.includes(q))) {
+      return p;
+    }
+    if (normModel.length > 5 && (q.includes(normModel) || normModel.includes(q))) {
+      return p;
+    }
   }
-  if (q.includes('libra75') || (q.includes('libra') && q.includes('75')) || q.includes('chimney2') || (q.includes('chimney') && q.includes('75'))) {
-    return FABER_PRODUCT_CATALOG.LIBRA_75;
+
+  // 3. Color & Finish discriminators
+  const isBlack = q.includes('black') || q.includes('bk') || q.includes('kali') || q.includes('काली') || q.includes('काला');
+  const isInox = q.includes('inox') || q.includes('steel') || q.includes('silver') || q.includes('स्टील');
+
+  // Chimneys - Libra BLDC series (60, 75, 90 cm)
+  if (q.includes('libra') || q.includes('chimney') || q.includes('hood') || q.includes('चिमनी')) {
+    if (q.includes('60') || q.includes('60cm') || q.includes('600')) return FABER_PRODUCT_CATALOG.LIBRA_60;
+    if (q.includes('75') || q.includes('75cm') || q.includes('750')) return FABER_PRODUCT_CATALOG.LIBRA_75;
+    if (q.includes('90') || q.includes('90cm') || q.includes('900')) return FABER_PRODUCT_CATALOG.LIBRA_90;
   }
-  if (q.includes('libra90') || (q.includes('libra') && q.includes('90')) || (q.includes('chimney') && q.includes('90'))) {
-    return FABER_PRODUCT_CATALOG.LIBRA_90;
-  }
-  if (q.includes('fbid') || (q.includes('builtin') && q.includes('dishwasher')) || q.includes('dishwasher1')) {
+  if (q.includes('60') && !q.includes('600') && !q.includes('14s') && !q.includes('12s')) return FABER_PRODUCT_CATALOG.LIBRA_60;
+  if (q.includes('75')) return FABER_PRODUCT_CATALOG.LIBRA_75;
+  if (q.includes('90') && !q.includes('90min') && !q.includes('90m')) return FABER_PRODUCT_CATALOG.LIBRA_90;
+  if (q.includes('chimney1')) return FABER_PRODUCT_CATALOG.LIBRA_60;
+  if (q.includes('chimney2')) return FABER_PRODUCT_CATALOG.LIBRA_75;
+  if (q.includes('chimney3')) return FABER_PRODUCT_CATALOG.LIBRA_90;
+
+  // Dishwashers - Built-in & Semi-Integrated
+  if (q.includes('fbid') || (q.includes('builtin') && !q.includes('semi')) || q.includes('dishwasher1')) {
     return FABER_PRODUCT_CATALOG.FBID_8PR_14S;
   }
-  if (q.includes('fsid') || (q.includes('semi') && q.includes('integrated')) || q.includes('dishwasher2')) {
+  if (q.includes('fsid') || q.includes('semi') || q.includes('dishwasher2')) {
     return FABER_PRODUCT_CATALOG.FSID_8PR_14S;
   }
-  if (q.includes('ffsd8pr14sbk') || (q.includes('8pr') && q.includes('black') && q.includes('14s'))) {
-    return FABER_PRODUCT_CATALOG.FFSD_8PR_14S_BK;
-  }
-  if (q.includes('ffsd8pr14s') || (q.includes('8pr') && q.includes('inox') && q.includes('14s'))) {
-    return FABER_PRODUCT_CATALOG.FFSD_8PR_14S;
-  }
-  if (q.includes('ffsd7pr14s') || (q.includes('7pr') && q.includes('14s'))) {
-    return FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK;
-  }
-  if (q.includes('digital') || (q.includes('6pr') && q.includes('14s') && q.includes('digital'))) {
-    return FABER_PRODUCT_CATALOG.FFSD_6PR_14S_BK_DIGITAL;
-  }
-  if (q.includes('12sneo') && q.includes('bk')) {
-    return FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK;
-  }
-  if (q.includes('12sneo') || (q.includes('12s') && q.includes('inox'))) {
-    return FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_INOX;
-  }
-  if ((q.includes('8s') || q.includes('ace')) && q.includes('black')) {
-    return FABER_PRODUCT_CATALOG.FFSD_6PR_8S_ACE_BLACK;
-  }
-  if (q.includes('8s') || q.includes('ace')) {
+
+  // Dishwashers - 8 Place Settings (Ace Tabletop)
+  if (q.includes('8s') || q.includes('8place') || q.includes('ace') || q.includes('tabletop') || q.includes('countertop')) {
+    if (isBlack) return FABER_PRODUCT_CATALOG.FFSD_6PR_8S_ACE_BLACK;
     return FABER_PRODUCT_CATALOG.FFSD_6PR_8S_ACE_INOX;
   }
 
-  // Substring name check
-  for (const p of getAllProducts()) {
+  // Dishwashers - 12 Place Settings (Neo)
+  if (q.includes('12s') || q.includes('12place') || q.includes('neo')) {
+    if (isBlack) return FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK;
+    return FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_INOX;
+  }
+
+  // Dishwashers - 14 Place Settings (Digital, 7PR, 8PR)
+  if (q.includes('digital') || (q.includes('6pr') && q.includes('14s'))) {
+    return FABER_PRODUCT_CATALOG.FFSD_6PR_14S_BK_DIGITAL;
+  }
+  if (q.includes('7pr') || q.includes('7programme') || q.includes('7program')) {
+    return FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK;
+  }
+  if (q.includes('8pr') || q.includes('8programme') || q.includes('8program')) {
+    if (isBlack) return FABER_PRODUCT_CATALOG.FFSD_8PR_14S_BK;
+    return FABER_PRODUCT_CATALOG.FFSD_8PR_14S;
+  }
+
+  // 4. Substring match
+  for (const p of all) {
     if (normalizeKey(p.name).includes(q) || normalizeKey(p.modelName).includes(q)) {
       return p;
     }
@@ -704,7 +863,14 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
       lowerText.includes('auto clean') ||
       lowerText.includes('autoclean') ||
       lowerText.includes('maintenance') ||
-      lowerText.includes('clean procedure')
+      lowerText.includes('clean procedure') ||
+      lowerText.includes('gesture') ||
+      lowerText.includes('troubleshoot') ||
+      lowerText.includes('troubleshooting') ||
+      lowerText.includes('filterless') ||
+      lowerText.includes('noisy') ||
+      lowerText.includes('weak suction') ||
+      lowerText.includes('service')
     ) {
       action = 'show_manual';
     } else if (
@@ -767,11 +933,11 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   // --------------------------------------------------------------------------
   // Component 2: User Manual / Auto-Clean Guide
   // --------------------------------------------------------------------------
-  if (action === 'show_manual' || action === 'manual' || action === 'auto_clean') {
+  if (action === 'show_manual' || action === 'manual' || action === 'auto_clean' || action === 'gesture' || action === 'troubleshooting') {
     return {
       componentType: 'manual',
-      title: 'Faber User Manual & Appliance Maintenance',
-      subtitle: 'Step-by-step Auto-Clean and chemical maintenance protocols',
+      title: 'Faber User Manual & Official Maintenance Guide',
+      subtitle: 'Heat auto-clean, wave gesture control, filterless care & troubleshooting matrix',
       manualData: USER_MANUAL_GUIDE,
       products: [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.FBID_8PR_14S],
       images: [
@@ -788,10 +954,46 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   // --------------------------------------------------------------------------
   // Component 3: Offers & Promotional Deals
   // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
+  // Component 3: Offers & Promotional Deals (with smart comparison redirect)
+  // --------------------------------------------------------------------------
   if (action === 'show_offers' || action === 'offers' || action === 'discounts') {
+    const wantsCompare = lowerText.includes('compare') || lowerText.includes('कंपेयर') || lowerText.includes('तुलना') || lowerText.includes('vs') || merged.compare === true || merged.compare === 'true';
+
+    // If the customer says "जो जो ऑफर में हैं उनको कंपेयर कर दीजिए", route to comparison of offer models!
+    if (wantsCompare) {
+      let offerCandidates = [];
+      if (category === 'chimney') {
+        offerCandidates = [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_75, FABER_PRODUCT_CATALOG.LIBRA_90];
+      } else if (category === 'dishwasher') {
+        offerCandidates = [FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK, FABER_PRODUCT_CATALOG.FFSD_6PR_14S_BK_DIGITAL, FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK];
+      } else {
+        offerCandidates = [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_75, FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK, FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK];
+      }
+
+      if (maxPrice > 0) {
+        offerCandidates = offerCandidates.filter((p) => p.price <= maxPrice);
+      }
+
+      const catTitle = category === 'chimney' ? 'Faber Chimney Offers Comparison' : category === 'dishwasher' ? 'Faber Dishwasher Offers Comparison' : 'Faber Special Offers Comparison';
+
+      return {
+        componentType: 'comparison',
+        title: catTitle,
+        subtitle: `Comparing ${offerCandidates.length} models with recorded promotional discounts up to 34% off`,
+        products: offerCandidates,
+        images: offerCandidates.map((p) => ({
+          name: p.name,
+          title: p.name,
+          imageUrl: p.imageUrl,
+          description: `Price: ₹${p.price.toLocaleString('en-IN')} (Save ₹${p.savings.toLocaleString('en-IN')})`
+        }))
+      };
+    }
+
     let offerProducts = allProducts.filter((p) => p.isOffer);
 
-    // Filter strictly by category if specified
+    // Filter by category if strictly specified (and not 'both')
     if (category === 'chimney') {
       offerProducts = offerProducts.filter((p) => p.category === 'chimney');
     } else if (category === 'dishwasher') {
@@ -804,7 +1006,7 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
       if (budgetOffers.length > 0) {
         offerProducts = budgetOffers;
       } else {
-        const anyBudget = allProducts.filter((p) => (category ? p.category === category : true) && p.price <= maxPrice);
+        const anyBudget = allProducts.filter((p) => (category && category !== 'both' ? p.category === category : true) && p.price <= maxPrice);
         if (anyBudget.length > 0) offerProducts = anyBudget;
       }
     }
@@ -812,7 +1014,7 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     // Sort by largest savings amount descending
     offerProducts.sort((a, b) => b.savings - a.savings);
 
-    const catLabel = category === 'chimney' ? 'Chimney' : category === 'dishwasher' ? 'Dishwasher' : 'Appliance';
+    const catLabel = category === 'chimney' ? 'Chimney' : category === 'dishwasher' ? 'Dishwasher' : category === 'both' ? 'Chimney & Dishwasher' : 'Appliance';
     const priceLabel = maxPrice > 0 ? ` under ₹${maxPrice.toLocaleString('en-IN')}` : '';
 
     return {
@@ -830,27 +1032,43 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   }
 
   // --------------------------------------------------------------------------
-  // Component 4: Price Filter Search (e.g. "chimneys under 25000", "under 20000")
+  // Component 4: Price Filter Search & Multi-Condition Filter
   // --------------------------------------------------------------------------
   if (action === 'filter_by_price' || action === 'filter_price' || maxPrice > 0) {
     let filtered = allProducts;
-    if (category === 'chimney' || lowerText.includes('chimney') || lowerText.includes('चिमनी')) {
+
+    // 1. Category Condition
+    if (category === 'chimney') {
       filtered = filtered.filter((p) => p.category === 'chimney');
-    } else if (category === 'dishwasher' || lowerText.includes('dish') || lowerText.includes('डिशवॉशर')) {
+    } else if (category === 'dishwasher') {
       filtered = filtered.filter((p) => p.category === 'dishwasher');
     }
+    // Note: If category === 'both', we keep products from BOTH categories!
 
+    // 2. Offer / Sale Condition
+    const wantsOffers = lowerText.includes('offer') || lowerText.includes('discount') || lowerText.includes('deal') || lowerText.includes('ऑफर') || lowerText.includes('सेल') || merged.isOffer === true || merged.isOffer === 'true' || merged.is_offer === true || merged.is_offer === 'true';
+    if (wantsOffers) {
+      filtered = filtered.filter((p) => p.isOffer);
+    }
+
+    // 3. Filterless Condition
+    const wantsFilterless = lowerText.includes('filterless') || lowerText.includes('फिल्टरलेस') || merged.filter === 'filterless' || merged.filterless === true || merged.filterless === 'true';
+    if (wantsFilterless) {
+      filtered = filtered.filter((p) => (p.filterDesign && p.filterDesign.toLowerCase().includes('filterless')));
+    }
+
+    // 4. Max Price Budget Condition
     if (maxPrice > 0) {
       filtered = filtered.filter((p) => p.price <= maxPrice);
     }
 
     filtered.sort((a, b) => a.price - b.price);
 
-    const catLabel = category === 'chimney' ? 'Chimneys' : category === 'dishwasher' ? 'Dishwashers' : 'Appliances';
+    const catLabel = category === 'chimney' ? 'Chimneys' : category === 'dishwasher' ? 'Dishwashers' : category === 'both' ? 'Chimneys & Dishwashers' : 'Appliances';
 
-    // Graceful handling when no models match budget (e.g. chimneys under 20k)
+    // Graceful handling when no models match budget
     if (filtered.length === 0 && maxPrice > 0) {
-      const closest = allProducts.filter((p) => (category ? p.category === category : true)).sort((a, b) => a.price - b.price);
+      const closest = allProducts.filter((p) => (category && category !== 'both' ? p.category === category : true)).sort((a, b) => a.price - b.price);
       const startingPrice = closest.length > 0 ? closest[0].price : 21990;
       const suggestions = closest.slice(0, 2);
 
@@ -870,10 +1088,18 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
 
     const limitLabel = maxPrice > 0 ? `under ₹${maxPrice.toLocaleString('en-IN')}` : 'by Price';
 
+    // Count breakdown for combined categories
+    let countSummary = `Found ${filtered.length} model${filtered.length === 1 ? '' : 's'} matching budget`;
+    if (category === 'both') {
+      const chimCount = filtered.filter((p) => p.category === 'chimney').length;
+      const dishCount = filtered.filter((p) => p.category === 'dishwasher').length;
+      countSummary = `Found ${filtered.length} models (${chimCount} chimney${chimCount === 1 ? '' : 's'}, ${dishCount} dishwasher${dishCount === 1 ? '' : 's'}) under ₹${maxPrice.toLocaleString('en-IN')}`;
+    }
+
     return {
       componentType: 'products',
       title: `Faber ${catLabel} ${limitLabel}`,
-      subtitle: `Found ${filtered.length} model${filtered.length === 1 ? '' : 's'} matching budget`,
+      subtitle: countSummary,
       products: filtered,
       images: filtered.map((p) => ({
         name: p.name,
@@ -890,24 +1116,7 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   if (action === 'compare_products' || action === 'compare' || action === 'comparison') {
     let candidateList = [];
 
-    // Check for Cross-Category Comparison (Chimney vs Dishwasher)
-    if (category === 'both') {
-      candidateList = [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.FBID_8PR_14S];
-      return {
-        componentType: 'comparison',
-        title: 'Faber Chimney vs Dishwasher Comparison',
-        subtitle: 'Comparing Faber Libra BLDC Chimney (60 cm) vs Faber Built-in Dishwasher (14 Place)',
-        products: candidateList,
-        images: candidateList.map((p) => ({
-          name: p.name,
-          title: p.name,
-          imageUrl: p.imageUrl,
-          description: `Price: ₹${p.price.toLocaleString('en-IN')} • ${p.category}`
-        }))
-      };
-    }
-
-    // Parse products list (supports array, comma-separated, "and", "vs", "aur")
+    // Parse products list FIRST (supports array, comma-separated, "and", "vs", "aur")
     let rawList = merged.products || merged.product_enums || merged.product;
     if (typeof rawList === 'string') {
       try {
@@ -938,19 +1147,32 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
       }
     }
 
-    // If user provided exact products, we compare ONLY those products!
-    // Only apply fallbacks if candidateList has fewer than 2 items
-    if (candidateList.length === 1) {
-      const single = candidateList[0];
-      if (single.category === 'chimney') {
-        const sibling = single.id === 'libra-60' ? FABER_PRODUCT_CATALOG.LIBRA_90 : FABER_PRODUCT_CATALOG.LIBRA_60;
-        candidateList.push(sibling);
-      } else {
-        const sibling = single.id === 'fbid-8pr-14s' ? FABER_PRODUCT_CATALOG.FSID_8PR_14S : FABER_PRODUCT_CATALOG.FBID_8PR_14S;
-        candidateList.push(sibling);
-      }
-    } else if (candidateList.length < 1) {
-      if (lowerText.includes('chimney') || lowerText.includes('libra') || category === 'chimney') {
+    // Only apply intelligent fallbacks if user did NOT provide at least 2 exact products
+    if (candidateList.length < 2) {
+      const wantsOffers = lowerText.includes('offer') || lowerText.includes('discount') || lowerText.includes('deal') || lowerText.includes('ऑफर') || lowerText.includes('सेल') || merged.isOffer;
+      const isThreeChimneys = lowerText.includes('तीनों चिमनी') || lowerText.includes('3 chimney') || lowerText.includes('all chimney') || lowerText.includes('teen chimney');
+
+      if (isThreeChimneys || (category === 'chimney' && wantsOffers)) {
+        candidateList = [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_75, FABER_PRODUCT_CATALOG.LIBRA_90];
+      } else if (category === 'dishwasher' && wantsOffers) {
+        candidateList = [FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK, FABER_PRODUCT_CATALOG.FFSD_6PR_14S_BK_DIGITAL, FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK];
+      } else if (maxPrice > 0) {
+        let budgetPool = allProducts.filter((p) => p.price <= maxPrice);
+        if (category === 'chimney') budgetPool = budgetPool.filter((p) => p.category === 'chimney');
+        else if (category === 'dishwasher') budgetPool = budgetPool.filter((p) => p.category === 'dishwasher');
+        if (budgetPool.length >= 2) candidateList = budgetPool.slice(0, 4);
+      } else if (candidateList.length === 1) {
+        const single = candidateList[0];
+        if (single.category === 'chimney') {
+          const sibling = single.id === 'libra-60' ? FABER_PRODUCT_CATALOG.LIBRA_90 : FABER_PRODUCT_CATALOG.LIBRA_60;
+          candidateList.push(sibling);
+        } else {
+          const sibling = single.id === 'fbid-8pr-14s' ? FABER_PRODUCT_CATALOG.FSID_8PR_14S : FABER_PRODUCT_CATALOG.FBID_8PR_14S;
+          candidateList.push(sibling);
+        }
+      } else if (category === 'both') {
+        candidateList = [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.FBID_8PR_14S];
+      } else if (category === 'chimney') {
         candidateList = [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_75, FABER_PRODUCT_CATALOG.LIBRA_90];
       } else {
         candidateList = [FABER_PRODUCT_CATALOG.FBID_8PR_14S, FABER_PRODUCT_CATALOG.FSID_8PR_14S];
