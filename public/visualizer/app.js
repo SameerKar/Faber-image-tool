@@ -5,6 +5,8 @@
  */
 
 (() => {
+  const pageStartTime = Date.now();
+
   // 1. Backend URL Management
   function getInitialBackendUrl() {
     const saved = localStorage.getItem('faber_backend_url');
@@ -52,6 +54,97 @@
 
   if (displaySessionEl) {
     displaySessionEl.textContent = sessionId;
+  }
+
+  // Micro-interaction: Animated display badge update
+  function updateDisplayBadge(text) {
+    if (!displayModeBadge) return;
+    displayModeBadge.textContent = text;
+    displayModeBadge.classList.remove('badge-updated');
+    void displayModeBadge.offsetWidth;
+    displayModeBadge.classList.add('badge-updated');
+  }
+
+  // Subtle Faber Green Morph Transition for Tool Calls & Screen Switches
+  const morphGlowEl = document.getElementById('morph-glow-fx');
+  const splashLoaderEl = document.getElementById('faber-splash-loader');
+
+  // Full-Screen Faber × OmniAgent Accent Green Splash Loader Lifecycle
+  function dismissSplashLoader() {
+    if (!splashLoaderEl || splashLoaderEl.classList.contains('morph-out')) return;
+    splashLoaderEl.classList.add('morph-out');
+
+    // Smoothly morph into main application screen
+    playGreenMorphTransition();
+
+    setTimeout(() => {
+      splashLoaderEl.classList.add('hidden');
+    }, 700);
+  }
+
+  function showSplashLoaderAndMorph(onComplete) {
+    if (!splashLoaderEl) {
+      if (onComplete) onComplete();
+      return;
+    }
+    splashLoaderEl.classList.remove('hidden', 'morph-out');
+    void splashLoaderEl.offsetWidth; // Force reflow
+
+    setTimeout(() => {
+      dismissSplashLoader();
+      if (onComplete) onComplete();
+    }, 1300);
+  }
+
+  // Auto-dismiss splash loader on page load after pleasant brand presentation
+  window.addEventListener('load', () => {
+    setTimeout(dismissSplashLoader, 1400);
+  });
+  if (document.readyState === 'complete') {
+    setTimeout(dismissSplashLoader, 1400);
+  }
+
+  let lastMorphTimestamp = 0;
+  function playGreenMorphTransition() {
+    if (!morphGlowEl) return;
+    const now = Date.now();
+    // Guard against rapid duplicate firing within 380ms (eliminates double-render & clicky snap)
+    if (now - lastMorphTimestamp < 380) return;
+    lastMorphTimestamp = now;
+
+    morphGlowEl.classList.remove('active');
+    void morphGlowEl.offsetWidth; // Force reflow
+    morphGlowEl.classList.add('active');
+  }
+
+  if (morphGlowEl) {
+    morphGlowEl.addEventListener('animationend', () => {
+      morphGlowEl.classList.remove('active');
+    });
+  }
+
+  // Enhanced screen switching transition helper with subtle green morph and double-render guard
+  let lastViewTransitionTimestamp = 0;
+  function prepareViewTransition(container) {
+    const target = container || document.getElementById('component-viewport') || productGrid;
+    if (!target) return target;
+
+    const now = Date.now();
+    // Strict guard against duplicate calls within 380ms (eliminates double reflow and clicky stutter)
+    if (now - lastViewTransitionTimestamp < 380) {
+      return target;
+    }
+    lastViewTransitionTimestamp = now;
+
+    target.scrollTop = 0;
+    target.classList.remove('view-enter-active');
+    void target.offsetWidth;
+    target.classList.add('view-enter-active');
+
+    // Trigger subtle green morph sheen
+    playGreenMorphTransition();
+
+    return target;
   }
 
   function updateBackendUrlDisplay() {
@@ -107,6 +200,25 @@
   if (btnCopySession) {
     btnCopySession.addEventListener('click', () => {
       navigator.clipboard.writeText(sessionId).then(() => showToast('Session ID copied!'));
+    });
+  }
+
+  // Start New Session Button
+  const btnNewSession = document.getElementById('btn-new-session');
+  if (btnNewSession) {
+    btnNewSession.addEventListener('click', () => {
+      const newSess = 'sess_' + Math.random().toString(36).substring(2, 9);
+      sessionStorage.setItem('faber_visualizer_session', newSess);
+      if (displaySessionEl) {
+        displaySessionEl.textContent = newSess;
+      }
+      showToast('New session started: ' + newSess);
+
+      // Trigger full accent green splash morph into fresh welcome screen
+      showSplashLoaderAndMorph(() => {
+        renderFaberWelcomeScreen();
+        initOrationWidget();
+      });
     });
   }
 
@@ -370,6 +482,15 @@
   function handleIncomingImages(payload) {
     if (!payload) return;
 
+    // Reject stale cached/replayed events from prior sessions so refresh stays on Faber screen
+    if (payload.timestamp) {
+      const eventTime = new Date(payload.timestamp).getTime();
+      if (!isNaN(eventTime) && eventTime < pageStartTime - 2000) {
+        console.log('[Visualizer] Ignored stale replayed payload from previous session:', payload.title || payload.componentType);
+        return;
+      }
+    }
+
     // Deduplicate identical payloads if unchanged
     const currentFingerprint = `${payload.timestamp || ''}_${payload.title || ''}_${payload.componentType || ''}_${(payload.products || []).length}`;
     if (currentFingerprint && currentFingerprint === lastPayloadFingerprint) {
@@ -387,6 +508,16 @@
 
     const container = document.getElementById('component-viewport') || productGrid;
     if (!container) return;
+    prepareViewTransition(container);
+
+    if (
+      compType === 'welcome' ||
+      payload.action === 'welcome' ||
+      payload.componentType === 'welcome'
+    ) {
+      renderFaberWelcomeScreen(container);
+      return;
+    }
 
     if (
       compType === 'installation' ||
@@ -397,7 +528,7 @@
       (payload.title && payload.title.toLowerCase().includes('installation')) ||
       (payload.query && payload.query.toLowerCase().includes('install'))
     ) {
-      if (displayModeBadge) displayModeBadge.textContent = 'Installation Guide';
+      updateDisplayBadge('Installation Guide');
       renderChimneyInstallation(container);
     } else if (
       compType === 'chimney-cleaning' ||
@@ -405,7 +536,7 @@
       payload.action === 'chimney_cleaning' ||
       (payload.title && payload.title.toLowerCase().includes('chimney cleaning'))
     ) {
-      if (displayModeBadge) displayModeBadge.textContent = 'Chimney Cleaning Guide';
+      updateDisplayBadge('Chimney Cleaning Guide');
       renderChimneyCleaning(container);
     } else if (
       compType === 'dishwasher-cleaning' ||
@@ -415,7 +546,7 @@
       payload.action === 'dishwasher_maintenance' ||
       (payload.title && payload.title.toLowerCase().includes('dishwasher maintenance'))
     ) {
-      if (displayModeBadge) displayModeBadge.textContent = 'Dishwasher Care Guide';
+      updateDisplayBadge('Dishwasher Care Guide');
       renderDishwasherCleaning(container);
     } else if (
       compType === 'dishwasher-usp' ||
@@ -425,7 +556,7 @@
       payload.action === 'dishwasher_features' ||
       (payload.title && payload.title.toLowerCase().includes('features & usps'))
     ) {
-      if (displayModeBadge) displayModeBadge.textContent = 'Dishwasher USPs';
+      updateDisplayBadge('Dishwasher USPs');
       renderDishwasherUSP(container);
     } else if (
       compType === 'bldc-motor' ||
@@ -433,7 +564,7 @@
       payload.action === 'bldc_motor' ||
       (payload.title && payload.title.toLowerCase().includes('bldc motor'))
     ) {
-      if (displayModeBadge) displayModeBadge.textContent = 'Inverter BLDC Motor';
+      updateDisplayBadge('Inverter BLDC Motor');
       renderBLDCMotor(container);
     } else if (
       compType === 'chimney-controls' ||
@@ -443,24 +574,22 @@
       payload.action === 'gesture_control' ||
       (payload.title && payload.title.toLowerCase().includes('gesture control'))
     ) {
-      if (displayModeBadge) displayModeBadge.textContent = 'Wave Gesture Controls';
+      updateDisplayBadge('Wave Gesture Controls');
       renderChimneyControls(container);
     } else if (compType === 'comparison' && products.length >= 2) {
-      if (displayModeBadge) displayModeBadge.textContent = `Comparing ${products.length} Models`;
+      updateDisplayBadge(`Comparing ${products.length} Models`);
       renderComparisonMatrix(container, products, payload.title);
     } else if (compType === 'dishwasher-loading') {
-      if (displayModeBadge) displayModeBadge.textContent = 'Installation Guide';
+      updateDisplayBadge('Installation Guide');
       renderChimneyInstallation(container);
     } else if (compType === 'manual') {
-      if (displayModeBadge) displayModeBadge.textContent = 'User Manual & Auto-Clean';
+      updateDisplayBadge('User Manual & Auto-Clean');
       renderUserManual(container, payload.manualData);
     } else if (compType === 'offers') {
-      if (displayModeBadge) displayModeBadge.textContent = `Special Offers (${products.length})`;
+      updateDisplayBadge(`Special Offers (${products.length})`);
       renderOffersShowcase(container, products, payload.title);
     } else {
-      if (displayModeBadge) {
-        displayModeBadge.textContent = products.length === 1 ? 'Featured Appliance (1)' : `${products.length} Appliances`;
-      }
+      updateDisplayBadge(products.length === 1 ? 'Featured Appliance (1)' : `${products.length} Appliances`);
       renderProductCards(container, products);
     }
   }
@@ -554,7 +683,65 @@
     startSmartPolling();
   }
 
+  // Component 0: Faber Official Logo Welcome Screen (Fresh Load & Refresh Default)
+  function renderFaberWelcomeScreen(container) {
+    const target = container || document.getElementById('component-viewport') || productGrid;
+    if (!target) return;
+    prepareViewTransition(target);
+
+    updateDisplayBadge('Faber Studio');
+    if (displaySubtitle) displaySubtitle.textContent = 'Speak to the assistant or select an appliance to begin';
+
+    target.innerHTML = `
+      <div class="faber-welcome-container">
+        <div class="faber-welcome-card glass-panel">
+          <div class="welcome-brand-emblem glass-card">
+            <img src="https://faberindia.com/cdn/shop/files/image_903.png?v=1778867879" alt="Faber" class="welcome-faber-logo" />
+          </div>
+
+          <div class="welcome-title-wrap">
+            <span class="welcome-kicker">ITALIAN HERITAGE • SINCE 1955</span>
+            <h2 class="welcome-headline">Faber Smart Appliance Visualizer</h2>
+            <p class="welcome-lead">
+              Official interactive showcase for Faber chimneys &amp; dishwashers. Speak with the AI assistant on the left to explore appliances, guides &amp; comparisons.
+            </p>
+          </div>
+
+          <div class="welcome-action-hint glass-pill">
+            <div class="hint-pulse"></div>
+            <span>Speak to the <strong>Faber AI Assistant</strong> on the left, or select a quick topic below:</span>
+          </div>
+
+          <div class="welcome-quick-pills">
+            <button class="welcome-pill glass-button" data-welcome-query="30,000 के अंदर डिशवॉशर और चिमनी">🔍 Models under ₹30k</button>
+            <button class="welcome-pill glass-button" data-welcome-action="installation">🛠️ Chimney Installation</button>
+            <button class="welcome-pill glass-button" data-welcome-action="chimney_cleaning">🧼 Cleaning &amp; Care</button>
+            <button class="welcome-pill glass-button" data-welcome-action="dishwasher_usp">⭐ Dishwasher USPs</button>
+            <button class="welcome-pill glass-button" data-welcome-action="show_all">👁️ Browse All 13 Models</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Wire suggestion pills inside the welcome card
+    target.querySelectorAll('.welcome-pill').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const query = btn.getAttribute('data-welcome-query');
+        const action = btn.getAttribute('data-welcome-action');
+        if (query) {
+          hitTool({ query });
+          showToast(`Sending: "${query}"`);
+        } else if (action) {
+          hitTool({ action: action === 'show_all' ? 'show_products' : action });
+          showToast(`Showing: ${action}`);
+        }
+      });
+    });
+  }
+
   // Component A: Standard & Gallery Product Cards
+  // Component A: Standard & Gallery Product Cards (Continuous Looping Marquee with 3-Card Viewport)
   function renderProductCards(container, products) {
     if (!products || products.length === 0) {
       container.innerHTML = `
@@ -565,85 +752,266 @@
       `;
       return;
     }
+    prepareViewTransition(container);
 
     const isSingle = products.length === 1;
     const isDual = products.length === 2;
-    const gridClass = isSingle ? 'product-grid single-item' : isDual ? 'product-grid dual-item' : 'product-grid';
+    const isMarquee = products.length >= 3;
 
-    container.innerHTML = `
-      <div class="${gridClass}">
-        ${products.map((item, index) => {
-          const price = Number(item.price || 0);
-          const mrp = Number(item.mrp || 0);
-          const savings = Number(item.savings || (mrp > price ? mrp - price : 0));
-          const discount = item.discountPercent || (mrp > 0 && price > 0 ? Math.round(((mrp - price) / mrp) * 100) : 0);
-          const categoryLabel = item.categoryLabel || item.type || (item.category === 'chimney' ? 'Kitchen Chimney' : 'Dishwasher');
-          const highlightTag = item.highlight || (item.isOffer ? 'Free Gift Inside' : 'Extended Warranty');
+    function renderCard(item, index, keySuffix = '') {
+      const price = Number(item.price || 0);
+      const mrp = Number(item.mrp || 0);
+      const savings = Number(item.savings || (mrp > price ? mrp - price : 0));
+      const discount = item.discountPercent || (mrp > 0 && price > 0 ? Math.round(((mrp - price) / mrp) * 100) : 0);
+      const categoryLabel = item.categoryLabel || item.type || (item.category === 'chimney' ? 'Kitchen Chimney' : 'Dishwasher');
+      const highlightTag = item.highlight || (item.isOffer ? 'Free Gift Inside' : 'Extended Warranty');
 
-          return `
-            <article class="product-card">
-              <div class="product-image-box">
-                <div class="card-badge-container">
-                  <span class="badge-brand-kicker">FABER</span>
-                  <span class="badge-feature-highlight">${highlightTag}</span>
-                </div>
-                <img src="${item.imageUrl}" alt="${item.name || item.title}" loading="eager" />
-              </div>
+      return `
+        <article class="product-card" data-key="${item.modelName || item.name || index}-${keySuffix}">
+          <div class="product-image-box">
+            <div class="card-badge-container">
+              <span class="badge-brand-kicker">FABER</span>
+              <span class="badge-feature-highlight">${highlightTag}</span>
+            </div>
+            <img src="${item.imageUrl}" alt="${item.name || item.title}" loading="eager" />
+          </div>
 
-              <div class="card-details">
-                <div class="card-header-info">
-                  <span class="card-category-label">${categoryLabel}</span>
-                  <h3 class="card-title">${item.name || item.title}</h3>
-                </div>
+          <div class="card-details">
+            <div class="card-header-info">
+              <span class="card-category-label">${categoryLabel}</span>
+              <h3 class="card-title">${item.name || item.title}</h3>
+            </div>
 
-                ${item.keyFeatures && item.keyFeatures.length > 0 ? `
-                  <ul class="card-features-bullet-list">
-                    ${item.keyFeatures.slice(0, 3).map(f => `<li>• ${f}</li>`).join('')}
-                  </ul>
-                ` : (item.suctionPower ? `
-                  <ul class="card-features-bullet-list">
-                    <li>• Suction: ${item.suctionPower}</li>
-                    <li>• Filterless Auto-Clean Technology</li>
-                    <li>• Motion Sensor Gesture Control</li>
-                  </ul>
-                ` : `
-                  <ul class="card-features-bullet-list">
-                    <li>• Capacity: ${item.capacity || '14-Place RapidDry'}</li>
-                    <li>• Multi-Wash Hygienic Spray Arms</li>
-                    <li>• Ultra-Silent BLDC Inverter Motor</li>
-                  </ul>
-                `)}
+            ${item.keyFeatures && item.keyFeatures.length > 0 ? `
+              <ul class="card-features-bullet-list">
+                ${item.keyFeatures.slice(0, 3).map(f => `<li>• ${f}</li>`).join('')}
+              </ul>
+            ` : (item.suctionPower ? `
+              <ul class="card-features-bullet-list">
+                <li>• Suction: ${item.suctionPower}</li>
+                <li>• Filterless Auto-Clean Technology</li>
+                <li>• Motion Sensor Gesture Control</li>
+              </ul>
+            ` : `
+              <ul class="card-features-bullet-list">
+                <li>• Capacity: ${item.capacity || '14-Place RapidDry'}</li>
+                <li>• Multi-Wash Hygienic Spray Arms</li>
+                <li>• Ultra-Silent BLDC Inverter Motor</li>
+              </ul>
+            `)}
 
-                ${price > 0 ? `
-                  <div class="price-container">
-                    ${discount > 0 ? `
-                      <div class="badge-faber-red" title="Faber Promotional Savings">
-                        <span>Faber Red</span>
-                        <strong>${discount}% OFF</strong>
-                      </div>
-                    ` : ''}
-                    <div class="price-amounts-col">
-                      ${mrp > price ? `<span class="price-mrp">Was ₹${mrp.toLocaleString('en-IN')}</span>` : ''}
-                      <span class="price-amount">₹${price.toLocaleString('en-IN')}</span>
-                    </div>
+            ${price > 0 ? `
+              <div class="price-container">
+                ${discount > 0 ? `
+                  <div class="badge-faber-red" title="Faber Promotional Savings">
+                    <span>Faber Red</span>
+                    <strong>${discount}% OFF</strong>
                   </div>
                 ` : ''}
-
-                <div class="card-footer-cta">
-                  <a href="${item.imageUrl}" target="_blank" class="btn-product-cta" rel="noopener">
-                    Try Visualizer →
-                  </a>
+                <div class="price-amounts-col">
+                  ${mrp > price ? `<span class="price-mrp">Was ₹${mrp.toLocaleString('en-IN')}</span>` : ''}
+                  <span class="price-amount">₹${price.toLocaleString('en-IN')}</span>
                 </div>
               </div>
-            </article>
-          `;
-        }).join('')}
+            ` : ''}
+
+            <div class="card-footer-cta">
+              <a href="${item.imageUrl}" target="_blank" class="btn-product-cta" rel="noopener">
+                Try Visualizer →
+              </a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    if (products.length === 1) {
+      container.innerHTML = `
+        <div class="product-grid single-item">
+          ${renderCard(products[0], 0)}
+        </div>
+      `;
+      return;
+    }
+
+    if (products.length === 2) {
+      container.innerHTML = `
+        <div class="product-grid dual-item">
+          ${renderCard(products[0], 0)}
+          ${renderCard(products[1], 1)}
+        </div>
+      `;
+      return;
+    }
+
+    // Group products into pairs of 2 for stepped vertical sliding (bottom to top)
+    const pairs = [];
+    for (let i = 0; i < products.length; i += 2) {
+      pairs.push(products.slice(i, i + 2));
+    }
+
+    let currentSlide = 0;
+    const totalSlides = pairs.length;
+
+    container.innerHTML = `
+      <div class="product-stepper-wrapper" id="product-stepper-wrapper">
+        <div class="stepper-header-bar">
+          <div class="stepper-header-left">
+            <span class="stepper-live-dot"></span>
+            <span class="stepper-title-txt">SHOWCASE • 2 AT A TIME</span>
+            <span class="badge-stepper-page" id="stepper-counter-badge">1–2 of ${products.length}</span>
+          </div>
+
+          <div class="stepper-header-right">
+            <div class="stepper-dots-nav" id="stepper-dots-nav">
+              ${pairs.map((_, idx) => `
+                <button class="stepper-dot ${idx === 0 ? 'active' : ''}" data-slide="${idx}" title="Go to items ${idx * 2 + 1}–${Math.min((idx + 1) * 2, products.length)}" aria-label="Slide ${idx + 1}"></button>
+              `).join('')}
+            </div>
+
+            <div class="stepper-nav-arrows">
+              <button class="btn-stepper-arrow" id="btn-stepper-prev" title="Previous 2 appliances (Up)" aria-label="Previous pair">▲</button>
+              <button class="btn-stepper-arrow" id="btn-stepper-next" title="Next 2 appliances (Down)" aria-label="Next pair">▼</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-stepper-viewport" id="product-stepper-viewport">
+          <div class="product-stepper-track" id="product-stepper-track" style="transform: translateY(0%);">
+            ${pairs.map((pair, pIdx) => `
+              <div class="product-stepper-slide ${pair.length === 1 ? 'single-card-slide' : ''}" data-pair="${pIdx}">
+                ${pair.map((item, i) => renderCard(item, pIdx * 2 + i)).join('')}
+              </div>
+            `).join('')}
+          </div>
+        </div>
       </div>
     `;
+
+    // Connect slider controls & bottom-to-top auto-advancing logic
+    const track = container.querySelector('#product-stepper-track');
+    const counterBadge = container.querySelector('#stepper-counter-badge');
+    const dots = container.querySelectorAll('.stepper-dot');
+    const btnPrev = container.querySelector('#btn-stepper-prev');
+    const btnNext = container.querySelector('#btn-stepper-next');
+    const wrapper = container.querySelector('#product-stepper-wrapper');
+
+    function goToSlide(index) {
+      if (!track) return;
+      currentSlide = (index + totalSlides) % totalSlides;
+      // Bottom to top vertical slide transition
+      track.style.transform = `translateY(-${currentSlide * 100}%)`;
+
+      // Update counter badge
+      if (counterBadge) {
+        const startIdx = currentSlide * 2 + 1;
+        const endIdx = Math.min((currentSlide + 1) * 2, products.length);
+        counterBadge.textContent = `${startIdx}–${endIdx} of ${products.length}`;
+      }
+
+      // Update dot states
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentSlide);
+      });
+    }
+
+    if (btnPrev) {
+      btnPrev.addEventListener('click', () => {
+        goToSlide(currentSlide - 1);
+        resetAutoAdvance();
+      });
+    }
+
+    if (btnNext) {
+      btnNext.addEventListener('click', () => {
+        goToSlide(currentSlide + 1);
+        resetAutoAdvance();
+      });
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const target = parseInt(dot.getAttribute('data-slide'), 10);
+        if (!isNaN(target)) {
+          goToSlide(target);
+          resetAutoAdvance();
+        }
+      });
+    });
+
+    // Auto-advance bottom-to-top every 3.8 seconds
+    let autoAdvanceTimer = null;
+    function startAutoAdvance() {
+      if (autoAdvanceTimer) clearInterval(autoAdvanceTimer);
+      autoAdvanceTimer = setInterval(() => {
+        goToSlide(currentSlide + 1);
+      }, 3800);
+    }
+
+    function stopAutoAdvance() {
+      if (autoAdvanceTimer) {
+        clearInterval(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+      }
+    }
+
+    function resetAutoAdvance() {
+      stopAutoAdvance();
+      startAutoAdvance();
+    }
+
+    // Pause on hover
+    if (wrapper) {
+      wrapper.addEventListener('mouseenter', stopAutoAdvance);
+      wrapper.addEventListener('mouseleave', startAutoAdvance);
+
+      // Mouse wheel stepped navigation (throttled)
+      let wheelThrottled = false;
+      wrapper.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaY) > 20 || Math.abs(e.deltaX) > 20) {
+          e.preventDefault();
+          if (wheelThrottled) return;
+          wheelThrottled = true;
+          const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+          if (delta > 0) {
+            goToSlide(currentSlide + 1); // Wheel down -> Next 2 (bottom to top)
+          } else {
+            goToSlide(currentSlide - 1); // Wheel up -> Previous 2
+          }
+          resetAutoAdvance();
+          setTimeout(() => {
+            wheelThrottled = false;
+          }, 450);
+        }
+      }, { passive: false });
+
+      // Touch / swipe support (vertical swipe)
+      let touchStartY = 0;
+      wrapper.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      wrapper.addEventListener('touchend', (e) => {
+        const touchEndY = e.changedTouches[0].clientY;
+        const diffY = touchEndY - touchStartY;
+        if (Math.abs(diffY) > 40) {
+          if (diffY < 0) {
+            goToSlide(currentSlide + 1); // Swipe up -> Next 2 (bottom to top)
+          } else {
+            goToSlide(currentSlide - 1); // Swipe down -> Previous 2
+          }
+          resetAutoAdvance();
+        }
+      }, { passive: true });
+    }
+
+    startAutoAdvance();
   }
 
   // Component B: Side-by-Side Comparison Matrix (Inspired by Faber Comparison Mockup)
   function renderComparisonMatrix(container, products, title) {
+    if (!container) return;
+    prepareViewTransition(container);
     container.innerHTML = `
       <div class="comparison-card">
         <div class="comparison-header-banner">
@@ -707,31 +1075,27 @@
                 }).join('')}
               </tr>
               <tr>
-                <th>Specs</th>
-                ${products.map(p => `<td>✓ Airflow: <strong>${p.suctionPower || p.capacity || '-'}</strong></td>`).join('')}
+                <th>Airflow / Cap</th>
+                ${products.map(p => `<td><strong>${p.suctionPower || p.capacity || '-'}</strong></td>`).join('')}
               </tr>
               <tr>
-                <th>Specs</th>
-                ${products.map(p => `<td>✓ Filter: <strong>${p.filterDesign || p.cleaningFunction || 'Filterless Tech'}</strong></td>`).join('')}
+                <th>Filter Tech</th>
+                ${products.map(p => `<td><strong>${p.filterDesign || p.cleaningFunction || 'Filterless Tech'}</strong></td>`).join('')}
               </tr>
               <tr>
-                <th>Specs</th>
-                ${products.map(p => `<td>✓ Controls: <strong>${p.controls || 'Motion Gesture & Touch'}</strong></td>`).join('')}
+                <th>Controls</th>
+                ${products.map(p => `<td>${p.controls || 'Motion Gesture & Touch'}</td>`).join('')}
               </tr>
               <tr>
-                <th>Specs</th>
-                ${products.map(p => `<td>✓ Dimensions: <strong>${p.width || p.dimensions || 'Standard Model'}</strong></td>`).join('')}
+                <th>Warranty</th>
+                ${products.map(p => `<td>${p.warranty || '2 Years Faber Warranty'}</td>`).join('')}
               </tr>
               <tr>
-                <th>Specs</th>
-                ${products.map(p => `<td>✓ Warranty: <strong>${p.warranty || '2 Years Faber Warranty'}</strong></td>`).join('')}
-              </tr>
-              <tr>
-                <th>CTA</th>
+                <th>Action</th>
                 ${products.map(p => `
                   <td>
                     <a href="${p.imageUrl}" target="_blank" class="btn-product-cta matrix-cta" rel="noopener">
-                      Buy Now →
+                      Try Visualizer →
                     </a>
                   </td>
                 `).join('')}
@@ -2349,28 +2713,33 @@
       const container = document.getElementById('component-viewport') || productGrid;
 
       if (container) {
-        if (q.includes('install') || payload.action === 'installation' || payload.action === 'chimney_installation') {
-          if (displayModeBadge) displayModeBadge.textContent = 'Installation Guide';
+        prepareViewTransition(container);
+        if (payload.action === 'welcome' || q === 'welcome' || q.includes('welcome') || q.includes('home')) {
+          renderFaberWelcomeScreen(container);
+          showToast('Displaying Faber Welcome Screen');
+          return;
+        } else if (q.includes('install') || payload.action === 'installation' || payload.action === 'chimney_installation') {
+          updateDisplayBadge('Installation Guide');
           renderChimneyInstallation(container);
           showToast('Displaying Chimney Installation Guide');
         } else if (payload.action === 'chimney_cleaning' || q.includes('chimney clean') || q.includes('oil collector')) {
-          if (displayModeBadge) displayModeBadge.textContent = 'Chimney Cleaning Guide';
+          updateDisplayBadge('Chimney Cleaning Guide');
           renderChimneyCleaning(container);
           showToast('Displaying Chimney Cleaning Guide');
         } else if (payload.action === 'dishwasher_cleaning' || payload.action === 'dishwasher_maintenance' || q.includes('dishwasher clean') || q.includes('rinse aid') || q.includes('salt')) {
-          if (displayModeBadge) displayModeBadge.textContent = 'Dishwasher Care Guide';
+          updateDisplayBadge('Dishwasher Care Guide');
           renderDishwasherCleaning(container);
           showToast('Displaying Dishwasher Care Guide');
         } else if (payload.action === 'dishwasher_usp' || payload.action === 'dishwasher_features' || q.includes('spray arm') || q.includes('dual zone') || q.includes('usp')) {
-          if (displayModeBadge) displayModeBadge.textContent = 'Dishwasher USPs';
+          updateDisplayBadge('Dishwasher USPs');
           renderDishwasherUSP(container);
           showToast('Displaying Dishwasher USPs');
         } else if (payload.action === 'bldc_motor' || q.includes('bldc') || q.includes('inverter motor')) {
-          if (displayModeBadge) displayModeBadge.textContent = 'Inverter BLDC Motor';
+          updateDisplayBadge('Inverter BLDC Motor');
           renderBLDCMotor(container);
           showToast('Displaying Inverter BLDC Motor');
         } else if (payload.action === 'chimney_controls' || payload.action === 'gesture_control' || q.includes('gesture') || q.includes('wave') || q.includes('touch panel')) {
-          if (displayModeBadge) displayModeBadge.textContent = 'Wave Gesture Controls';
+          updateDisplayBadge('Wave Gesture Controls');
           renderChimneyControls(container);
           showToast('Displaying Wave Gesture Controls');
         }
@@ -2571,9 +2940,7 @@
             subtitle: 'All 13 official Faber chimneys and dishwashers loaded. Ask the agent or select a trigger.',
             products: data.products
           });
-          if (displayModeBadge) {
-            displayModeBadge.textContent = `All Products (${data.products.length})`;
-          }
+          updateDisplayBadge(`All Products (${data.products.length})`);
         }
       }
     } catch (e) {
@@ -2584,5 +2951,5 @@
   // Initialize
   initOrationWidget();
   connectSSE();
-  loadInitialImages();
+  renderFaberWelcomeScreen();
 })();

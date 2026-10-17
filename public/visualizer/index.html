@@ -7,10 +7,25 @@
   <meta name="description" content="Faber luxury appliance visualizer integrated with interactive Voice & Chat" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
+  <!-- Faber × OmniAgent Luxury Green Splash & Session Boot Loader Screen -->
+  <div id="faber-splash-loader" class="faber-splash-loader" aria-label="Loading Faber AI Visualizer">
+    <div class="splash-ambient-glow" aria-hidden="true"></div>
+    <div class="splash-lockup-container">
+      <div class="splash-brand-lockup">
+        <img src="https://faberindia.com/cdn/shop/files/image_903.png?v=1778867879" alt="Faber" class="splash-logo splash-logo-faber" />
+        <span class="splash-collab-cross" aria-hidden="true">✕</span>
+        <img src="images/omniagent_logo_white.png" alt="OmniAgent" class="splash-logo splash-logo-omni" />
+      </div>
+      <div class="splash-morph-spinner" aria-hidden="true">
+        <span class="splash-pulse-ring"></span>
+      </div>
+    </div>
+  </div>
 
   <!-- Top Navigation Bar (Luxury Faber Appliance Theme) -->
   <header class="navbar">
@@ -19,15 +34,25 @@
       <span class="brand-sub-badge">AI VISUALIZER</span>
     </div>
 
-    <nav class="navbar-center-nav">
-      <span class="nav-link active">Chimneys</span>
-      <span class="nav-link">Dishwashers</span>
-      <span class="nav-link">Hobs</span>
-      <span class="nav-link">Smart Kitchen</span>
-      <span class="nav-link highlight">AI Visualizer</span>
-    </nav>
+    <!-- Center Brand: OmniAgent Logo & Attribution (Replaces category menu buttons) -->
+    <div class="navbar-center-omni">
+      <div class="omniagent-nav-badge">
+        <img src="images/omniagent_logo_white.png" alt="OmniAgent by Tatwa Technologies" class="omniagent-nav-logo" />
+        <span class="omniagent-nav-tag">Powered by OmniAgent</span>
+      </div>
+    </div>
 
     <div class="navbar-right">
+      <div class="navbar-showcase-badge" title="Active Appliance Showcase Display Mode">
+        <span class="showcase-mini-dot"></span>
+        <span class="showcase-title-txt">Showcase:</span>
+        <span class="view-badge" id="display-mode-badge">Faber Studio</span>
+      </div>
+
+      <button id="btn-open-drawer-right" class="btn-drawer-toggle-subtle" title="Open Test Simulator & Triggers Drawer">
+        <span>⚡ Controls</span>
+      </button>
+
       <button id="btn-open-drawer" class="btn-faber-voice-pill" title="Open Voice Simulator & Controls Drawer" aria-label="Open Controls Drawer">
         <span class="voice-wave-bars">
           <span></span><span></span><span></span><span></span>
@@ -42,10 +67,10 @@
     </div>
   </header>
 
-  <!-- Main Split-Screen Layout -->
+  <!-- Main Split-Screen Layout (30/70 Horizontally) -->
   <main class="split-container">
 
-    <!-- LEFT PANE: Full Vertical Oration Voice & Chat Widget Interface -->
+    <!-- LEFT PANE: Full Vertical Oration Voice & Chat Widget Interface (30%) -->
     <section class="left-pane full-cover">
       <div class="pane-header">
         <div class="header-status-group">
@@ -61,20 +86,10 @@
       </div>
     </section>
 
-    <!-- RIGHT PANE: Dedicated Pure Appliance Showcase (Maximizes image viewport) -->
+    <!-- RIGHT PANE: Dedicated Pure Appliance Showcase (100% Height Canvas, 70% Width) -->
     <section class="right-pane">
-      <div class="right-header">
-        <div class="right-title-group">
-          <h2>Appliance Showcase</h2>
-          <p id="display-subtitle">Images synchronize live when the agent hits the backend tool.</p>
-        </div>
-        <div class="right-header-actions">
-          <span class="view-badge" id="display-mode-badge">All Products (13)</span>
-          <button id="btn-open-drawer-right" class="btn-drawer-toggle-subtle" title="Open Test Simulator & Triggers Drawer">
-            <span>⚡ Controls ☰</span>
-          </button>
-        </div>
-      </div>
+      <!-- Subtle Faber Green Morph Transition Glow FX -->
+      <div id="morph-glow-fx" class="morph-glow-fx" aria-hidden="true"></div>
 
       <!-- Dynamic Component Viewport (Swaps between Product Cards, Comparison Matrix, Loading Guide, Manual) -->
       <div class="component-viewport" id="component-viewport">
@@ -88,6 +103,9 @@
     </section>
 
   </main>
+
+  <!-- Hidden subtitle anchor for JS state tracking -->
+  <span id="display-subtitle" style="display:none;" aria-hidden="true"></span>
 
   <!-- SLIDE-OUT SIDE NAV DRAWER (Off-Canvas Menu for Simulator, Presets & Controls) -->
   <div id="side-nav-drawer" class="side-nav-drawer" aria-hidden="true">
@@ -125,6 +143,7 @@
               <span class="session-label">Session</span>
               <code id="display-session-id">Loading...</code>
               <button id="btn-copy-session" class="btn-copy-icon" title="Copy Session ID">📋</button>
+              <button id="btn-new-session" class="btn-new-session-chip" title="Start New Session">🔄 New</button>
             </div>
           </div>
 
@@ -164,6 +183,7 @@
         <div class="drawer-section">
           <div class="drawer-section-title">QUICK TEST SCENARIOS</div>
           <div class="drawer-presets-grid" id="simulator-presets-scroll">
+            <button class="preset-pill" data-preset-action="welcome">🏠 Faber Welcome Screen</button>
             <button class="preset-pill" data-preset-query="30,000 के अंदर डिशवॉशर और चिमनी">🔍 Chimneys &amp; Dishwashers &lt; ₹30k</button>
             <button class="preset-pill" data-preset-action="installation">🛠️ Chimney Installation</button>
             <button class="preset-pill" data-preset-action="chimney_cleaning">🧼 Chimney Cleaning &amp; Service</button>
@@ -271,6 +291,9 @@
             </button>
             <button class="btn-test drawer-item btn-test-all" data-action="show_all">
               👁️ View All 13 Products
+            </button>
+            <button class="btn-test drawer-item" data-action="welcome">
+              🏠 Faber Welcome Screen (Logo &amp; Overview)
             </button>
           </div>
         </div>
