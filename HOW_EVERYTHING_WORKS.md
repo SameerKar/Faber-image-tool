@@ -60,6 +60,62 @@ When you open `http://localhost:3000`, the screen is divided into two synchroniz
 
 ---
 
+## 2.1 Master Presentation Matrix: Voice Queries vs. Visual Components Rendered
+
+Use this reference table for slide presentations, stakeholder demos, and team walkthroughs. It maps every customer voice query to its exact backend action, rendered component, and right-screen layout.
+
+| # | Query Intent / Category | Sample Spoken Customer Questions (Hindi / English) | Backend Tool Payload (`POST /api/tool`) | Rendered Component (`componentType`) | Visual Representation on Right Screen | Total Possibilities & Variations Handled |
+| :-: | :--- | :--- | :--- | :--- | :--- | :--- |
+| **1** | **Cross-Category Comparison** *(Chimney vs. Dishwasher)* | • *"चिमनी और डिशवॉशर का डिफरेंस दिखाइए"*<br>• *"Show me the difference between chimney and dishwasher"*<br>• *"दोनों में क्या फर्क है, इमेज दिखाओ"* | `action: "compare"`<br>`category: "both"`<br>`products: "chimney, dishwasher"` | `comparison`<br>*(Side-by-Side Matrix)* | **Dual-column comparative table**: Chimney flagship vs. Dishwasher flagship side-by-side with pedestal images, prices, Faber Red discount pills, spec checkmarks (`✓ Airflow`, `✓ Capacity`, `✓ Filter`), and `Buy Now →` CTAs. | **1 canonical cross-category pair** (Flagship Chimney + Flagship Dishwasher). |
+| **2** | **Intra-Category Multi-Model Comparison** *(2, 3, or 4 Models)* | • *"तीनों चिमनी कंपेयर करें"*<br>• *"Compare Libra 60 and Libra 90"*<br>• *"तीनों डिशवॉशर कंपेयर कर दीजिए"*<br>• *"Built-in aur freestanding dishwasher mein kya farak hai"* | `action: "compare"`<br>`category: "chimney"` or `"dishwasher"`<br>`products: ["Model A", "Model B", ...]` | `comparison`<br>*(Side-by-Side Matrix)* | **Multi-column spec matrix with horizontal smooth scroll arrows (`◄` `►`)**: Product pedestal cutouts, bold deal prices, struck MRP, Faber Red badges, suction/wash specs, dimensions, and individual `Buy Now →` buttons. | **Up to 4 models simultaneously**; handles 2-model, 3-model, and 4-model combinations across all 13 catalog appliances. |
+| **3** | **Budget & Price Filters** *(Dual or Single Category)* | • *"30,000 के अंदर डिशवॉशर और चिमनी दिखाइए"*<br>• *"Chimneys under ₹25,000"*<br>• *"Dishwashers below 30k"*<br>• *"35000 mein kaun sa best aayega"* | `action: "filter_by_price"`<br>`max_price: 30000`<br>`category: "both" \| "chimney" \| "dishwasher"` | `products`<br>*(Product Cards Grid)* | **Ranked product showcase grid**: Models sorted by price and savings, Faber Red badges (`34% OFF`), feature bullet points (`• 1500 m³/hr`, `• 14-Place`), and `Try Visualizer →` CTA. If budget < 20k, displays smart guidance note + entry models. | **Any numerical budget** (e.g. ₹20k, ₹25k, ₹30k, ₹35k, ₹40k, ₹50k+). Renders 1 item (Hero), 2 items (Dual), or 3–6 items (Grid). |
+| **4** | **Multi-Condition Filters** *(Filterless + Sale + Budget)* | • *"25,000 के अंदर जो फ़िल्टरलेस चिमनी सेल में हैं वो दिखाओ"*<br>• *"Filterless chimney on offer under 25k"*<br>• *"Discounted auto-clean chimney under 30000"* | `action: "filter_by_price"`<br>`category: "chimney"`<br>`filter: "filterless"`<br>`is_offer: true`<br>`max_price: 25000` | `products`<br>*(Targeted Product Grid)* | **Filtered high-relevance appliance cards**: Strictly filterless models with thermal auto-clean, verified sale tags (`Free Gift Inside`), struck MRP, and motion gesture sensor highlights. | **Triple-condition intersection**: `Category` + `Filter Type` + `Sale Condition` + `Price Ceiling`. |
+| **5** | **Special Offers & Promotional Discounts** | • *"डिशवॉशर के क्या ऑफर हैं"*<br>• *"चिमनी पर क्या छूट है"*<br>• *"Show me festive offers"*<br>• *"Top promotional discounts"* | `action: "offers"` or `"show_offers"`<br>`category: "dishwasher" \| "chimney"`<br>`compare: true \| false` | `offers`<br>*(Festive Celebration Banner + Deal Cards)*<br>*(or `comparison` if compare=true)* | **Celebratory Festive Banner**: `• FESTIVE CELEBRATIONS • EXCLUSIVE FESTIVE OFFERS` with gold/red accent styling, followed by high-discount appliance cards with glowing Faber Red badges (`34%–38% OFF`), savings amount, and `Try Visualizer →` / `Claim Now →`. | **Category-isolated offers** (strictly chimneys, strictly dishwashers, or global deals). Optional matrix view if customer says *"compare offers"*. |
+| **6** | **Dishwasher Utensil Loading Guide** *(Indian Cookware)* | • *"बर्तन कैसे लोड करते हैं"*<br>• *"कड़ाही और पतीला कहाँ रखें"*<br>• *"How to load heavy Indian cookware"*<br>• *"Can I put pressure cooker in dishwasher"* | `action: "dishwasher_loading"`<br>`query: "loading guide"` | `dishwasher-loading`<br>*(Infographic Loading Guide)* | **3 numbered rack visual blueprint matching appliance diagrams**: `01 / UPPER RACK ✓` (glasses, cups, katoris angled down), `02 / LOWER RACK ✓` (plates inward, kadai/patila at 45° angle), `03 / CUTLERY TRAY ✓` (flatware, spoons alternating), plus expandable **`LOADING TIPS & INDIAN UTENSILS GUIDE ▾`** (detergent rules, spray arm clearance). | **Complete visual manual**: 3 rack diagrams, 6 callout pointer tags, and 4 detailed Indian cookware rules. |
+| **7** | **Step-by-Step Maintenance & Auto-Clean Manual** | • *"ऑटो क्लीन कैसे काम करता है"*<br>• *"How does 9-minute heat clean work"*<br>• *"जेस्चर कंट्रोल कैसे यूज़ करें"*<br>• *"Chimney troubleshooting & maintenance"* | `action: "show_manual"`<br>`manual_topic: "heat_auto_clean" \| "gesture_control" \| "troubleshooting"` | `manual`<br>*(Structured Timeline & Step Guide)* | **Numbered phased procedural cards**: Phase 1 (Press Auto-Clean) ➔ Phase 2 (9-Min Thermal Heating Coil melts grease) ➔ Phase 3 (1-Min High Speed Blower drains oil) ➔ Phase 4 (Stainless Steel Collector Tray removal & wash). | **3 distinct operational topics**: Heat Auto-Clean, Gesture Control Motion Sensor Guide, and Filterless Cleaning & Maintenance. |
+| **8** | **Exact Appliance Lookup** *(Single Model Spotlight)* | • *"Faber FFSD 6PR 12S Neo Black दिखाओ"*<br>• *"Show me the Libra BLDC 90"*<br>• *"Show FSID 8PR 14S dishwasher"* | `action: "show_products"`<br>`products: ["Exact Model Name"]` | `products`<br>*(Hero Appliance Layout)* | **Studio Hero Layout**: Single massive centered appliance cutout image, `FABER` brand kicker, verified category tag, full specification matrix (suction, decibel level, wash programs, warranty), price breakdown, and `Try Visualizer →` link. | **All 13 official Faber catalog appliances** individually accessible. |
+| **9** | **Full Catalog Overview** *(All Models)* | • *"सब प्रोडक्ट दिखाइए"*<br>• *"Show all appliances"*<br>• *"What all chimneys and dishwashers do you sell"* | `action: "show_all"` or `action: "show_products"` (empty/all) | `products`<br>*(Full Gallery Grid)* | **Comprehensive 13-Appliance Showcase Grid**: All 3 BLDC chimneys (60, 75, 90 cm) + all 10 freestanding, semi-integrated, and built-in dishwashers with category pills, live counts, and sorting. | **Complete catalog coverage** (13 total products). |
+
+---
+
+### Component Distribution & Possibility Summary
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 COMPONENT SWITCHING MATRIX                                     │
+├────────────────────────┬──────────────────────┬────────────────────────────────────────────────┤
+│ Dynamic Component      │ Trigger Actions      │ Customer Scenarios & Possibilities             │
+├────────────────────────┼──────────────────────┼────────────────────────────────────────────────┤
+│ 1. "comparison"        │ compare, vs, differ  │ • 2-Model Chimney vs Chimney                   │
+│                        │                      │ • 2-Model Dishwasher vs Dishwasher             │
+│                        │                      │ • 2-Model Chimney vs Dishwasher (Cross-cat)    │
+│                        │                      │ • 3-Model All Chimneys (60, 75, 90 cm)         │
+│                        │                      │ • 3-Model Discounted Dishwashers               │
+│                        │                      │ • 4-Model Budget Comparison (< ₹30k)           │
+├────────────────────────┼──────────────────────┼────────────────────────────────────────────────┤
+│ 2. "products"          │ filter_by_price,     │ • Single Hero Model Spotlight (1 item)         │
+│                        │ show_products,       │ • Dual Model Comparison (2 items)              │
+│                        │ show_all             │ • Price Budget Filter (e.g. < 25k, < 30k)      │
+│                        │                      │ • Multi-Condition Filter (Filterless + Sale)   │
+│                        │                      │ • Full Catalog Gallery (All 13 items)          │
+├────────────────────────┼──────────────────────┼────────────────────────────────────────────────┤
+│ 3. "dishwasher-loading"│ dishwasher_loading,  │ • How to load heavy Indian cookware            │
+│                        │ loading guide        │ • Pressure cooker & Kadai 45° placement        │
+│                        │                      │ • Chai cup, glassware & katori loading         │
+│                        │                      │ • Spray arm clearance & detergent warnings     │
+├────────────────────────┼──────────────────────┼────────────────────────────────────────────────┤
+│ 4. "manual"            │ show_manual          │ • Chimney 9-Min Heat Auto-Clean Timeline       │
+│                        │                      │ • Gesture Control Motion Sensor Wave Guide     │
+│                        │                      │ • Troubleshooting & Maintenance FAQ            │
+├────────────────────────┼──────────────────────┼────────────────────────────────────────────────┤
+│ 5. "offers"            │ offers, show_offers  │ • Chimney Offers & Savings (up to 38% off)     │
+│                        │                      │ • Dishwasher Offers & Savings (up to 34% off)  │
+│                        │                      │ • Festive Combos & Promotional Bundles         │
+└────────────────────────┴──────────────────────┴────────────────────────────────────────────────┘
+```
+
+---
+
 ## 3. End-to-End Query Lifecycles (Input -> Code -> Output)
 
 ```

@@ -23,5 +23,9 @@
     "ORATION_AGENT_ID": "538568f1-6a55-4e3f-989c-164f391a8443",
     "TOOL_WEBHOOK_SECRET": "faber_internal_secret_2026",
     "ALLOWED_ORIGIN": "*"
+  },
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
   }
 }

@@ -322,7 +322,18 @@ export default {
     }
 
     // =========================================================================
-    // 8. Fallback 404
+    // 8. Visualizer Frontend & Static Assets Route (/visualizer, /)
+    // =========================================================================
+    if (url.pathname === '/visualizer') {
+      return Response.redirect(`${url.origin}/visualizer/`, 301);
+    }
+
+    if (env.ASSETS && (url.pathname.startsWith('/visualizer') || url.pathname === '/')) {
+      return env.ASSETS.fetch(request);
+    }
+
+    // =========================================================================
+    // 9. Fallback 404
     // =========================================================================
     return new Response(
       JSON.stringify({
