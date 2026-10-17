@@ -897,6 +897,54 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   // Auto-Detect Intent from Natural Voice Query if action is not explicitly set
   if (!action || action === 'show_products' || action === 'display_images' || action === 'view') {
     if (
+      action === 'installation' ||
+      action === 'chimney_installation' ||
+      lowerText.includes('install') ||
+      lowerText.includes('installation') ||
+      lowerText.includes('mount') ||
+      lowerText.includes('mounting') ||
+      lowerText.includes('फिटिंग') ||
+      lowerText.includes('इनस्टॉल')
+    ) {
+      action = 'chimney_installation';
+    } else if (
+      action === 'chimney_cleaning' ||
+      (lowerText.includes('chimney') && (lowerText.includes('clean') || lowerText.includes('oil collector') || lowerText.includes('साफ') || lowerText.includes('सर्विस'))) ||
+      lowerText.includes('oil collector')
+    ) {
+      action = 'chimney_cleaning';
+    } else if (
+      action === 'dishwasher_cleaning' ||
+      action === 'dishwasher_maintenance' ||
+      (lowerText.includes('dish') && (lowerText.includes('salt') || lowerText.includes('rinse aid') || lowerText.includes('descale') || lowerText.includes('filter cleaning')))
+    ) {
+      action = 'dishwasher_cleaning';
+    } else if (
+      action === 'dishwasher_usp' ||
+      action === 'dishwasher_features' ||
+      (lowerText.includes('dish') && (lowerText.includes('feature') || lowerText.includes('usp') || lowerText.includes('spray arm') || lowerText.includes('dual zone') || lowerText.includes('खासियत')))
+    ) {
+      action = 'dishwasher_usp';
+    } else if (
+      action === 'bldc_motor' ||
+      lowerText.includes('bldc') ||
+      lowerText.includes('motor warranty') ||
+      lowerText.includes('inverter motor') ||
+      lowerText.includes('quiet motor') ||
+      lowerText.includes('मोटर')
+    ) {
+      action = 'bldc_motor';
+    } else if (
+      action === 'chimney_controls' ||
+      action === 'gesture_control' ||
+      lowerText.includes('gesture') ||
+      lowerText.includes('wave') ||
+      lowerText.includes('touch panel') ||
+      lowerText.includes('controls') ||
+      lowerText.includes('जेस्चर')
+    ) {
+      action = 'chimney_controls';
+    } else if (
       lowerText.includes('load') ||
       lowerText.includes('loading') ||
       lowerText.includes('how to load') ||
@@ -910,7 +958,6 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
       lowerText.includes('autoclean') ||
       lowerText.includes('maintenance') ||
       lowerText.includes('clean procedure') ||
-      lowerText.includes('gesture') ||
       lowerText.includes('troubleshoot') ||
       lowerText.includes('troubleshooting') ||
       lowerText.includes('filterless') ||
@@ -975,7 +1022,7 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   }
 
   // Component 2: User Manual / Auto-Clean Guide
-  if (action === 'show_manual' || action === 'manual' || action === 'auto_clean' || action === 'gesture' || action === 'troubleshooting') {
+  if (action === 'show_manual' || action === 'manual' || action === 'auto_clean' || action === 'troubleshooting') {
     return {
       componentType: 'manual',
       title: 'Faber User Manual & Official Maintenance Guide',
@@ -988,6 +1035,114 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
           title: '9-Min Heating + 1-Min Fan Oil Collector Guide',
           imageUrl: FABER_PRODUCT_CATALOG.LIBRA_60.imageUrl,
           description: 'Thermal heat auto-clean separates oil into the stainless steel collector.'
+        }
+      ]
+    };
+  }
+
+  // Component 2a: Chimney Installation Guide
+  if (action === 'chimney_installation' || action === 'installation') {
+    return {
+      componentType: 'chimney-installation',
+      title: 'Faber Chimney Installation Guide',
+      subtitle: 'BLDC Autoclean Cooker Hood Step-by-Step Installation Manual',
+      products: [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_90],
+      images: [
+        {
+          name: 'Chimney Installation Blueprint',
+          title: '4-Step Wall Mount & Duct Installation',
+          imageUrl: 'images/chimney_installation_hero.jpg',
+          description: 'Step 1 Prepare Wall, Step 2 Fix Bracket, Step 3 Mount Chimney, Step 4 Connect & Test'
+        }
+      ]
+    };
+  }
+
+  // Component 2b: Chimney Cleaning & Servicing Guide
+  if (action === 'chimney_cleaning') {
+    return {
+      componentType: 'chimney-cleaning',
+      title: 'Chimney Cleaning & Servicing Guide',
+      subtitle: 'Oil collector drainage, thermal heat clean & filterless routine care',
+      products: [FABER_PRODUCT_CATALOG.LIBRA_60],
+      images: [
+        {
+          name: 'Chimney Cleaning Guide',
+          title: 'Oil Collector and Thermal Auto-Clean Care',
+          imageUrl: FABER_PRODUCT_CATALOG.LIBRA_60.imageUrl,
+          description: 'Empty oil cup every 15-20 days, rinse in warm water, wipe glass sensors with microfiber.'
+        }
+      ]
+    };
+  }
+
+  // Component 2c: Dishwasher Maintenance & Cleaning Guide
+  if (action === 'dishwasher_cleaning' || action === 'dishwasher_maintenance') {
+    return {
+      componentType: 'dishwasher-cleaning',
+      title: 'Dishwasher Maintenance & Cleaning Guide',
+      subtitle: 'Salt refill, rinse aid dispenser, 3-stage mesh filter & monthly descaling',
+      products: [FABER_PRODUCT_CATALOG.FFSD_6PR_12S_BK],
+      images: [
+        {
+          name: 'Dishwasher Care Guide',
+          title: 'Essential Hygiene & Filter Maintenance',
+          imageUrl: FABER_PRODUCT_CATALOG.FFSD_6PR_12S_BK.imageUrl,
+          description: 'Add salt to prevent white limescale, refill rinse aid for streak-free drying, rinse 3-stage mesh filter weekly.'
+        }
+      ]
+    };
+  }
+
+  // Component 2d: Dishwasher Unique Selling Points & Features
+  if (action === 'dishwasher_usp' || action === 'dishwasher_features') {
+    return {
+      componentType: 'dishwasher-usp',
+      title: 'Faber Dishwasher Advanced Features & USPs',
+      subtitle: '3D triple spray arms, dual zone wash, 70°C sanitization & 14-place capacity',
+      products: [FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK, FABER_PRODUCT_CATALOG.FBID_8PR_14S],
+      images: [
+        {
+          name: 'Dishwasher USPs',
+          title: 'Advanced Faber Dishwasher Engineering',
+          imageUrl: FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK.imageUrl,
+          description: '3D Triple Spray Arms for intense Indian cooking stains, Dual Zone Wash flexibility, and 70°C germ-kill sanitization.'
+        }
+      ]
+    };
+  }
+
+  // Component 2e: BLDC Inverter Motor Spotlight
+  if (action === 'bldc_motor') {
+    return {
+      componentType: 'bldc-motor',
+      title: 'Faber Inverter BLDC Motor Technology',
+      subtitle: '50% energy savings, ultra-quiet 44–46 dB operation & 12-year warranty',
+      products: [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_75, FABER_PRODUCT_CATALOG.LIBRA_90],
+      images: [
+        {
+          name: 'Inverter BLDC Motor',
+          title: 'Brushless DC Inverter Motor Architecture',
+          imageUrl: FABER_PRODUCT_CATALOG.LIBRA_60.imageUrl,
+          description: 'Consumes only 150W, runs whisper-quiet at 44-46 dB, and backed by an industry-leading 12-year warranty.'
+        }
+      ]
+    };
+  }
+
+  // Component 2f: Chimney Controls & Wave Gesture
+  if (action === 'chimney_controls' || action === 'gesture_control') {
+    return {
+      componentType: 'chimney-controls',
+      title: 'Touch & Wave Gesture Control System',
+      subtitle: 'Hands-free wave sensor navigation & 9-speed touch control interface',
+      products: [FABER_PRODUCT_CATALOG.LIBRA_90],
+      images: [
+        {
+          name: 'Gesture Controls',
+          title: 'Touch & Wave Motion Sensor Guide',
+          imageUrl: FABER_PRODUCT_CATALOG.LIBRA_90.imageUrl,
+          description: 'Wave left-to-right to turn on and increase speed. Wave right-to-left to decrease speed and power down.'
         }
       ]
     };
