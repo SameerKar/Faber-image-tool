@@ -1082,12 +1082,12 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
       componentType: 'dishwasher-cleaning',
       title: 'Dishwasher Maintenance & Cleaning Guide',
       subtitle: 'Salt refill, rinse aid dispenser, 3-stage mesh filter & monthly descaling',
-      products: [FABER_PRODUCT_CATALOG.FFSD_6PR_12S_BK],
+      products: [FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK],
       images: [
         {
           name: 'Dishwasher Care Guide',
           title: 'Essential Hygiene & Filter Maintenance',
-          imageUrl: FABER_PRODUCT_CATALOG.FFSD_6PR_12S_BK.imageUrl,
+          imageUrl: FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK.imageUrl,
           description: 'Add salt to prevent white limescale, refill rinse aid for streak-free drying, rinse 3-stage mesh filter weekly.'
         }
       ]
