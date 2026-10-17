@@ -847,11 +847,13 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   }
 
   // --------------------------------------------------------------------------
-  // Auto-Detect Intent from Natural Voice Query
+  // --------------------------------------------------------------------------
+  // Auto-Detect Intent from Action & Natural Voice Query
   // --------------------------------------------------------------------------
   if (
     action === 'installation' ||
     action === 'chimney_installation' ||
+    action === 'install' ||
     lowerText.includes('install') ||
     lowerText.includes('installation') ||
     lowerText.includes('mount') ||
@@ -861,101 +863,150 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     ((action === 'loading_guide' || action === 'load') && (category === 'chimney' || lowerText.includes('chimney') || lowerText.includes('चिमनी')))
   ) {
     action = 'chimney_installation';
-  } else if (!action || action === 'show_products' || action === 'display_images' || action === 'view' || action === 'loading_guide' || action === 'load') {
-    if (
-      action === 'chimney_cleaning' ||
-      (lowerText.includes('chimney') && (lowerText.includes('clean') || lowerText.includes('oil collector') || lowerText.includes('साफ') || lowerText.includes('सर्विस'))) ||
-      lowerText.includes('oil collector')
-    ) {
-      action = 'chimney_cleaning';
-    } else if (
-      action === 'dishwasher_cleaning' ||
-      action === 'dishwasher_maintenance' ||
-      (lowerText.includes('dish') && (lowerText.includes('salt') || lowerText.includes('rinse aid') || lowerText.includes('descale') || lowerText.includes('filter cleaning')))
-    ) {
-      action = 'dishwasher_cleaning';
-    } else if (
-      action === 'dishwasher_usp' ||
-      action === 'dishwasher_features' ||
-      (lowerText.includes('dish') && (lowerText.includes('feature') || lowerText.includes('usp') || lowerText.includes('spray arm') || lowerText.includes('dual zone') || lowerText.includes('खासियत')))
-    ) {
-      action = 'dishwasher_usp';
-    } else if (
-      action === 'bldc_motor' ||
-      lowerText.includes('bldc') ||
-      lowerText.includes('motor warranty') ||
-      lowerText.includes('inverter motor') ||
-      lowerText.includes('quiet motor') ||
-      lowerText.includes('मोटर')
-    ) {
-      action = 'bldc_motor';
-    } else if (
-      action === 'chimney_controls' ||
-      action === 'gesture_control' ||
-      lowerText.includes('gesture') ||
-      lowerText.includes('wave') ||
-      lowerText.includes('touch panel') ||
-      lowerText.includes('controls') ||
-      lowerText.includes('जेस्चर')
-    ) {
-      action = 'chimney_controls';
-    } else if (
-      lowerText.includes('load') ||
-      lowerText.includes('loading') ||
-      lowerText.includes('how to load') ||
-      lowerText.includes('utensil') ||
-      lowerText.includes('bartan')
-    ) {
-      action = 'dishwasher_loading';
-    } else if (
-      lowerText.includes('manual') ||
-      lowerText.includes('auto clean') ||
-      lowerText.includes('autoclean') ||
-      lowerText.includes('maintenance') ||
-      lowerText.includes('clean procedure') ||
-      lowerText.includes('gesture') ||
-      lowerText.includes('troubleshoot') ||
-      lowerText.includes('troubleshooting') ||
-      lowerText.includes('filterless') ||
-      lowerText.includes('noisy') ||
-      lowerText.includes('weak suction') ||
-      lowerText.includes('service')
-    ) {
-      action = 'show_manual';
-    } else if (
-      lowerText.includes('offer') ||
-      lowerText.includes('discount') ||
-      lowerText.includes('deal') ||
-      lowerText.includes('best price') ||
-      lowerText.includes('savings') ||
-      lowerText.includes('ऑफर')
-    ) {
-      action = 'show_offers';
-    } else if (
-      category === 'both' ||
-      lowerText.includes('compare') ||
-      lowerText.includes('difference') ||
-      lowerText.includes('vs') ||
-      lowerText.includes('comparison') ||
-      lowerText.includes('डिफरेंस') ||
-      lowerText.includes('तुलना')
-    ) {
-      action = 'compare_products';
-    } else if (
-      lowerText.includes('under') ||
-      lowerText.includes('below') ||
-      lowerText.includes('less than') ||
-      lowerText.includes('budget') ||
-      lowerText.includes('अंडर') ||
-      maxPrice > 0 ||
-      /\d{4,6}/.test(lowerText)
-    ) {
-      if (!maxPrice) {
-        const match = lowerText.match(/(\d{4,6})/);
-        if (match) maxPrice = Number(match[1]);
-      }
-      action = 'filter_by_price';
+  } else if (
+    action === 'chimney_cleaning' ||
+    action === 'chimney_clean' ||
+    action === 'auto_clean' ||
+    action === 'autoclean' ||
+    action === 'heat_auto_clean' ||
+    action === 'heat_clean' ||
+    ((action === 'cleaning' || action === 'clean' || action === 'maintenance') && (category === 'chimney' || !category || category === 'all')) ||
+    lowerText.includes('auto clean') ||
+    lowerText.includes('autoclean') ||
+    lowerText.includes('heat clean') ||
+    lowerText.includes('thermal heat') ||
+    lowerText.includes('oil collector') ||
+    (lowerText.includes('chimney') && (lowerText.includes('clean') || lowerText.includes('maintenance') || lowerText.includes('servicing') || lowerText.includes('साफ') || lowerText.includes('सर्विस'))) ||
+    lowerText.includes('clean chimney') ||
+    lowerText.includes('cleaning of the chimney') ||
+    lowerText.includes('चिमनी साफ')
+  ) {
+    action = 'chimney_cleaning';
+  } else if (
+    action === 'dishwasher_cleaning' ||
+    action === 'dishwasher_clean' ||
+    action === 'dishwasher_maintenance' ||
+    action === 'dishwasher_care' ||
+    ((action === 'cleaning' || action === 'clean' || action === 'maintenance') && category === 'dishwasher') ||
+    (lowerText.includes('dish') && (lowerText.includes('clean') || lowerText.includes('salt') || lowerText.includes('rinse aid') || lowerText.includes('descale') || lowerText.includes('descaling') || lowerText.includes('filter') || lowerText.includes('maintenance') || lowerText.includes('care') || lowerText.includes('साफ'))) ||
+    lowerText.includes('cleaning of the dishwasher') ||
+    lowerText.includes('clean dishwasher') ||
+    lowerText.includes('डिशवॉशर साफ')
+  ) {
+    action = 'dishwasher_cleaning';
+  } else if (
+    action === 'dishwasher_usp' ||
+    action === 'dishwasher_usps' ||
+    action === 'dishwasher_features' ||
+    action === 'usp' ||
+    action === 'usps' ||
+    lowerText.includes('usp') ||
+    lowerText.includes('usps') ||
+    lowerText.includes('unique selling') ||
+    lowerText.includes('selling point') ||
+    lowerText.includes('spray arm') ||
+    lowerText.includes('dual zone') ||
+    lowerText.includes('70c') ||
+    lowerText.includes('70°c') ||
+    lowerText.includes('70 degree') ||
+    lowerText.includes('sanitization') ||
+    lowerText.includes('hygiene wash') ||
+    lowerText.includes('14 place') ||
+    (lowerText.includes('dish') && (lowerText.includes('feature') || lowerText.includes('features') || lowerText.includes('खासियत'))) ||
+    lowerText.includes('डिशवॉशर की खासियत')
+  ) {
+    action = 'dishwasher_usp';
+  } else if (
+    action === 'bldc_motor' ||
+    action === 'bldc' ||
+    action === 'motor' ||
+    lowerText.includes('bldc') ||
+    lowerText.includes('motor warranty') ||
+    lowerText.includes('12 year motor') ||
+    lowerText.includes('inverter motor') ||
+    lowerText.includes('quiet motor') ||
+    lowerText.includes('150w') ||
+    lowerText.includes('150 watt') ||
+    lowerText.includes('मोटर')
+  ) {
+    action = 'bldc_motor';
+  } else if (
+    action === 'chimney_controls' ||
+    action === 'gesture_control' ||
+    action === 'gesture' ||
+    action === 'controls' ||
+    lowerText.includes('gesture') ||
+    lowerText.includes('wave') ||
+    lowerText.includes('touch panel') ||
+    lowerText.includes('touch control') ||
+    lowerText.includes('sensor control') ||
+    lowerText.includes('9 speed') ||
+    lowerText.includes('जेस्चर')
+  ) {
+    action = 'chimney_controls';
+  } else if (
+    action === 'dishwasher_loading' ||
+    action === 'loading_guide' ||
+    action === 'load' ||
+    lowerText.includes('how to load') ||
+    lowerText.includes('loading guide') ||
+    lowerText.includes('rack loading') ||
+    (lowerText.includes('dish') && lowerText.includes('load')) ||
+    (lowerText.includes('load') && !lowerText.includes('chimney') && !lowerText.includes('चिमनी')) ||
+    lowerText.includes('bartan') ||
+    lowerText.includes('utensil')
+  ) {
+    action = 'dishwasher_loading';
+  } else if (
+    action === 'show_offers' ||
+    action === 'offers' ||
+    action === 'discounts' ||
+    action === 'deals' ||
+    lowerText.includes('offer') ||
+    lowerText.includes('discount') ||
+    lowerText.includes('deal') ||
+    lowerText.includes('best price') ||
+    lowerText.includes('savings') ||
+    lowerText.includes('ऑफर')
+  ) {
+    action = 'show_offers';
+  } else if (
+    action === 'compare_products' ||
+    action === 'compare' ||
+    action === 'comparison' ||
+    category === 'both' ||
+    lowerText.includes('compare') ||
+    lowerText.includes('difference') ||
+    lowerText.includes('vs') ||
+    lowerText.includes('comparison') ||
+    lowerText.includes('डिफरेंस') ||
+    lowerText.includes('तुलना')
+  ) {
+    action = 'compare_products';
+  } else if (
+    action === 'filter_by_price' ||
+    lowerText.includes('under') ||
+    lowerText.includes('below') ||
+    lowerText.includes('less than') ||
+    lowerText.includes('budget') ||
+    lowerText.includes('अंडर') ||
+    maxPrice > 0 ||
+    /\d{4,6}/.test(lowerText)
+  ) {
+    if (!maxPrice) {
+      const match = lowerText.match(/(\d{4,6})/);
+      if (match) maxPrice = Number(match[1]);
     }
+    action = 'filter_by_price';
+  } else if (
+    lowerText.includes('manual') ||
+    lowerText.includes('troubleshoot') ||
+    lowerText.includes('troubleshooting') ||
+    lowerText.includes('filterless') ||
+    lowerText.includes('noisy') ||
+    lowerText.includes('weak suction')
+  ) {
+    action = 'show_manual';
   }
 
   // --------------------------------------------------------------------------
@@ -1049,15 +1100,15 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   if (action === 'chimney_cleaning') {
     return {
       componentType: 'chimney-cleaning',
-      title: 'Chimney Cleaning & Servicing Guide',
-      subtitle: 'Oil collector drainage, thermal heat clean & filterless routine care',
-      products: [FABER_PRODUCT_CATALOG.LIBRA_60],
+      title: 'Cleaning & Maintenance of the Chimney',
+      subtitle: 'Heat Auto-Clean & Stainless Steel Oil Collector Maintenance',
+      products: [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_75, FABER_PRODUCT_CATALOG.LIBRA_90],
       images: [
         {
-          name: 'Chimney Cleaning Guide',
-          title: 'Oil Collector and Thermal Auto-Clean Care',
-          imageUrl: FABER_PRODUCT_CATALOG.LIBRA_60.imageUrl,
-          description: 'Empty oil cup every 15-20 days, rinse in warm water, wipe glass sensors with microfiber.'
+          name: 'Chimney Heat Auto-Clean Guide',
+          title: '9-Min Thermal Heat + 1-Min Blower Flush',
+          imageUrl: 'images/clean_hero_diag.jpg',
+          description: 'Step 1 Surface Care, Step 2 9-Min Thermal Melting, Step 3 1-Min Centrifuge Flush, Step 4 Empty Stainless Oil Collector.'
         }
       ]
     };
@@ -1069,9 +1120,9 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   if (action === 'dishwasher_cleaning' || action === 'dishwasher_maintenance') {
     return {
       componentType: 'dishwasher-cleaning',
-      title: 'Dishwasher Maintenance & Cleaning Guide',
-      subtitle: 'Salt refill, rinse aid dispenser, 3-stage mesh filter & monthly descaling',
-      products: [FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK],
+      title: 'Dishwasher Maintenance & Chemical Care',
+      subtitle: 'Salt softener, rinse aid dispenser, 3-stage mesh filter & monthly descaling',
+      products: [FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK, FABER_PRODUCT_CATALOG.FBID_8PR_14S],
       images: [
         {
           name: 'Dishwasher Care Guide',
@@ -1089,15 +1140,15 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   if (action === 'dishwasher_usp' || action === 'dishwasher_features') {
     return {
       componentType: 'dishwasher-usp',
-      title: 'Faber Dishwasher Advanced Features & USPs',
-      subtitle: '3D triple spray arms, dual zone wash, 70°C sanitization & 14-place capacity',
-      products: [FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK, FABER_PRODUCT_CATALOG.FBID_8PR_14S],
+      title: 'Unique Selling Points of the Dishwasher',
+      subtitle: 'Engineered for Heavy Indian Cooking, Burnt Kadai & 14-Place Hygiene',
+      products: [FABER_PRODUCT_CATALOG.FBID_8PR_14S, FABER_PRODUCT_CATALOG.FSID_8PR_14S, FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK],
       images: [
         {
-          name: 'Dishwasher USPs',
-          title: 'Advanced Faber Dishwasher Engineering',
-          imageUrl: FABER_PRODUCT_CATALOG.FFSD_7PR_14S_BK.imageUrl,
-          description: '3D Triple Spray Arms for intense Indian cooking stains, Dual Zone Wash flexibility, and 70°C germ-kill sanitization.'
+          name: 'Dishwasher Signature USPs',
+          title: 'Faber 3D Hydro-Clean & 70°C Sanitization',
+          imageUrl: 'images/dw_usp_hero.jpg',
+          description: 'USP 1 3D Triple Spray Arms, USP 2 Dual Zone Wash, USP 3 70°C Intensive Hygiene, USP 4 14-Place Indian Cookware Capacity.'
         }
       ]
     };
