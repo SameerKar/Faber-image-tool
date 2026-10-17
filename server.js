@@ -894,20 +894,21 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     }
   }
 
-  // Auto-Detect Intent from Natural Voice Query if action is not explicitly set
-  if (!action || action === 'show_products' || action === 'display_images' || action === 'view') {
+  // Auto-Detect Intent from Natural Voice Query
+  if (
+    action === 'installation' ||
+    action === 'chimney_installation' ||
+    lowerText.includes('install') ||
+    lowerText.includes('installation') ||
+    lowerText.includes('mount') ||
+    lowerText.includes('mounting') ||
+    lowerText.includes('फिटिंग') ||
+    lowerText.includes('इनस्टॉल') ||
+    ((action === 'loading_guide' || action === 'load') && (category === 'chimney' || lowerText.includes('chimney') || lowerText.includes('चिमनी')))
+  ) {
+    action = 'chimney_installation';
+  } else if (!action || action === 'show_products' || action === 'display_images' || action === 'view' || action === 'loading_guide' || action === 'load') {
     if (
-      action === 'installation' ||
-      action === 'chimney_installation' ||
-      lowerText.includes('install') ||
-      lowerText.includes('installation') ||
-      lowerText.includes('mount') ||
-      lowerText.includes('mounting') ||
-      lowerText.includes('फिटिंग') ||
-      lowerText.includes('इनस्टॉल')
-    ) {
-      action = 'chimney_installation';
-    } else if (
       action === 'chimney_cleaning' ||
       (lowerText.includes('chimney') && (lowerText.includes('clean') || lowerText.includes('oil collector') || lowerText.includes('साफ') || lowerText.includes('सर्विस'))) ||
       lowerText.includes('oil collector')
@@ -1002,8 +1003,49 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     }
   }
 
-  // Component 1: Dishwasher Loading Guide
+  // Component 1: Chimney Installation Guide (Top Priority Guide)
+  if (
+    action === 'chimney_installation' ||
+    action === 'installation' ||
+    ((action === 'loading_guide' || action === 'guide') && (category === 'chimney' || lowerText.includes('chimney') || lowerText.includes('चिमनी'))) ||
+    lowerText.includes('install') ||
+    lowerText.includes('installation') ||
+    lowerText.includes('mount')
+  ) {
+    return {
+      componentType: 'chimney-installation',
+      title: 'Faber Chimney Installation Guide',
+      subtitle: 'BLDC Autoclean Cooker Hood Step-by-Step Installation Manual',
+      products: [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_90],
+      images: [
+        {
+          name: 'Chimney Installation Blueprint',
+          title: '4-Step Wall Mount & Duct Installation',
+          imageUrl: 'images/chimney_installation_hero.jpg',
+          description: 'Step 1 Prepare Wall, Step 2 Fix Bracket, Step 3 Mount Chimney, Step 4 Connect & Test'
+        }
+      ]
+    };
+  }
+
+  // Component 2: Dishwasher Loading Guide (Only for Dishwashers)
   if (action === 'dishwasher_loading' || action === 'loading_guide' || action === 'load') {
+    if (category === 'chimney' || lowerText.includes('chimney') || lowerText.includes('चिमनी')) {
+      return {
+        componentType: 'chimney-installation',
+        title: 'Faber Chimney Installation Guide',
+        subtitle: 'BLDC Autoclean Cooker Hood Step-by-Step Installation Manual',
+        products: [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_90],
+        images: [
+          {
+            name: 'Chimney Installation Blueprint',
+            title: '4-Step Wall Mount & Duct Installation',
+            imageUrl: 'images/chimney_installation_hero.jpg',
+            description: 'Step 1 Prepare Wall, Step 2 Fix Bracket, Step 3 Mount Chimney, Step 4 Connect & Test'
+          }
+        ]
+      };
+    }
     return {
       componentType: 'dishwasher-loading',
       title: 'How to Load a Faber Dishwasher',
@@ -1021,7 +1063,7 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     };
   }
 
-  // Component 2: User Manual / Auto-Clean Guide
+  // Component 3: User Manual / Auto-Clean Guide
   if (action === 'show_manual' || action === 'manual' || action === 'auto_clean' || action === 'troubleshooting') {
     return {
       componentType: 'manual',
@@ -1035,24 +1077,6 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
           title: '9-Min Heating + 1-Min Fan Oil Collector Guide',
           imageUrl: FABER_PRODUCT_CATALOG.LIBRA_60.imageUrl,
           description: 'Thermal heat auto-clean separates oil into the stainless steel collector.'
-        }
-      ]
-    };
-  }
-
-  // Component 2a: Chimney Installation Guide
-  if (action === 'chimney_installation' || action === 'installation') {
-    return {
-      componentType: 'chimney-installation',
-      title: 'Faber Chimney Installation Guide',
-      subtitle: 'BLDC Autoclean Cooker Hood Step-by-Step Installation Manual',
-      products: [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_90],
-      images: [
-        {
-          name: 'Chimney Installation Blueprint',
-          title: '4-Step Wall Mount & Duct Installation',
-          imageUrl: 'images/chimney_installation_hero.jpg',
-          description: 'Step 1 Prepare Wall, Step 2 Fix Bracket, Step 3 Mount Chimney, Step 4 Connect & Test'
         }
       ]
     };
