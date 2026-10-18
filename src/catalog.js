@@ -927,6 +927,11 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     lowerText.includes('quiet motor') ||
     lowerText.includes('150w') ||
     lowerText.includes('150 watt') ||
+    lowerText.includes('what is bldc') ||
+    lowerText.includes('what does bldc') ||
+    lowerText.includes('what is a bldc') ||
+    lowerText.includes('bldc क्या') ||
+    lowerText.includes('बीएलडीसी') ||
     lowerText.includes('मोटर')
   ) {
     action = 'bldc_motor';
@@ -1161,13 +1166,14 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     return {
       componentType: 'bldc-motor',
       title: 'Faber Inverter BLDC Motor Technology',
-      subtitle: '50% energy savings, ultra-quiet 44–46 dB operation & 12-year warranty',
+      subtitle: 'Brushless DC Inverter Motor Architecture & Operation Video',
+      videoUrl: 'images/bldc_motor.mp4',
       products: [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_75, FABER_PRODUCT_CATALOG.LIBRA_90],
       images: [
         {
-          name: 'Inverter BLDC Motor',
+          name: 'Inverter BLDC Motor Video',
           title: 'Brushless DC Inverter Motor Architecture',
-          imageUrl: FABER_PRODUCT_CATALOG.LIBRA_60.imageUrl,
+          imageUrl: 'images/bldc_motor.mp4',
           description: 'Consumes only 150W, runs whisper-quiet at 44-46 dB, and backed by an industry-leading 12-year warranty.'
         }
       ]

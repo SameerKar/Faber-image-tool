@@ -4120,6 +4120,120 @@ oration-widget {
   flex-shrink: 0;
 }
 
+/* ==========================================================================
+   COMPONENT: INVERTER BLDC MOTOR FULL-VIEW CINEMATIC LOOPING VIDEO
+   ========================================================================== */
+.bldc-video-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #111a14 0%, #050a07 100%);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+}
+
+.bldc-video-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.bldc-cinematic-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #000000;
+}
+
+/* Bottom Right Corner Faber Logo Overlay */
+.bldc-video-corner-logo-box {
+  position: absolute;
+  bottom: 72px;
+  right: 28px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: rgba(12, 18, 14, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.75);
+}
+
+.bldc-corner-faber-logo {
+  height: 34px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  display: block;
+  filter: brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.8));
+}
+
+.bldc-video-audio-btn {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  z-index: 20;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.bldc-video-audio-btn:hover {
+  background: rgba(30, 41, 59, 0.85);
+  transform: scale(1.05);
+}
+
+@media (max-width: 900px) {
+  .bldc-video-corner-logo-box {
+    bottom: 52px;
+    right: 18px;
+    padding: 5px 12px;
+  }
+  .bldc-corner-faber-logo {
+    height: 26px;
+  }
+  .bldc-video-audio-btn {
+    top: 12px;
+    right: 14px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+  }
+}
+
 /* Specific Component Styling: BLDC Motor 9-Speed Selector */
 .bldc-speed-console {
   background: #0f172a;

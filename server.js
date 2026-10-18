@@ -98,6 +98,8 @@ const staticCandidate = [
 if (staticCandidate) {
   app.use(express.static(staticCandidate));
 }
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/visualizer', express.static(path.join(__dirname, 'public', 'visualizer')));
 
 // ----------------------------------------------------------------------------
 // 2. COMPLETE 13-PRODUCT CATALOG FROM AGENT TRAINING KNOWLEDGE BASE
@@ -932,10 +934,16 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     action === 'dishwasher_maintenance' ||
     action === 'dishwasher_care' ||
     ((action === 'cleaning' || action === 'clean' || action === 'maintenance') && category === 'dishwasher') ||
-    (lowerText.includes('dish') && (lowerText.includes('clean') || lowerText.includes('salt') || lowerText.includes('rinse aid') || lowerText.includes('descale') || lowerText.includes('descaling') || lowerText.includes('filter') || lowerText.includes('maintenance') || lowerText.includes('care') || lowerText.includes('साफ'))) ||
+    (lowerText.includes('dish') && (lowerText.includes('clean') || lowerText.includes('salt') || lowerText.includes('rinse aid') || lowerText.includes('descale') || lowerText.includes('descaling') || lowerText.includes('filter') || lowerText.includes('maintenance') || lowerText.includes('care') || lowerText.includes('साफ') || lowerText.includes('सॉल्ट'))) ||
     lowerText.includes('cleaning of the dishwasher') ||
     lowerText.includes('clean dishwasher') ||
-    lowerText.includes('डिशवॉशर साफ')
+    lowerText.includes('dishwasher salt') ||
+    lowerText.includes('dishwasher maintenance') ||
+    lowerText.includes('dishwasher care') ||
+    lowerText.includes('डिशवॉशर साफ') ||
+    lowerText.includes('डिशवॉशर सॉल्ट') ||
+    lowerText.includes('water softener') ||
+    lowerText.includes('salt softener')
   ) {
     action = 'dishwasher_cleaning';
   } else if (
@@ -971,6 +979,11 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     lowerText.includes('quiet motor') ||
     lowerText.includes('150w') ||
     lowerText.includes('150 watt') ||
+    lowerText.includes('what is bldc') ||
+    lowerText.includes('what does bldc') ||
+    lowerText.includes('what is a bldc') ||
+    lowerText.includes('bldc क्या') ||
+    lowerText.includes('बीएलडीसी') ||
     lowerText.includes('मोटर')
   ) {
     action = 'bldc_motor';
@@ -1099,15 +1112,15 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     return {
       componentType: 'dishwasher-loading',
       title: 'How to Load a Faber Dishwasher',
-      subtitle: 'Proper utensil arrangement for optimal cleaning and drainage',
+      subtitle: 'Rack architecture & Indian utensil arrangement for optimal cleaning',
       guideData: DISHWASHER_LOADING_GUIDE,
       products: [FABER_PRODUCT_CATALOG.FBID_8PR_14S, FABER_PRODUCT_CATALOG.FSID_8PR_14S],
       images: [
         {
-          name: 'Dishwasher Loading Diagram',
+          name: 'Dishwasher Loading Architecture',
           title: 'Faber Dishwasher Loading Architecture',
-          imageUrl: DISHWASHER_LOADING_GUIDE.imageUrl,
-          description: 'Upper basket for cups/glasses, lower basket for kadai/plates.'
+          imageUrl: 'images/dw_clean_hero_diag.jpg',
+          description: 'Lower basket for heavy kadai & patila, upper basket for glassware & cups, cutlery basket.'
         }
       ]
     };
@@ -1154,15 +1167,15 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
   if (action === 'dishwasher_cleaning' || action === 'dishwasher_maintenance') {
     return {
       componentType: 'dishwasher-cleaning',
-      title: 'Dishwasher Maintenance & Chemical Care',
+      title: 'Maintenance & Care of the Dishwasher',
       subtitle: 'Salt softener, rinse aid dispenser, 3-stage mesh filter & monthly descaling',
       products: [FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK, FABER_PRODUCT_CATALOG.FBID_8PR_14S],
       images: [
         {
           name: 'Dishwasher Care Guide',
-          title: 'Essential Hygiene & Filter Maintenance',
-          imageUrl: FABER_PRODUCT_CATALOG.FFSD_6PR_12S_NEO_BK.imageUrl,
-          description: 'Add salt to prevent white limescale, refill rinse aid for streak-free drying, rinse 3-stage mesh filter weekly.'
+          title: 'Essential Hygiene & Salt Softening',
+          imageUrl: 'images/dw_clean_hero_diag.jpg',
+          description: 'Step 1 Salt Refill, Step 2 Rinse Aid, Step 3 3-Stage Filter, Step 4 70°C Machine Descaling.'
         }
       ]
     };
@@ -1186,18 +1199,19 @@ function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     };
   }
 
-  // Component 2e: BLDC Inverter Motor Spotlight
+  // Component 2e: BLDC Inverter Motor Video Spotlight
   if (action === 'bldc_motor') {
     return {
       componentType: 'bldc-motor',
       title: 'Faber Inverter BLDC Motor Technology',
-      subtitle: '50% energy savings, ultra-quiet 44–46 dB operation & 12-year warranty',
+      subtitle: 'Brushless DC Inverter Motor Architecture & Operation Video',
+      videoUrl: 'images/bldc_motor.mp4',
       products: [FABER_PRODUCT_CATALOG.LIBRA_60, FABER_PRODUCT_CATALOG.LIBRA_75, FABER_PRODUCT_CATALOG.LIBRA_90],
       images: [
         {
-          name: 'Inverter BLDC Motor',
+          name: 'Inverter BLDC Motor Video',
           title: 'Brushless DC Inverter Motor Architecture',
-          imageUrl: FABER_PRODUCT_CATALOG.LIBRA_60.imageUrl,
+          imageUrl: 'images/bldc_motor.mp4',
           description: 'Consumes only 150W, runs whisper-quiet at 44-46 dB, and backed by an industry-leading 12-year warranty.'
         }
       ]

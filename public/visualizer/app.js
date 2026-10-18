@@ -544,10 +544,22 @@
       compType === 'dishwasher_maintenance' ||
       payload.action === 'dishwasher_cleaning' ||
       payload.action === 'dishwasher_maintenance' ||
-      (payload.title && payload.title.toLowerCase().includes('dishwasher maintenance'))
+      (payload.title && payload.title.toLowerCase().includes('dishwasher maintenance')) ||
+      (payload.title && payload.title.toLowerCase().includes('care of the dishwasher')) ||
+      (payload.title && payload.title.toLowerCase().includes('salt softener'))
     ) {
       updateDisplayBadge('Dishwasher Care Guide');
       renderDishwasherCleaning(container);
+    } else if (
+      compType === 'dishwasher-loading' ||
+      compType === 'dishwasher_loading' ||
+      payload.action === 'dishwasher_loading' ||
+      payload.action === 'loading_guide' ||
+      (payload.title && payload.title.toLowerCase().includes('load a faber dishwasher')) ||
+      (payload.title && payload.title.toLowerCase().includes('how to load'))
+    ) {
+      updateDisplayBadge('Dishwasher Loading Guide');
+      renderDishwasherLoading(container);
     } else if (
       compType === 'dishwasher-usp' ||
       compType === 'dishwasher_usp' ||
@@ -579,9 +591,6 @@
     } else if (compType === 'comparison' && products.length >= 2) {
       updateDisplayBadge(`Comparing ${products.length} Models`);
       renderComparisonMatrix(container, products, payload.title);
-    } else if (compType === 'dishwasher-loading') {
-      updateDisplayBadge('Installation Guide');
-      renderChimneyInstallation(container);
     } else if (compType === 'manual') {
       updateDisplayBadge('User Manual & Auto-Clean');
       renderUserManual(container, payload.manualData);
@@ -715,8 +724,11 @@
           <div class="welcome-quick-pills">
             <button class="welcome-pill glass-button" data-welcome-query="30,000 के अंदर डिशवॉशर और चिमनी">🔍 Models under ₹30k</button>
             <button class="welcome-pill glass-button" data-welcome-action="installation">🛠️ Chimney Installation</button>
-            <button class="welcome-pill glass-button" data-welcome-action="chimney_cleaning">🧼 Cleaning &amp; Care</button>
+            <button class="welcome-pill glass-button" data-welcome-action="chimney_cleaning">🧼 Chimney Cleaning</button>
+            <button class="welcome-pill glass-button" data-welcome-action="dishwasher_cleaning">💧 Dishwasher Salt &amp; Care</button>
+            <button class="welcome-pill glass-button" data-welcome-action="dishwasher_loading">🍽️ How to Load Dishwasher</button>
             <button class="welcome-pill glass-button" data-welcome-action="dishwasher_usp">⭐ Dishwasher USPs</button>
+            <button class="welcome-pill glass-button" data-welcome-action="bldc_motor">⚡ Inverter BLDC Video</button>
             <button class="welcome-pill glass-button" data-welcome-action="show_all">👁️ Browse All 13 Models</button>
           </div>
         </div>
@@ -1918,121 +1930,571 @@
   // ==========================================================================
   // COMPONENT: DISHWASHER MAINTENANCE & CHEMICAL CARE
   // ==========================================================================
+  // ==========================================================================
+  // COMPONENT: DISHWASHER MAINTENANCE & CHEMICAL CARE (Faber Reference Blueprint)
+  // ==========================================================================
   function renderDishwasherCleaning(container) {
     if (!container) return;
+
+    if (displaySubtitle) {
+      displaySubtitle.textContent = 'Salt Softener, Rinse Aid, 3-Stage Filter & 70°C Machine Descaling';
+    }
+
     container.innerHTML = `
-      <div class="component-dashboard-card" id="dishwasher-cleaning-comp">
-        <header class="dash-header">
-          <div class="dash-title-group">
-            <span class="dash-kicker">Hygiene &amp; Longevity</span>
-            <h2 class="dash-heading">DISHWASHER MAINTENANCE &amp; CHEMICAL CARE</h2>
-            <span class="dash-subheading">Salt softener, rinse aid dispenser, 3-stage mesh filter &amp; monthly descaling</span>
+      <div class="installation-guide-card" id="dw-cleaning-comp">
+        <header class="guide-header">
+          <div class="brand-title-group">
+            <div class="brand-wordmark">
+              <span class="brand-wordmark-text">FABER</span>
+              <span class="brand-accent-line"></span>
+            </div>
+            <h1 class="main-title">MAINTENANCE &amp; CARE OF THE DISHWASHER</h1>
+            <div class="sub-title">WATER SOFTENING SALT, RINSE AID &amp; HYGIENE PROTOCOL</div>
           </div>
-          <div class="dash-badge-pill blue">
-            <span>💧 Water Softening System</span>
+
+          <div class="playback-controls">
+            <button id="btn-toggle-dw-clean-cycle" class="btn-auto-play-toggle" title="Pause or Resume Auto Cycle">
+              <span id="cycle-icon-dw-clean">⏸</span>
+              <span id="cycle-text-dw-clean">Auto Cycle Active</span>
+            </button>
           </div>
+
+          <nav class="steps-nav-tracker" aria-label="Maintenance Steps">
+            <div class="step-nav-item active" data-step="1">
+              <div class="step-circle">1</div>
+              <span class="step-label">Salt Softener</span>
+            </div>
+            <div class="step-nav-item" data-step="2">
+              <div class="step-circle">2</div>
+              <span class="step-label">Rinse Aid</span>
+            </div>
+            <div class="step-nav-item" data-step="3">
+              <div class="step-circle">3</div>
+              <span class="step-label">Microfilter</span>
+            </div>
+            <div class="step-nav-item" data-step="4">
+              <div class="step-circle">4</div>
+              <span class="step-label">70°C Descaling</span>
+            </div>
+          </nav>
         </header>
 
-        <div class="dash-body-grid-4">
-          <!-- Card 1: Dishwasher Salt -->
-          <article class="dash-feature-card highlight">
-            <div class="dash-card-top">
-              <div class="dash-icon-box blue">🧂</div>
-              <div>
-                <span class="dash-kicker" style="color:#0284c7;">Step 01</span>
-                <h3 class="dash-card-heading">DISHWASHER SALT</h3>
+        <main class="installation-canvas">
+          <div class="steps-column">
+            <!-- Step 1: Dishwasher Salt -->
+            <article class="step-card active" id="dw-step-card-1" data-step="1">
+              <div class="step-info-col">
+                <div class="step-title-header">
+                  <span class="step-num-pill">01</span>
+                  <h2 class="step-heading">DISHWASHER SALT REFILL</h2>
+                </div>
+                <ul class="step-bullets-list">
+                  <li>Unscrew cap at base; insert funnel to add coarse salt.</li>
+                  <li>Recharges ion-exchange resin to soften hard Indian water.</li>
+                  <li>Top up whenever the 'S' indicator illuminates on fascia.</li>
+                </ul>
               </div>
-            </div>
-            <p class="dash-card-desc">Softens hard Indian water by recharging ion-exchange resin. Prevents white limescale buildup on stainless steel utensils.</p>
-            <ul class="dash-card-bullets">
-              <li>Refill tub base chamber with funnel.</li>
-              <li>Top up when 'S' salt LED glows.</li>
-              <li>Crucial for lifespan of internal pump.</li>
-            </ul>
-            <div class="dash-card-bottom-pill blue">Prevents Limescale Film</div>
-          </article>
-
-          <!-- Card 2: Rinse Aid -->
-          <article class="dash-feature-card">
-            <div class="dash-card-top">
-              <div class="dash-icon-box emerald">✨</div>
-              <div>
-                <span class="dash-kicker" style="color:#059669;">Step 02</span>
-                <h3 class="dash-card-heading">RINSE AID DISPENSER</h3>
+              <div class="step-square-box" title="Step 1: Dishwasher Salt Refill">
+                <img src="images/dw_clean_step1_salt.jpg" alt="Dishwasher salt refill with funnel" />
               </div>
-            </div>
-            <p class="dash-card-desc">Lowers water surface tension during final hot rinse. Ensures rapid moisture sheet evaporation without milky drop stains.</p>
-            <ul class="dash-card-bullets">
-              <li>Fill door dispenser beside tablet door.</li>
-              <li>Dial level 3 or 4 for Indian glassware.</li>
-              <li>Streak-free dry finish on crockery.</li>
-            </ul>
-            <div class="dash-card-bottom-pill emerald">Spotless Glass Drying</div>
-          </article>
+            </article>
 
-          <!-- Card 3: 3-Stage Filter -->
-          <article class="dash-feature-card">
-            <div class="dash-card-top">
-              <div class="dash-icon-box red">🔄</div>
-              <div>
-                <span class="dash-kicker" style="color:#e11d48;">Step 03</span>
-                <h3 class="dash-card-heading">3-STAGE MESH FILTER</h3>
+            <!-- Step 2: Rinse Aid Dispenser -->
+            <article class="step-card" id="dw-step-card-2" data-step="2">
+              <div class="step-info-col">
+                <div class="step-title-header">
+                  <span class="step-num-pill">02</span>
+                  <h2 class="step-heading">RINSE AID DISPENSER</h2>
+                </div>
+                <ul class="step-bullets-list">
+                  <li>Fill door-mounted dispenser next to tablet compartment.</li>
+                  <li>Ensures sheet water runoff during hot drying phase.</li>
+                  <li>Prevents water drop marks &amp; chalky film on glassware.</li>
+                </ul>
               </div>
-            </div>
-            <p class="dash-card-desc">Traps rice, seeds, masala residues before water recirculation. Unscrew cylindrical filter at bottom weekly and rinse.</p>
-            <ul class="dash-card-bullets">
-              <li>Twist 90° anti-clockwise to remove.</li>
-              <li>Rinse under tap with soft brush.</li>
-              <li>Prevents spray nozzle blockage.</li>
-            </ul>
-            <div class="dash-card-bottom-pill red">Weekly Tap Rinse</div>
-          </article>
-
-          <!-- Card 4: Monthly Descale -->
-          <article class="dash-feature-card">
-            <div class="dash-card-top">
-              <div class="dash-icon-box blue">🌡️</div>
-              <div>
-                <span class="dash-kicker" style="color:#0284c7;">Step 04</span>
-                <h3 class="dash-card-heading">70°C HOT DESCALING</h3>
+              <div class="step-square-box" title="Step 2: Rinse Aid Dispenser Fill">
+                <img src="images/dw_clean_step2_rinseaid.jpg" alt="Rinse aid liquid dispenser" />
               </div>
-            </div>
-            <p class="dash-card-desc">Run monthly machine care cycle with descaler powder at 70°C in an empty machine to eliminate hidden grease and odor.</p>
-            <ul class="dash-card-bullets">
-              <li>Removes hidden oil from pipe bends.</li>
-              <li>Eliminates food odor completely.</li>
-              <li>Restores peak heating performance.</li>
-            </ul>
-            <div class="dash-card-bottom-pill blue">Monthly Self-Clean</div>
-          </article>
-        </div>
+            </article>
+          </div>
 
-        <footer class="dash-footer-strip">
-          <div class="bottom-info-card">
-            <div class="bottom-card-icon">🧼</div>
-            <div class="bottom-card-text">
-              <span class="bottom-card-title">Detergent Rule</span>
-              <p class="bottom-card-desc">Use ONLY automatic dishwasher tablets or powder. Never manual soap.</p>
+          <!-- Hero Center Column -->
+          <div class="hero-center-column">
+            <div class="hero-chimney-img-box">
+              <img src="images/dw_clean_hero_diag.jpg" alt="Faber Dishwasher Maintenance Architecture" />
+              <div class="hero-pointer-tag active" style="bottom: 27%; left: 44%;" id="dw-clean-pointer-01" data-step="1" title="01: Salt Chamber / Reservoir">01</div>
+              <div class="hero-pointer-tag" style="bottom: 30%; left: 32%;" id="dw-clean-pointer-02" data-step="2" title="02: Rinse Aid Door Dispenser">02</div>
+              <div class="hero-pointer-tag" style="bottom: 28%; right: 38%;" id="dw-clean-pointer-03" data-step="3" title="03: 3-Stage Mesh Microfilter">03</div>
+              <div class="hero-pointer-tag" style="top: 28%; left: 52%;" id="dw-clean-pointer-04" data-step="4" title="04: 70°C Wash Chamber &amp; Hygiene Cycle">04</div>
             </div>
           </div>
+
+          <div class="steps-column">
+            <!-- Step 3: 3-Stage Microfilter -->
+            <article class="step-card" id="dw-step-card-3" data-step="3">
+              <div class="step-info-col">
+                <div class="step-title-header">
+                  <span class="step-num-pill">03</span>
+                  <h2 class="step-heading">3-STAGE MESH FILTER</h2>
+                </div>
+                <ul class="step-bullets-list">
+                  <li>Twist cylindrical filter 90° anti-clockwise on tub floor.</li>
+                  <li>Wash under tap with soft brush weekly to clear food debris.</li>
+                  <li>Protects dual high-pressure rotating spray arm nozzles.</li>
+                </ul>
+              </div>
+              <div class="step-square-box" title="Step 3: 3-Stage Mesh Filter Cleaning">
+                <img src="images/dw_clean_step3_filter.jpg" alt="Wash mesh filter under running water" />
+              </div>
+            </article>
+
+            <!-- Step 4: 70°C Machine Descaling -->
+            <article class="step-card" id="dw-step-card-4" data-step="4">
+              <div class="step-info-col">
+                <div class="step-title-header">
+                  <span class="step-num-pill">04</span>
+                  <h2 class="step-heading">70°C MACHINE DESCALING</h2>
+                </div>
+                <ul class="step-bullets-list">
+                  <li>Place machine cleaner bottle/powder in empty rack.</li>
+                  <li>Run Intensive 70°C hygiene cycle once every 30 days.</li>
+                  <li>Dissolves internal grease, limescale &amp; eliminates odors.</li>
+                </ul>
+              </div>
+              <div class="step-square-box" title="Step 4: 70°C Machine Descaling">
+                <img src="images/dw_clean_step4_descale.jpg" alt="70°C machine descaling cycle" />
+              </div>
+            </article>
+          </div>
+        </main>
+
+        <footer class="guide-bottom-strip">
           <div class="bottom-info-card">
-            <div class="bottom-card-icon">⛔</div>
+            <div class="bottom-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+              </svg>
+            </div>
             <div class="bottom-card-text">
-              <span class="bottom-card-title">Strict Warning</span>
-              <p class="bottom-card-desc">NEVER put Vim/Pril liquid into dispenser—causes foam overflow and error codes.</p>
+              <span class="bottom-card-title">Water Hardness Rule</span>
+              <p class="bottom-card-desc">Always use Faber genuine dishwasher salt to prevent white calcium scaling on stainless steel.</p>
             </div>
           </div>
+
+          <div class="bottom-info-card">
+            <div class="bottom-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+              </svg>
+            </div>
+            <div class="bottom-card-text">
+              <span class="bottom-card-title">Strict Detergent Rule</span>
+              <p class="bottom-card-desc">Use only automatic dishwasher detergents. Never use liquid hand dish soap (causes foam overflow).</p>
+            </div>
+          </div>
+
           <div class="bottom-notice-card">
-            <div class="notice-shield-icon">📞</div>
+            <div class="notice-shield-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
             <div class="notice-card-text">
-              <span class="notice-card-title">Authorized Faber Service</span>
-              <p class="notice-card-desc">For descaling kits &amp; genuine salts call Faber Support at 1800-209-3484.</p>
+              <span class="notice-card-title">Official Care Kits: 1800-209-3484</span>
+              <p class="notice-card-desc">Order genuine Faber dishwasher salt, rinse aid, and descaling kits from Faber authorized service.</p>
             </div>
           </div>
         </footer>
       </div>
     `;
+
+    initDWCleaningStepCycle(container);
   }
+
+  function initDWCleaningStepCycle(container) {
+    if (!container) return;
+    let currentStep = 1;
+    const totalSteps = 4;
+    let autoPlay = true;
+    let cycleTimer = null;
+    const cycleIntervalMs = 3800;
+
+    const navItems = container.querySelectorAll('.step-nav-item');
+    const stepCards = container.querySelectorAll('.step-card');
+    const pointerTags = container.querySelectorAll('.hero-pointer-tag');
+    const btnToggle = container.querySelector('#btn-toggle-dw-clean-cycle');
+    const cycleIcon = container.querySelector('#cycle-icon-dw-clean');
+    const cycleText = container.querySelector('#cycle-text-dw-clean');
+    const compCard = container.querySelector('#dw-cleaning-comp');
+
+    function setActiveStep(stepNum) {
+      currentStep = Number(stepNum);
+
+      navItems.forEach((nav) => {
+        const s = Number(nav.getAttribute('data-step'));
+        nav.classList.toggle('active', s === currentStep);
+      });
+
+      stepCards.forEach((card) => {
+        const s = Number(card.getAttribute('data-step'));
+        card.classList.toggle('active', s === currentStep);
+      });
+
+      pointerTags.forEach((ptr) => {
+        const s = Number(ptr.getAttribute('data-step'));
+        ptr.classList.toggle('active', s === currentStep);
+      });
+    }
+
+    function nextStep() {
+      let next = currentStep + 1;
+      if (next > totalSteps) next = 1;
+      setActiveStep(next);
+    }
+
+    function startCycle() {
+      if (cycleTimer) clearInterval(cycleTimer);
+      cycleTimer = setInterval(nextStep, cycleIntervalMs);
+      autoPlay = true;
+      if (cycleIcon) cycleIcon.textContent = '⏸';
+      if (cycleText) cycleText.textContent = 'Auto Cycle Active';
+    }
+
+    function stopCycle() {
+      if (cycleTimer) {
+        clearInterval(cycleTimer);
+        cycleTimer = null;
+      }
+      autoPlay = false;
+      if (cycleIcon) cycleIcon.textContent = '▶';
+      if (cycleText) cycleText.textContent = 'Paused (Click to play)';
+    }
+
+    navItems.forEach((nav) => {
+      nav.addEventListener('click', () => {
+        setActiveStep(nav.getAttribute('data-step'));
+        stopCycle();
+      });
+    });
+
+    stepCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        setActiveStep(card.getAttribute('data-step'));
+        stopCycle();
+      });
+    });
+
+    pointerTags.forEach((ptr) => {
+      ptr.addEventListener('click', () => {
+        setActiveStep(ptr.getAttribute('data-step'));
+        stopCycle();
+      });
+    });
+
+    if (btnToggle) {
+      btnToggle.addEventListener('click', () => {
+        if (autoPlay) stopCycle();
+        else startCycle();
+      });
+    }
+
+    if (compCard) {
+      compCard.addEventListener('mouseenter', () => {
+        if (autoPlay && cycleTimer) clearInterval(cycleTimer);
+      });
+      compCard.addEventListener('mouseleave', () => {
+        if (autoPlay) startCycle();
+      });
+    }
+
+    setActiveStep(1);
+    startCycle();
+  }
+
+  // ==========================================================================
+  // COMPONENT: DISHWASHER LOADING ARCHITECTURE & INDIAN COOKWARE GUIDE
+  // ==========================================================================
+  function renderDishwasherLoading(container) {
+    if (!container) return;
+
+    if (displaySubtitle) {
+      displaySubtitle.textContent = 'Rack Architecture & Utensil Arrangement for Indian Cookware';
+    }
+
+    container.innerHTML = `
+      <div class="installation-guide-card" id="dw-loading-comp">
+        <header class="guide-header">
+          <div class="brand-title-group">
+            <div class="brand-wordmark">
+              <span class="brand-wordmark-text">FABER</span>
+              <span class="brand-accent-line"></span>
+            </div>
+            <h1 class="main-title">HOW TO LOAD A FABER DISHWASHER</h1>
+            <div class="sub-title">OFFICIAL LOADING TECHNIQUES FOR INDIAN COOKWARE &amp; MAXIMUM HYGIENE</div>
+          </div>
+
+          <div class="playback-controls">
+            <button id="btn-toggle-dw-load-cycle" class="btn-auto-play-toggle" title="Pause or Resume Auto Cycle">
+              <span id="cycle-icon-dw-load">⏸</span>
+              <span id="cycle-text-dw-load">Auto Cycle Active</span>
+            </button>
+          </div>
+
+          <nav class="steps-nav-tracker" aria-label="Loading Steps">
+            <div class="step-nav-item active" data-step="1">
+              <div class="step-circle">1</div>
+              <span class="step-label">Lower Basket</span>
+            </div>
+            <div class="step-nav-item" data-step="2">
+              <div class="step-circle">2</div>
+              <span class="step-label">Upper Basket</span>
+            </div>
+            <div class="step-nav-item" data-step="3">
+              <div class="step-circle">3</div>
+              <span class="step-label">Cutlery Tray</span>
+            </div>
+            <div class="step-nav-item" data-step="4">
+              <div class="step-circle">4</div>
+              <span class="step-label">Pre-Flight Checks</span>
+            </div>
+          </nav>
+        </header>
+
+        <main class="installation-canvas">
+          <div class="steps-column">
+            <!-- Step 1: Lower Basket -->
+            <article class="step-card active" id="dw-load-card-1" data-step="1">
+              <div class="step-info-col">
+                <div class="step-title-header">
+                  <span class="step-num-pill">01</span>
+                  <h2 class="step-heading">LOWER BASKET: HEAVY COOKWARE</h2>
+                </div>
+                <ul class="step-bullets-list">
+                  <li>Angle heavy kadai, patila &amp; pressure cookers at 45° face-down.</li>
+                  <li>Align large thalis &amp; dinner plates vertically between rack tines.</li>
+                  <li>Ensure vessels drain freely; never nest pots inside each other.</li>
+                </ul>
+              </div>
+              <div class="step-square-box" title="Step 1: Lower Basket Cookware">
+                <img src="images/usp2_dual_zone.jpg" alt="Lower basket for heavy Indian cookware" />
+              </div>
+            </article>
+
+            <!-- Step 2: Upper Basket -->
+            <article class="step-card" id="dw-load-card-2" data-step="2">
+              <div class="step-info-col">
+                <div class="step-title-header">
+                  <span class="step-num-pill">02</span>
+                  <h2 class="step-heading">UPPER BASKET: CROCKERY &amp; GLASS</h2>
+                </div>
+                <ul class="step-bullets-list">
+                  <li>Invert chai mugs, wine glasses &amp; dessert bowls between tines.</li>
+                  <li>Angle curved bottoms to prevent wash water pooling.</li>
+                  <li>Secure lightweight steel katoris firmly so water jets do not flip them.</li>
+                </ul>
+              </div>
+              <div class="step-square-box" title="Step 2: Upper Basket Glassware">
+                <img src="images/usp4_14place.jpg" alt="Upper basket glassware and cups" />
+              </div>
+            </article>
+          </div>
+
+          <!-- Hero Center Column -->
+          <div class="hero-center-column">
+            <div class="hero-chimney-img-box">
+              <img src="images/dw_clean_hero_diag.jpg" alt="Faber Dishwasher Loading Architecture" />
+              <div class="hero-pointer-tag active" style="bottom: 34%; left: 48%;" id="dw-load-pointer-01" data-step="1" title="01: Lower Basket (Kadai &amp; Thalis)">01</div>
+              <div class="hero-pointer-tag" style="top: 32%; left: 48%;" id="dw-load-pointer-02" data-step="2" title="02: Upper Basket (Glasses &amp; Cups)">02</div>
+              <div class="hero-pointer-tag" style="bottom: 42%; left: 56%;" id="dw-load-pointer-03" data-step="3" title="03: Cutlery Basket (Spoons &amp; Knives)">03</div>
+              <div class="hero-pointer-tag" style="top: 24%; right: 40%;" id="dw-load-pointer-04" data-step="4" title="04: Dual Rotating Spray Arms">04</div>
+            </div>
+          </div>
+
+          <div class="steps-column">
+            <!-- Step 3: Cutlery Basket -->
+            <article class="step-card" id="dw-load-card-3" data-step="3">
+              <div class="step-info-col">
+                <div class="step-title-header">
+                  <span class="step-num-pill">03</span>
+                  <h2 class="step-heading">CUTLERY TRAY &amp; UTENSILS</h2>
+                </div>
+                <ul class="step-bullets-list">
+                  <li>Alternate spoon handles up and down to prevent nesting together.</li>
+                  <li>Point knife blades downwards for safety during unloading.</li>
+                  <li>Lay long cooking ladles, chimta &amp; tongs flat on the upper rack shelf.</li>
+                </ul>
+              </div>
+              <div class="step-square-box" title="Step 3: Cutlery Basket">
+                <img src="images/usp1_spray_arms.jpg" alt="Cutlery tray organization" />
+              </div>
+            </article>
+
+            <!-- Step 4: Pre-Flight Checks -->
+            <article class="step-card" id="dw-load-card-4" data-step="4">
+              <div class="step-info-col">
+                <div class="step-title-header">
+                  <span class="step-num-pill">04</span>
+                  <h2 class="step-heading">CRITICAL PRE-FLIGHT CHECKS</h2>
+                </div>
+                <ul class="step-bullets-list">
+                  <li>Spin spray arms by hand: ensure tall spatulas do not hit arms.</li>
+                  <li>Scrape solid bones &amp; seeds into bin (no pre-rinsing required).</li>
+                  <li>Ensure plates do not obstruct detergent tablet dispenser door.</li>
+                </ul>
+              </div>
+              <div class="step-square-box" title="Step 4: Spray Arm Rotation Check">
+                <img src="images/usp3_70c_wash.jpg" alt="Spray arm rotation check" />
+              </div>
+            </article>
+          </div>
+        </main>
+
+        <footer class="guide-bottom-strip">
+          <div class="bottom-info-card">
+            <div class="bottom-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M8 12l2 2 4-4" />
+              </svg>
+            </div>
+            <div class="bottom-card-text">
+              <span class="bottom-card-title">Scrape, Don't Pre-Wash</span>
+              <p class="bottom-card-desc">Faber 70°C Intensive cycle dissolves grease directly. Simply scrape solid food into trash.</p>
+            </div>
+          </div>
+
+          <div class="bottom-info-card">
+            <div class="bottom-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+              </svg>
+            </div>
+            <div class="bottom-card-text">
+              <span class="bottom-card-title">Spray Clearance Check</span>
+              <p class="bottom-card-desc">Always spin both spray arms 360° before starting to ensure zero obstruction from tall pans.</p>
+            </div>
+          </div>
+
+          <div class="bottom-notice-card">
+            <div class="notice-shield-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+            </div>
+            <div class="notice-card-text">
+              <span class="notice-card-title">Dual Zone Wash Option</span>
+              <p class="notice-card-desc">Activate Dual Zone for half-load efficiency if washing only upper or lower basket.</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    `;
+
+    initDWLoadingStepCycle(container);
+  }
+
+  function initDWLoadingStepCycle(container) {
+    if (!container) return;
+    let currentStep = 1;
+    const totalSteps = 4;
+    let autoPlay = true;
+    let cycleTimer = null;
+    const cycleIntervalMs = 3800;
+
+    const navItems = container.querySelectorAll('.step-nav-item');
+    const stepCards = container.querySelectorAll('.step-card');
+    const pointerTags = container.querySelectorAll('.hero-pointer-tag');
+    const btnToggle = container.querySelector('#btn-toggle-dw-load-cycle');
+    const cycleIcon = container.querySelector('#cycle-icon-dw-load');
+    const cycleText = container.querySelector('#cycle-text-dw-load');
+    const compCard = container.querySelector('#dw-loading-comp');
+
+    function setActiveStep(stepNum) {
+      currentStep = Number(stepNum);
+
+      navItems.forEach((nav) => {
+        const s = Number(nav.getAttribute('data-step'));
+        nav.classList.toggle('active', s === currentStep);
+      });
+
+      stepCards.forEach((card) => {
+        const s = Number(card.getAttribute('data-step'));
+        card.classList.toggle('active', s === currentStep);
+      });
+
+      pointerTags.forEach((ptr) => {
+        const s = Number(ptr.getAttribute('data-step'));
+        ptr.classList.toggle('active', s === currentStep);
+      });
+    }
+
+    function nextStep() {
+      let next = currentStep + 1;
+      if (next > totalSteps) next = 1;
+      setActiveStep(next);
+    }
+
+    function startCycle() {
+      if (cycleTimer) clearInterval(cycleTimer);
+      cycleTimer = setInterval(nextStep, cycleIntervalMs);
+      autoPlay = true;
+      if (cycleIcon) cycleIcon.textContent = '⏸';
+      if (cycleText) cycleText.textContent = 'Auto Cycle Active';
+    }
+
+    function stopCycle() {
+      if (cycleTimer) {
+        clearInterval(cycleTimer);
+        cycleTimer = null;
+      }
+      autoPlay = false;
+      if (cycleIcon) cycleIcon.textContent = '▶';
+      if (cycleText) cycleText.textContent = 'Paused (Click to play)';
+    }
+
+    navItems.forEach((nav) => {
+      nav.addEventListener('click', () => {
+        setActiveStep(nav.getAttribute('data-step'));
+        stopCycle();
+      });
+    });
+
+    stepCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        setActiveStep(card.getAttribute('data-step'));
+        stopCycle();
+      });
+    });
+
+    pointerTags.forEach((ptr) => {
+      ptr.addEventListener('click', () => {
+        setActiveStep(ptr.getAttribute('data-step'));
+        stopCycle();
+      });
+    });
+
+    if (btnToggle) {
+      btnToggle.addEventListener('click', () => {
+        if (autoPlay) stopCycle();
+        else startCycle();
+      });
+    }
+
+    if (compCard) {
+      compCard.addEventListener('mouseenter', () => {
+        if (autoPlay && cycleTimer) clearInterval(cycleTimer);
+      });
+      compCard.addEventListener('mouseleave', () => {
+        if (autoPlay) startCycle();
+      });
+    }
+
+    setActiveStep(1);
+    startCycle();
+  }
+
 
   // ==========================================================================
   // COMPONENT: DISHWASHER UNIQUE SELLING POINTS & ADVANCED FEATURES
@@ -2316,168 +2778,67 @@
   // ==========================================================================
   // COMPONENT: INVERTER BLDC MOTOR SPOTLIGHT & 9-SPEED CONSOLE
   // ==========================================================================
+  // ==========================================================================
+  // COMPONENT: INVERTER BLDC MOTOR - FULL-VIEW CINEMATIC LOOPING VIDEO
+  // ==========================================================================
   function renderBLDCMotor(container) {
     if (!container) return;
+
+    if (displaySubtitle) {
+      displaySubtitle.textContent = 'Inverter BLDC Motor Architecture & Performance Video';
+    }
+
     container.innerHTML = `
-      <div class="component-dashboard-card" id="bldc-motor-comp">
-        <header class="dash-header">
-          <div class="dash-title-group">
-            <span class="dash-kicker">Motor Innovation</span>
-            <h2 class="dash-heading">FABER INVERTER BLDC MOTOR SPOTLIGHT</h2>
-            <span class="dash-subheading">Brushless direct-current inverter motor with 9 precision speeds &amp; 12-year warranty</span>
+      <div class="bldc-video-stage" id="bldc-motor-comp">
+        <div class="bldc-video-frame">
+          <video
+            id="bldc-loop-video"
+            class="bldc-cinematic-video"
+            src="images/bldc_motor.mp4"
+            autoplay
+            loop
+            muted
+            playsinline
+          ></video>
+
+          <!-- Bottom Right Corner Faber Logo Overlay -->
+          <div class="bldc-video-corner-logo-box" title="Faber - Franke Expert">
+            <img
+              src="images/faber_logo.png"
+              alt="Faber"
+              class="bldc-corner-faber-logo"
+              onerror="this.src='https://faberindia.com/cdn/shop/files/image_903.png?v=1778867879'"
+            />
           </div>
-          <div class="dash-badge-pill red">
-            <span>12-Year Motor Warranty • 1500 m³/hr</span>
-          </div>
-        </header>
 
-        <div class="dash-body-grid-3">
-          <!-- Column 1: BLDC vs AC Benchmark -->
-          <article class="dash-feature-card highlight">
-            <div class="dash-card-top">
-              <div class="dash-icon-box red">⚡</div>
-              <div>
-                <span class="dash-kicker" style="color:#e11d48;">Benchmark</span>
-                <h3 class="dash-card-heading">BLDC VS TRADITIONAL AC</h3>
-              </div>
-            </div>
-            <p class="dash-card-desc">Permanent magnet synchronous design eliminates carbon brush friction, reducing energy consumption by half while doubling lifespan.</p>
-            <ul class="dash-card-bullets">
-              <li><strong>Wattage:</strong> 150W Inverter vs 300W AC Motor.</li>
-              <li><strong>Energy:</strong> 50% power savings on daily run.</li>
-              <li><strong>Sound:</strong> 44–46 dB vs 62–68 dB noisy AC.</li>
-              <li><strong>Heat:</strong> No internal friction coil overheating.</li>
-            </ul>
-            <div class="dash-card-bottom-pill red">50% Electricity Saved</div>
-          </article>
-
-          <!-- Column 2: Interactive 9-Speed Selector -->
-          <article class="dash-feature-card" style="background:#ffffff;border-color:#cbd5e1;">
-            <div class="dash-card-top">
-              <div class="dash-icon-box blue">🎛️</div>
-              <div>
-                <span class="dash-kicker" style="color:#0284c7;">Interactive Console</span>
-                <h3 class="dash-card-heading">9-SPEED AIRFLOW DIAL</h3>
-              </div>
-            </div>
-            <p class="dash-card-desc">Click any speed level below to simulate real-time inverter suction RPM, acoustic decibels, and recommended Indian cooking mode:</p>
-            
-            <div class="bldc-speed-console">
-              <div class="speed-dial-header">
-                <span class="speed-dial-title">Inverter Speed</span>
-                <span class="speed-live-feedback" id="bldc-feedback-txt">Speed 5 • Everyday Cooking</span>
-              </div>
-              <div class="speed-dial-pills" id="bldc-speed-pills">
-                <button class="speed-dial-btn" data-speed="1">1</button>
-                <button class="speed-dial-btn" data-speed="2">2</button>
-                <button class="speed-dial-btn" data-speed="3">3</button>
-                <button class="speed-dial-btn" data-speed="4">4</button>
-                <button class="speed-dial-btn active" data-speed="5">5</button>
-                <button class="speed-dial-btn" data-speed="6">6</button>
-                <button class="speed-dial-btn" data-speed="7">7</button>
-                <button class="speed-dial-btn" data-speed="8">8</button>
-                <button class="speed-dial-btn" data-speed="9">9</button>
-              </div>
-              <div class="speed-meter-row">
-                <div class="meter-col">
-                  <span class="meter-lbl">Suction</span>
-                  <span class="meter-val" id="bldc-suction-val">980 m³/hr</span>
-                </div>
-                <div class="meter-col">
-                  <span class="meter-lbl">Noise</span>
-                  <span class="meter-val" id="bldc-noise-val">44.8 dB</span>
-                </div>
-                <div class="meter-col">
-                  <span class="meter-lbl">Wattage</span>
-                  <span class="meter-val" id="bldc-watts-val">85 Watts</span>
-                </div>
-              </div>
-            </div>
-            <div class="dash-card-bottom-pill blue" style="margin-top:0.4rem;">Click Speeds 1–9 to test</div>
-          </article>
-
-          <!-- Column 3: 12-Year Warranty & Engineering -->
-          <article class="dash-feature-card">
-            <div class="dash-card-top">
-              <div class="dash-icon-box emerald">🛡️</div>
-              <div>
-                <span class="dash-kicker" style="color:#059669;">Durability</span>
-                <h3 class="dash-card-heading">12-YEAR WARRANTY</h3>
-              </div>
-            </div>
-            <p class="dash-card-desc">Faber provides an industry-leading 12-year motor warranty on the Libra BLDC range, backed by sealed industrial bearings.</p>
-            <ul class="dash-card-bullets">
-              <li>100% pure copper heavy windings.</li>
-              <li>Thermal cutoff protection against spikes.</li>
-              <li>Sealed rotor prevents grease ingress.</li>
-              <li>Engineered for 15+ years of kitchen service.</li>
-            </ul>
-            <div class="dash-card-bottom-pill emerald">12-Year Warranty Shield</div>
-          </article>
+          <!-- Mute / Unmute Audio Toggle -->
+          <button class="bldc-video-audio-btn" id="btn-toggle-bldc-audio" title="Mute / Unmute Audio" aria-label="Toggle Audio">
+            <span class="audio-btn-icon">🔇</span>
+            <span>Audio</span>
+          </button>
         </div>
-
-        <footer class="dash-footer-strip">
-          <div class="bottom-info-card">
-            <div class="bottom-card-icon">🔇</div>
-            <div class="bottom-card-text">
-              <span class="bottom-card-title">Ultra Quiet 44 dB</span>
-              <p class="bottom-card-desc">Conversational kitchen comfort—listen to podcasts or take phone calls while cooking.</p>
-            </div>
-          </div>
-          <div class="bottom-info-card">
-            <div class="bottom-card-icon">⚡</div>
-            <div class="bottom-card-text">
-              <span class="bottom-card-title">Inverter Efficiency</span>
-              <p class="bottom-card-desc">Draws variable wattage based on selected speed rather than fixed high power.</p>
-            </div>
-          </div>
-          <div class="bottom-notice-card">
-            <div class="notice-shield-icon">⭐</div>
-            <div class="notice-card-text">
-              <span class="notice-card-title">Available in 60, 75, 90 cm</span>
-              <p class="notice-card-desc">Standard across the Faber Libra BLDC curved glass cooker hood lineup.</p>
-            </div>
-          </div>
-        </footer>
       </div>
     `;
 
-    initBLDCSpeedDial(container);
-  }
+    // Ensure video automatically plays and loops without user gesture blocks
+    const videoEl = container.querySelector('#bldc-loop-video');
+    const audioBtn = container.querySelector('#btn-toggle-bldc-audio');
 
-  function initBLDCSpeedDial(container) {
-    const pills = container.querySelectorAll('.speed-dial-btn');
-    const feedbackTxt = container.querySelector('#bldc-feedback-txt');
-    const suctionVal = container.querySelector('#bldc-suction-val');
-    const noiseVal = container.querySelector('#bldc-noise-val');
-    const wattsVal = container.querySelector('#bldc-watts-val');
-
-    const speedData = {
-      1: { name: 'Low Simmer / Tea', suction: '450 m³/hr', noise: '44.0 dB', watts: '30 W' },
-      2: { name: 'Boiling / Steaming', suction: '580 m³/hr', noise: '44.2 dB', watts: '42 W' },
-      3: { name: 'Light Sautéing', suction: '720 m³/hr', noise: '44.5 dB', watts: '55 W' },
-      4: { name: 'Medium Sauté / Sabzi', suction: '850 m³/hr', noise: '44.7 dB', watts: '70 W' },
-      5: { name: 'Everyday Cooking', suction: '980 m³/hr', noise: '44.9 dB', watts: '85 W' },
-      6: { name: 'Dal Tadka / Spices', suction: '1120 m³/hr', noise: '45.2 dB', watts: '105 W' },
-      7: { name: 'Heavy Frying / Puri', suction: '1250 m³/hr', noise: '45.5 dB', watts: '120 W' },
-      8: { name: 'Fish Fry / Grilling', suction: '1380 m³/hr', noise: '45.8 dB', watts: '135 W' },
-      9: { name: 'Max Smoke & Tadka', suction: '1500 m³/hr', noise: '46.0 dB', watts: '150 W' }
-    };
-
-    pills.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        pills.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        const s = btn.getAttribute('data-speed');
-        const d = speedData[s];
-        if (d) {
-          if (feedbackTxt) feedbackTxt.textContent = `Speed ${s} • ${d.name}`;
-          if (suctionVal) suctionVal.textContent = d.suction;
-          if (noiseVal) noiseVal.textContent = d.noise;
-          if (wattsVal) wattsVal.textContent = d.watts;
-        }
+    if (videoEl) {
+      videoEl.play().catch(() => {
+        videoEl.muted = true;
+        videoEl.play().catch((e) => console.warn('[BLDC Video Playback]', e));
       });
-    });
+
+      if (audioBtn) {
+        audioBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          videoEl.muted = !videoEl.muted;
+          const icon = audioBtn.querySelector('.audio-btn-icon');
+          if (icon) icon.textContent = videoEl.muted ? '🔇' : '🔊';
+        });
+      }
+    }
   }
 
   // ==========================================================================
@@ -2726,10 +3087,14 @@
           updateDisplayBadge('Chimney Cleaning Guide');
           renderChimneyCleaning(container);
           showToast('Displaying Chimney Cleaning Guide');
-        } else if (payload.action === 'dishwasher_cleaning' || payload.action === 'dishwasher_maintenance' || q.includes('dishwasher clean') || q.includes('rinse aid') || q.includes('salt')) {
+        } else if (payload.action === 'dishwasher_cleaning' || payload.action === 'dishwasher_maintenance' || q.includes('dishwasher clean') || q.includes('rinse aid') || q.includes('salt') || q.includes('water softener')) {
           updateDisplayBadge('Dishwasher Care Guide');
           renderDishwasherCleaning(container);
           showToast('Displaying Dishwasher Care Guide');
+        } else if (payload.action === 'dishwasher_loading' || payload.action === 'loading_guide' || q.includes('how to load') || q.includes('rack loading') || (q.includes('dish') && q.includes('load'))) {
+          updateDisplayBadge('Dishwasher Loading Guide');
+          renderDishwasherLoading(container);
+          showToast('Displaying Dishwasher Loading Guide');
         } else if (payload.action === 'dishwasher_usp' || payload.action === 'dishwasher_features' || q.includes('spray arm') || q.includes('dual zone') || q.includes('usp')) {
           updateDisplayBadge('Dishwasher USPs');
           renderDishwasherUSP(container);
