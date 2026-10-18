@@ -888,10 +888,17 @@ export function resolveToolRequest(rawBody = {}, rawQuery = {}) {
     action === 'dishwasher_maintenance' ||
     action === 'dishwasher_care' ||
     ((action === 'cleaning' || action === 'clean' || action === 'maintenance') && category === 'dishwasher') ||
-    (lowerText.includes('dish') && (lowerText.includes('clean') || lowerText.includes('salt') || lowerText.includes('rinse aid') || lowerText.includes('descale') || lowerText.includes('descaling') || lowerText.includes('filter') || lowerText.includes('maintenance') || lowerText.includes('care') || lowerText.includes('साफ'))) ||
+    (lowerText.includes('dish') && (lowerText.includes('clean') || lowerText.includes('salt') || lowerText.includes('rinse aid') || lowerText.includes('descale') || lowerText.includes('descaling') || lowerText.includes('filter') || lowerText.includes('maintenance') || lowerText.includes('care') || lowerText.includes('साफ') || lowerText.includes('सॉल्ट') || lowerText.includes('नमक'))) ||
+    (lowerText.includes('डिशवॉशर') && (lowerText.includes('clean') || lowerText.includes('salt') || lowerText.includes('नमक') || lowerText.includes('सॉल्ट') || lowerText.includes('साफ') || lowerText.includes('सफाई') || lowerText.includes('फिल्टर') || lowerText.includes('केयर') || lowerText.includes('मेंटेनेंस'))) ||
     lowerText.includes('cleaning of the dishwasher') ||
     lowerText.includes('clean dishwasher') ||
-    lowerText.includes('डिशवॉशर साफ')
+    lowerText.includes('dishwasher salt') ||
+    lowerText.includes('dishwasher maintenance') ||
+    lowerText.includes('dishwasher care') ||
+    lowerText.includes('डिशवॉशर साफ') ||
+    lowerText.includes('डिशवॉशर सॉल्ट') ||
+    lowerText.includes('water softener') ||
+    lowerText.includes('salt softener')
   ) {
     action = 'dishwasher_cleaning';
   } else if (
